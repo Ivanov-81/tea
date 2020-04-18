@@ -9,21 +9,27 @@ require 'phpmailer/PHPMailer.php';
 require 'phpmailer/SMTP.php';
 require 'phpmailer/Exception.php';
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $postData = json_decode(file_get_contents('php://input'), true);
 
-    $group = $postData['group'];
     $mail = new PHPMailer\PHPMailer\PHPMailer();
+    $address = $postData['address'];
     $email = $postData['email'];
     $name = $postData['name'];
     $phone = $postData['phone'];
     $phone_template = $postData['phone_template'];
     $products = $postData['products'];
-    $str = "";
+    $string = "";
+    $amount = 0;
 
     foreach ($products as $value) {
-        $str .= "";
+        $amount = $amount + $value["amount"];
+        $string .= "<div style='border-bottom: 1px solid #ebebeb; font-size: 13px'>
+                <span style='margin: 0 10px 0 0; width: 100px; min-width: 100px'>".$value["vendor_code"]."</span>
+                <span style='margin: 0 10px 0 0'>".$value["name"]."</span>
+                <span>".$value["price"]."</span> руб/".$value["unit"]."
+                <br/><span style='font-weight: bolder'>На сумму: ".$value["amount"]." руб</span>
+            </div>";
     }
 
     try {
@@ -34,33 +40,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Настройки вашей почты
         $mail->Host       = 'smtp.gmail.com'; // SMTP сервера GMAIL
-        $mail->Username   = 'gmiolegv'; // Логин на почте
-        $mail->Password   = 'vrscsjvawepkkeyj'; // Пароль на почте
+        $mail->Username   = 'chainaya.zhemchuzhina'; // Логин на почте
+        $mail->Password   = 'voiqcybfgspuagwl'; // Пароль на почте
         $mail->SMTPSecure = 'ssl';
         $mail->Port       = 465;
-        $mail->setFrom('gmiolegv@gmail.com', 'Чайная жемчужина'); // Адрес самой почты и имя отправителя
+        $mail->setFrom('chainaya.zhemchuzhina@gmail.com', 'Чайная жемчужина'); // Адрес самой почты и имя отправителя
 
         // Получатель письма
         $mail->addAddress('ivanov-81@mail.ru');
-        $mail->addAddress('danil-klimov-2013@mail.ru');
+        $mail->addAddress('gmiolegv@gmail.com');
+//        $mail->addAddress('chainaya.zhemchuzhina@gmail.com');
         $mail->addAddress($email);
+
+
 
         // -----------------------
         // Само письмо
         // -----------------------
         $mail->isHTML(true);
-        $message = '<div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: calc(100% - 60px); height: 550px">
+        $message = '<div style="width: calc(100% - 60px); height: 550px">
                     <h2>Заявка на доставку из магазина "Чайная жемчужина"</h2>
                     <div>
-                        <img alt="logo" src="http://94.19.190.165/images/pic_05.jpg" style="width: 600px">
                         <p><b>'.$name.'</b> прислал(а) заявку с сайта "Чайная жемчужина"</p>
+                        <p>Адрес доставки: '.$address.'</a></p>
                         <p>Номер телефона: <a href="tel:'.$phone.'">'.$phone_template.'</a></p>
-                        
-
-                        
-                        
-                        <p>'.serialize($products).'</p>
+                        <p>'.$string.'</p>
                     </div>
+                    <div style="margin-bottom: 20px">Итого: <b>'.$amount.'</b> руб.</div>
+                    <img alt="logo" src="http://ivanovhome.keenetic.link/images/pic_05.jpg" style="width: 600px">
                 </div>';
         $mail->Subject = "Заявка на доставку из магазина \"Чайная жемчужина\"";
         $mail->Body    = $message;

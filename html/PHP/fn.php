@@ -1,6 +1,6 @@
 <?php
 
-function generate_string($strength = 16) {
+function generate_string($strength = 64) {
     $input = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
     $input_length = strlen($input);
     $random_string = '';

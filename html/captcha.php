@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $postData = json_decode(file_get_contents('php://input'), true);
     $KEY = "97LeIxAhjgYYGGjtbOOfVBjgYZVRqyHh71UMIE";
     $result = false;
-    $captcha = "";
     $timer = 120;
     $error = "";
 
@@ -18,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if($KEY == $site_key) {
             $captcha = generate_string();
             $result = true;
+            $_SESSION['captcha'] = $captcha;
         }
         else {
             $error = "Ключи не совпадают!";
