@@ -302,7 +302,7 @@ const useStyles = makeStyles((theme) => createStyles({
             height: "35px",
         },
         "& p": {
-            fontSize: "16px",
+            fontSize: "14px",
             margin: "1px 3px 0 -5px",
             // [theme.breakpoints.down('lg')]: {
             //     fontSize: "14px",
@@ -317,17 +317,17 @@ const useStyles = makeStyles((theme) => createStyles({
             //     margin: "0 0 0 -5px",
             // },
         },
-        "&input": {
+        "& input": {
             margin: "1px 3px 0 0",
             height: "35px",
-            fontSize: "15px",
+            fontSize: "14px",
         },
         "& p.Mui-error": {
             position: "absolute",
-            top: "45px",
+            top: "26px",
             fontSize: "11px",
             margin: "0 0 0 9px",
-            background: "#fff",
+            background: "#EFE6DF",
             padding: "0 5px",
         },
         // [theme.breakpoints.down('lg')]: {
@@ -478,11 +478,12 @@ const useStyles = makeStyles((theme) => createStyles({
             fontSize: "14px",
         },
         "& p.Mui-error": {
+            height: "10px",
             position: "absolute",
-            top: "45px",
+            top: "26px",
             fontSize: "11px",
             margin: "0 0 0 9px",
-            background: "#fff",
+            background: "#EFE6DF",
             padding: "0 5px",
         },
         // [theme.breakpoints.down('lg')]: {
@@ -557,7 +558,7 @@ export default function Main() {
     const [errorPhone, setErrorPhone] = useState(false);
     const [helperTextPhone, setHelperTextPhone] = useState("");
 
-    const [name, setName] = React.useState("Виктория Олеговна");
+    const [name, setName] = React.useState("");
     const [errorName, setErrorName] = useState(false);
     const [helperTextName, setHelperTextName] = useState("");
 
@@ -578,7 +579,11 @@ export default function Main() {
     const [errorAddress, setErrorAddress] = useState(false);
     const [helperAddress, setHelperAddress] = useState("");
 
-    const [delivery, setDelivery] = useState({bool: false, address: "Самовывоз"});
+    const [default_address, setDefaultAddress] = useState("г.Берёзовский ТЦ Центральный. Театральная улица, 6");
+    const [delivery, setDelivery] = useState({
+        bool: false,
+        address: "г.Берёзовский ТЦ Центральный. Театральная улица, 6"
+    });
     const [city, setCity] = useState("Берёзовский");
     const [cities] = useState([
         {id: "Берёзовский", name: "Берёзовский"},
@@ -629,9 +634,13 @@ export default function Main() {
 
     const handlerCheckDelivery = () => {
         if (delivery.bool) {
-            setDelivery({bool: false, address: "Самовывоз"})
+            setDelivery({bool: false, address: ""});
+            setAddress("");
         } else {
-            setDelivery({bool: true, address: address})
+            setAddress("");
+            setDelivery({bool: true, address: ""});
+            setAddress(default_address);
+            setCity("Берёзовский");
         }
     };
 
@@ -788,6 +797,9 @@ export default function Main() {
         }
 
         let object = {
+            "address": `${city} ${address}`,
+            "description": description,
+            "delivery": (delivery.bool) ? `Доставка: ${address}` : `Самовывоз: ${default_address}`,
             "name": name,
             "phone": "+7" + phone,
             "phone_template": "+7 (" + phone.substring(0, 3) + ") " + phone.substring(3, 6) + "-" + phone.substring(6, 8) + "-" + phone.slice(8),
@@ -851,7 +863,21 @@ export default function Main() {
 
         if (completed < 2) {
             let number = completed + 1
-            setCompleted(number)
+
+            if(number === 1) {
+                setCompleted(number)
+            }
+
+            if(number === 2) {
+                if (address === "") {
+                    setErrorAddress(true)
+                    setHelperAddress("Введите адрес")
+                    return
+                }
+                else {
+                    setCompleted(number)
+                }
+            }
 
             if (number === 1) {
                 setCompletedDis(false);
@@ -999,8 +1025,8 @@ export default function Main() {
 
                                 <ThemeProvider theme={theme}>
                                     <TextField
-                                        error={errorName}
-                                        helperText={helperTextName}
+                                        error={errorAddress}
+                                        helperText={helperAddress}
                                         placeholder="Ленина 31 д.5/2 кв.385"
                                         name="address"
                                         type="text"
