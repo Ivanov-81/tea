@@ -38,7 +38,14 @@ import {ThemeProvider} from "@material-ui/styles";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
+import {CheckBox, CheckBoxOutlineBlank} from "@material-ui/icons";
+
 import {SITE_KEY} from "../../js/constants"
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 
 const useStyles = makeStyles((theme) => createStyles({
     root: {
@@ -239,110 +246,283 @@ const useStyles = makeStyles((theme) => createStyles({
     progressAction: {
         width: "33.3%",
         textAlign: "center",
-        color: "#3f51b5",
+        color: "#666666",
     },
-    bodyForm: {},
+    bodyForm: {
+        marginTop: "20px",
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    bF: {
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+    },
     phone: {
         fontFamily: "Roboto, Helvetica, Arial, sans-serif",
         fontStyle: "normal",
         fontWeight: "bold",
-        fontSize: "15px",
-        lineHeight: "10px",
+        fontSize: "14px",
+        lineHeight: "14px",
         display: "flex",
         alignItems: "center",
         color: "#000000",
-        margin: "0 0 0 0",
-        [theme.breakpoints.down('lg')]: {
-            fontSize: "14px",
-            fontWeight: 400,
-            lineHeight: "14px",
-            margin: "5px 0 0 0",
+        margin: "20px 0 0 0",
+        // [theme.breakpoints.down('lg')]: {
+        //     fontSize: "14px",
+        //     fontWeight: 400,
+        //     lineHeight: "14px",
+        //     margin: "5px 0 0 0",
+        // },
+        // [theme.breakpoints.down('md')]: {
+        //     fontSize: "13px",
+        //     lineHeight: "13px",
+        //     fontWeight: 400,
+        //     margin: "4px 0 0 0",
+        //     overflow: "hidden",
+        //     whiteSpace: "nowrap",
+        // },
+        // [theme.breakpoints.down('sm')]: {
+        //     fontSize: "12px",
+        //     lineHeight: "12px",
+        //     fontWeight: 300,
+        //     margin: "3px 0 0 0",
+        //     overflow: "hidden",
+        //     whiteSpace: "nowrap",
+        // },
+    },
+    input: {
+        margin: "5px 0 0 0",
+        color: "#879196",
+        width: "200px",
+        "& div": {
+            height: "35px",
         },
-        [theme.breakpoints.down('md')]: {
-            fontSize: "13px",
-            lineHeight: "13px",
-            fontWeight: 400,
-            margin: "4px 0 0 0",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
+        "& p": {
+            fontSize: "16px",
+            margin: "1px 3px 0 -5px",
+            // [theme.breakpoints.down('lg')]: {
+            //     fontSize: "14px",
+            //     margin: "0 0 0 -5px",
+            // },
+            // [theme.breakpoints.down('md')]: {
+            //     fontSize: "12px",
+            //     margin: "0 0 0 -5px",
+            // },
+            // [theme.breakpoints.down('sm')]: {
+            //     fontSize: "11px",
+            //     margin: "0 0 0 -5px",
+            // },
         },
-        [theme.breakpoints.down('sm')]: {
-            fontSize: "12px",
-            lineHeight: "12px",
-            fontWeight: 300,
-            margin: "3px 0 0 0",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
+        "&input": {
+            margin: "1px 3px 0 0",
+            height: "35px",
+            fontSize: "15px",
         },
-        input: {
-            margin: "5px 0 0 0",
-            color: "#879196",
-            "& p": {
-                fontSize: "16px",
-                margin: "1px 3px 0 -5px",
-                [theme.breakpoints.down('lg')]: {
-                    fontSize: "14px",
-                    margin: "0 0 0 -5px",
-                },
-                [theme.breakpoints.down('md')]: {
-                    fontSize: "12px",
-                    margin: "0 0 0 -5px",
-                },
-                [theme.breakpoints.down('sm')]: {
-                    fontSize: "11px",
-                    margin: "0 0 0 -5px",
-                },
-            },
-            "& input": {
-                margin: "1px 3px 0 0",
-            },
-            "& p.Mui-error": {
-                position: "absolute",
-                top: "45px",
-                fontSize: "11px",
-                margin: "0 0 0 9px",
-                background: "#fff",
-                padding: "0 5px",
-            },
-            [theme.breakpoints.down('lg')]: {
-                margin: "2px 0 0 0",
-                "& input": {
-                    padding: "10px 10px",
-                    fontSize: "14px",
-                    height: "19px",
-                },
-                "& p.Mui-error": {
-                    top: "28px",
-                    fontSize: "11px",
-                },
-            },
-            [theme.breakpoints.down('md')]: {
-                margin: "2px 0 0 0",
-                "& input": {
-                    padding: "5px 5px",
-                    fontSize: "13px",
-                    height: "28px",
-                },
-                "& p.Mui-error": {
-                    top: "30px",
-                    fontSize: "10px",
-                    height: "10px",
-                },
-            },
-            [theme.breakpoints.down('sm')]: {
-                margin: "2px 0 0 0",
-                "& input": {
-                    padding: "3px 3px",
-                    fontSize: "13px",
-                    height: "24px",
-                },
-                "& p.Mui-error": {
-                    top: "26px",
-                    fontSize: "10px",
-                    height: "10px",
-                },
-            },
+        "& p.Mui-error": {
+            position: "absolute",
+            top: "45px",
+            fontSize: "11px",
+            margin: "0 0 0 9px",
+            background: "#fff",
+            padding: "0 5px",
+        },
+        // [theme.breakpoints.down('lg')]: {
+        //     margin: "2px 0 0 0",
+        //     "& input": {
+        //         padding: "10px 10px",
+        //         fontSize: "14px",
+        //         height: "19px",
+        //     },
+        //     "& p.Mui-error": {
+        //         top: "28px",
+        //         fontSize: "11px",
+        //     },
+        // },
+        // [theme.breakpoints.down('md')]: {
+        //     margin: "2px 0 0 0",
+        //     "& input": {
+        //         padding: "5px 5px",
+        //         fontSize: "13px",
+        //         height: "28px",
+        //     },
+        //     "& p.Mui-error": {
+        //         top: "30px",
+        //         fontSize: "10px",
+        //         height: "10px",
+        //     },
+        // },
+        // [theme.breakpoints.down('sm')]: {
+        //     margin: "2px 0 0 0",
+        //     "& input": {
+        //         padding: "3px 3px",
+        //         fontSize: "13px",
+        //         height: "24px",
+        //     },
+        //     "& p.Mui-error": {
+        //         top: "26px",
+        //         fontSize: "10px",
+        //         height: "10px",
+        //     },
+        // },
+    },
+    captcha: {
+        position: "relative",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "20px 0 0 0",
+        width: "200px",
+        height: "55px",
+        borderRadius: "4px",
+        border: "1px solid #BBB",
+        "&:hover": {
+            margin: "20px 0 0 0",
+            border: "1px solid blue",
+            width: "200px",
+            height: "55px",
         }
+    },
+    checkbox: {
+        cursor: "pointer",
+        width: "24px",
+        height: "24px",
+        margin: "0 20px",
+    },
+    loader: {
+        position: "absolute",
+        top: "12px",
+        left: "17px",
+    },
+    delivery: {
+        width: "35%",
+        padding: "10px",
+    },
+    pickup: {
+        width: "65%",
+        padding: "10px",
+        position: "relative"
+    },
+    fone: {
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        zIndex: 1,
+    },
+    checkboxDeliv: {
+        width: "100%",
+        height: "40px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        cursor: "pointer",
+    },
+    formControl: {
+        width: "60%",
+        height: "35px",
+        margin: "10px 0 0 0",
+        "& div": {
+            height: "35px",
+            "& div": {
+                height: "23px",
+                padding: "8px 22px 5px 15px",
+                fontSize: "14px",
+            }
+        }
+    },
+    fC1: {},
+    textarea: {
+        color: "#879196",
+        width: "90%",
+        height: "150px !important",
+        margin: "5px 0 0 0",
+        fontSize: "13px",
+        border: "1px solid #BBB",
+        borderRadius: "4px",
+        background: "#EFE6DF",
+        padding: "5px 10px",
+        outline: "none",
+    },
+    inputArea: {
+        color: "#879196",
+        width: "90%",
+        margin: "5px 0 0 0",
+        "& div": {
+            height: "35px",
+            fontSize: "14px"
+        },
+        "& p": {
+            fontSize: "14px",
+            margin: "1px 3px 0 -5px",
+            // [theme.breakpoints.down('lg')]: {
+            //     fontSize: "14px",
+            //     margin: "0 0 0 -5px",
+            // },
+            // [theme.breakpoints.down('md')]: {
+            //     fontSize: "12px",
+            //     margin: "0 0 0 -5px",
+            // },
+            // [theme.breakpoints.down('sm')]: {
+            //     fontSize: "11px",
+            //     margin: "0 0 0 -5px",
+            // },
+        },
+        "&input": {
+            margin: "1px 3px 0 0",
+            height: "35px",
+            fontSize: "14px",
+        },
+        "& p.Mui-error": {
+            position: "absolute",
+            top: "45px",
+            fontSize: "11px",
+            margin: "0 0 0 9px",
+            background: "#fff",
+            padding: "0 5px",
+        },
+        // [theme.breakpoints.down('lg')]: {
+        //     margin: "2px 0 0 0",
+        //     "& input": {
+        //         padding: "10px 10px",
+        //         fontSize: "14px",
+        //         height: "19px",
+        //     },
+        //     "& p.Mui-error": {
+        //         top: "28px",
+        //         fontSize: "11px",
+        //     },
+        // },
+        // [theme.breakpoints.down('md')]: {
+        //     margin: "2px 0 0 0",
+        //     "& input": {
+        //         padding: "5px 5px",
+        //         fontSize: "13px",
+        //         height: "28px",
+        //     },
+        //     "& p.Mui-error": {
+        //         top: "30px",
+        //         fontSize: "10px",
+        //         height: "10px",
+        //     },
+        // },
+        // [theme.breakpoints.down('sm')]: {
+        //     margin: "2px 0 0 0",
+        //     "& input": {
+        //         padding: "3px 3px",
+        //         fontSize: "13px",
+        //         height: "24px",
+        //     },
+        //     "& p.Mui-error": {
+        //         top: "26px",
+        //         fontSize: "10px",
+        //         height: "10px",
+        //     },
+        // },
     }
 }));
 
@@ -371,12 +551,13 @@ export default function Main() {
     const [completed_next, setCompletedNext] = React.useState(false);
 
     const [checked, setChecked] = React.useState(false);
+    const [status_checked, setStatusChecked] = React.useState(false);
 
     const [phone, setPhone] = React.useState("");
     const [errorPhone, setErrorPhone] = useState(false);
     const [helperTextPhone, setHelperTextPhone] = useState("");
 
-    const [name, setName] = React.useState("");
+    const [name, setName] = React.useState("Виктория Олеговна");
     const [errorName, setErrorName] = useState(false);
     const [helperTextName, setHelperTextName] = useState("");
 
@@ -389,6 +570,39 @@ export default function Main() {
     const show_cart_sm = useSelector(store => store.app.show_cart_sm);
 
     const [captcha, setCaptcha] = useState(null);
+    const [checked_loader, setCheckedLoader] = useState(false);
+
+    const [description, setDescription] = useState("");
+
+    const [address, setAddress] = useState("");
+    const [errorAddress, setErrorAddress] = useState(false);
+    const [helperAddress, setHelperAddress] = useState("");
+
+    const [delivery, setDelivery] = useState({bool: false, address: "Самовывоз"});
+    const [city, setCity] = useState("Берёзовский");
+    const [cities] = useState([
+        {id: "Берёзовский", name: "Берёзовский"},
+        {id: "Екатеринбург", name: "Екатеринбург"},
+        {id: "Верхняя Пышма", name: "Верхняя Пышма"},
+        {id: "Среднеуральск", name: "Среднеуральск"}
+    ]);
+
+    const handleChangeTextArea = (e) => {
+        setDescription(e.target.value)
+    }
+
+    const handleChangeAddress = (e) => {
+        setAddress(e.target.value)
+    };
+
+    const handleFocusAddress = (e) => {
+        setErrorAddress(false)
+        setHelperAddress("")
+    };
+
+    const handlerChangeCity = (e) => {
+        setCity(e.target.value)
+    };
 
     const handlerGetProducts = (item) => {
 
@@ -411,6 +625,14 @@ export default function Main() {
 
     const closeList = (data) => {
         setOpen(data);
+    };
+
+    const handlerCheckDelivery = () => {
+        if (delivery.bool) {
+            setDelivery({bool: false, address: "Самовывоз"})
+        } else {
+            setDelivery({bool: true, address: address})
+        }
     };
 
     const handleChangeInputText = (e) => {
@@ -471,8 +693,61 @@ export default function Main() {
 
     };
 
+    const handlerCheckRobot = () => {
+
+        if (!status_checked) {
+            setCheckedLoader(true);
+            axios.post('/captcha.php', {key: SITE_KEY})
+                .then((result) => {
+                    const {status, data} = result;
+                    if (status === 200) {
+
+                        if (data.result) {
+                            setTimeout(() => {
+                                setCaptcha(data.data.captcha)
+                                setStatusChecked(true)
+                                setCheckedLoader(false);
+                            }, 3000)
+                        } else {
+                            enqueueSnackbar({
+                                message: data.reason,
+                                options: {
+                                    key: new Date().getTime() + Math.random(),
+                                    variant: 'error',
+                                    action: (key) => (
+                                        <Button onClick={() => closeSnackbar(key)}>
+                                            <CloseIcon/>
+                                        </Button>
+                                    ),
+                                },
+                            });
+                        }
+                    }
+                })
+                .catch(error => {
+
+                });
+        }
+
+    };
+
     const sendData = () => {
 
+        if (captcha === null || captcha === undefined) {
+            enqueueSnackbar({
+                message: "Подтвердите что вы не робот!",
+                options: {
+                    key: new Date().getTime() + Math.random(),
+                    variant: 'warning',
+                    action: (key) => (
+                        <Button onClick={() => closeSnackbar(key)}>
+                            <CloseIcon/>
+                        </Button>
+                    ),
+                },
+            });
+            return
+        }
 
         if (name === "") {
             setErrorName(true);
@@ -510,22 +785,6 @@ export default function Main() {
                 setHelperTextEmail("Введите корректный E-mail");
                 return false;
             }
-        }
-
-        if (captcha === null || captcha === undefined) {
-            enqueueSnackbar({
-                message: "Подтвердите что вы не робот!",
-                options: {
-                    key: new Date().getTime() + Math.random(),
-                    variant: 'warning',
-                    action: (key) => (
-                        <Button onClick={() => closeSnackbar(key)}>
-                            <CloseIcon/>
-                        </Button>
-                    ),
-                },
-            });
-            return
         }
 
         let object = {
@@ -694,7 +953,89 @@ export default function Main() {
                     }
                     {
                         (completed === 1) &&
-                        "Корзина"
+                        <section className={classes.bF}>
+                            <div className={classes.delivery}>
+                                <div className={classes.checkboxDeliv} onClick={handlerCheckDelivery}>
+                                    {
+                                        !delivery.bool ? <CheckBox style={{color: "green"}}/> : <CheckBoxOutlineBlank/>
+                                    }
+                                    <span style={{marginLeft: "10px"}}>Доставка</span>
+                                </div>
+                                <div className={classes.checkboxDeliv} onClick={handlerCheckDelivery}>
+                                    {
+                                        delivery.bool ? <CheckBox style={{color: "green"}}/> : <CheckBoxOutlineBlank/>
+                                    }
+                                    <span style={{marginLeft: "10px"}}>Самовывоз</span>
+                                </div>
+                            </div>
+                            <div className={classes.pickup}>
+
+                                {
+                                    delivery.bool && <div className={classes.fone}/>
+                                }
+
+                                <div className={classes.phone} style={{margin: "14px 0 0 0"}}>Город</div>
+
+                                <FormControl variant="outlined" className={clsx(classes.formControl, classes.fC1)}
+                                             disabled={delivery.bool}>
+                                    <Select
+                                        value={city}
+                                        onChange={handlerChangeCity}
+                                    >
+                                        <MenuItem value="null">
+                                            <em className={classes.em}>Город</em>
+                                        </MenuItem>
+                                        {
+                                            cities.map((item, index) => (
+                                                <MenuItem key={index} value={item.id}>
+                                                    {item.name}
+                                                </MenuItem>
+                                            ))
+                                        }
+                                    </Select>
+                                </FormControl>
+
+                                <div className={classes.phone} style={{margin: "14px 0 0 0"}}>Адрес</div>
+
+                                <ThemeProvider theme={theme}>
+                                    <TextField
+                                        error={errorName}
+                                        helperText={helperTextName}
+                                        placeholder="Ленина 31 д.5/2 кв.385"
+                                        name="address"
+                                        type="text"
+                                        value={address}
+                                        className={clsx(classes.inputArea)}
+                                        margin="normal"
+                                        variant="outlined"
+                                        onChange={handleChangeAddress}
+                                        onFocus={handleFocusAddress}
+                                        autoComplete="off"
+                                        disabled={delivery.bool}
+                                        InputProps={{
+                                            inputProps: {
+                                                maxLength: 100,
+                                            },
+                                        }}
+
+                                    />
+                                </ThemeProvider>
+
+                                <div className={classes.phone} style={{margin: "14px 0 0 0"}}>Заметка</div>
+
+                                <TextareaAutosize
+                                    rowsMax={4}
+                                    aria-label="maximum height"
+                                    placeholder="Пожелания по заказу"
+                                    value={description}
+                                    className={classes.textarea}
+                                    disabled={delivery.bool}
+                                    name="description"
+                                    onChange={handleChangeTextArea}
+                                />
+
+                            </div>
+                        </section>
                     }
                     {
                         (completed === 2) &&
@@ -768,6 +1109,18 @@ export default function Main() {
 
                                 />
                             </ThemeProvider>
+
+                            <div className={classes.captcha}>
+                                <div className={classes.checkbox} onClick={handlerCheckRobot}>
+                                    {
+                                        status_checked ? <CheckBox style={{color: "green"}}/> : <CheckBoxOutlineBlank/>
+                                    }
+                                    {
+                                        checked_loader && <CircularProgress size={30} className={classes.loader}/>
+                                    }
+                                </div>
+                                <span style={{lineHeight: "17px"}}>Подтвердите что вы не робот</span>
+                            </div>
 
                         </Fragment>
                     }
