@@ -56,18 +56,21 @@ const useStyles = makeStyles((theme) => createStyles({
         width: "100%",
         height: "100%",
         color: "#000000",
-        padding: "55px 23px 0 23px",
+        padding: "55px 23px 55px 23px",
         flexGrow: 1,
+        overflow: "hidden",
     },
     menu: {
         height: "222px",
-        backgroundColor: "#EFE6DF",
-        border: "1px solid #D5BC9C",
+        backgroundColor: "#092924",
+        // border: "1px solid #D5BC9C",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
         minWidth: "186px",
+        borderRadius: 0,
+        padding: "0 10px"
     },
     carousel: {
         height: "422px",
@@ -77,6 +80,7 @@ const useStyles = makeStyles((theme) => createStyles({
         alignItems: "center",
         justifyContent: "center",
         padding: "0px",
+        borderRadius: 0
     },
     block: {
         position: "relative",
@@ -111,7 +115,7 @@ const useStyles = makeStyles((theme) => createStyles({
     },
     link: {
         position: "fixed",
-        bottom: "18px",
+        top: "110px",
         right: "25px",
         color: "#BA975F",
         zIndex: 1,
@@ -124,10 +128,12 @@ const useStyles = makeStyles((theme) => createStyles({
         width: "100%",
         height: "37px",
         borderBottom: "1px solid #D5BC9C",
+        borderRight: "1px solid #D5BC9C",
         backgroundColor: "#EFE6DF",
         fontSize: "15px",
         fontWeight: 400,
         color: "#815333",
+        borderRadius: 0,
         "&:hover": {
             color: "#815333",
             backgroundColor: "#EFE6DF",
@@ -146,7 +152,9 @@ const useStyles = makeStyles((theme) => createStyles({
         height: "28px",
         textAlign: "left",
     },
-    popper: {},
+    popper: {
+        left: "-10px !important"
+    },
     modal: {
         display: 'flex',
         alignItems: 'center',
@@ -170,7 +178,7 @@ const useStyles = makeStyles((theme) => createStyles({
         width: "850px",
         height: "600px",
         backgroundColor: "#EFE6DF",
-        borderRadius: "4px",
+        borderRadius: "0",
         display: "flex",
         flexDirection: "column",
         justifyContent: "flex-start",
@@ -200,7 +208,7 @@ const useStyles = makeStyles((theme) => createStyles({
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: "35px",
+        height: "36px",
         fontSize: "18px",
         color: "#041715",
     },
@@ -524,6 +532,227 @@ const useStyles = makeStyles((theme) => createStyles({
         //         height: "10px",
         //     },
         // },
+    },
+    news: {
+        position: "relative",
+        display: "flex",
+        margin: "10px 0 0 0",
+        borderRadius: 0,
+        height: "222px",
+        minWidth: "186px",
+        alignItems: "center",
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        backgroundColor: "#092924",
+    },
+    news2: {
+        margin: "15px 0 0 0",
+    },
+    titleNews: {
+        textAlign: "center",
+        position: "relative",
+        top: "20px",
+        zIndex: 9,
+        fontWeight: 600,
+        fontSize: "15px",
+        color: "#A58A58",
+        padding: "0 0 0 0",
+        margin: "0 0 0 0",
+    },
+    newsBody: {
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+        bottom: "10px",
+        left: "10px",
+        backgroundColor: "#092924",
+        borderLeft: "2px solid #A58A58",
+        borderTop: "1px solid #A58A58",
+        borderBottom: "1px solid #A58A58",
+        borderRight: "1px solid #A58A58",
+        padding: "30px 0 0 0",
+        overflowX: "hidden",
+        overflowY: "auto",
+    },
+    email: {
+        height: "120px",
+        backgroundColor: "inherit",
+    },
+    titleEmail: {
+        top: "7px",
+        color: "#092924",
+        margin: "0 0 10px 0",
+        padding: 0,
+        zIndex: 9,
+        position: "relative",
+        fontSize: "15px",
+        textAlign: "center",
+        fontWeight: 600,
+        display: "flex",
+        flexDirection: "column",
+    },
+    buttonInputBlock: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    emailBody: {
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+        bottom: "10px",
+        left: "10px",
+        backgroundColor: "#A58A58",
+        padding: "0",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-start",
+    },
+    emailBody2: {
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+        bottom: "10px",
+        left: "10px",
+        backgroundColor: "#A58A58",
+        padding: "0",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        border: "1px solid #092924",
+    },
+    inputEmail: {
+        height: "100%",
+        border: 0,
+        background: "#D8C3A4",
+        padding: "0 12px",
+    },
+    buttonEmail: {
+        padding: "6px 24px",
+        border: "1px solid #D8C3A4",
+        borderRadius: 0
+    },
+    recipe: {
+        position: "relative",
+        marginTop: "16px",
+        width: "100%",
+        height: "327px",
+        backgroundColor: "#092924",
+        borderRadius: 0,
+    },
+    recipeInner: {
+        position: "absolute",
+        width: "auto",
+        height: "auto",
+        border: "1px solid #A58A58",
+        top: "10px",
+        left: "10px",
+        bottom: "10px",
+        right: "10px"
+    },
+    innerText: {
+        width: "100%",
+        height: "30px",
+        color: "#BA975F",
+        textAlign: "center",
+        position: "relative",
+        display: "block",
+        padding: "5px 0 0 0",
+        fontSize: "20px",
+        fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+    },
+    innerLine: {
+        position: "absolute",
+        top: "40px",
+        width: "calc(100% + 23px)",
+        height: "30px",
+        margin: "0 -11px 0 -11px",
+        background: "#D9C4A5",
+        color: "#092924",
+    },
+    divTea: {
+        color: "#092924",
+        fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+        fontSize: "15px",
+        position: "relative",
+        display: "inline-block",
+        width: "19.6%",
+        textAlign: "center",
+        padding: "5px 0 0 0",
+    },
+    black: {
+
+    },
+    green: {
+
+    },
+    red: {
+
+    },
+    lineTea: {
+        position: "relative",
+        width: "90%",
+        height: 0,
+        borderTop: "1px solid #BA975F",
+        top: "20px",
+        margin: "0 30px 0 40px",
+    },
+    lineTeaText: {
+        position: "absolute",
+        color: "#BA975F",
+        width: "180px",
+        textAlign: "center",
+        margin: "-10px 0 0 -90px",
+        background: "#092924",
+        left: "50%",
+        fontSize: "13px",
+    },
+    blockTea: {
+        position: "relative",
+        width: "calc(100% - 22px)",
+        height: "35px",
+        color: "#D9C4A5",
+        margin: "35px 11px 0 11px",
+    },
+    blockTeaOne: {
+
+    },
+    blockTeaTwo: {
+
+    },
+    blockTeaTree: {
+
+    },
+    blockTeaSpan: {
+        position: "relative",
+        display: "inline-block",
+        width: "19.6%",
+        height: "100%",
+        textAlign: "center",
+        padding: "9px 0 0 0",
+        fontSize: "13px",
+    },
+    lineTeaTextTwo: {
+        position: "absolute",
+        color: "#BA975F",
+        width: "140px",
+        textAlign: "center",
+        margin: "-10px 0 0 -70px",
+        background: "#092924",
+        left: "50%",
+        fontSize: "13px",
+    },
+    lineTeaTextTree: {
+        position: "absolute",
+        color: "#BA975F",
+        width: "150px",
+        textAlign: "center",
+        margin: "-10px 0 0 -75px",
+        background: "#092924",
+        left: "50%",
+        fontSize: "13px",
     }
 }));
 
@@ -864,17 +1093,16 @@ export default function Main() {
         if (completed < 2) {
             let number = completed + 1
 
-            if(number === 1) {
+            if (number === 1) {
                 setCompleted(number)
             }
 
-            if(number === 2) {
+            if (number === 2) {
                 if (address === "") {
                     setErrorAddress(true)
                     setHelperAddress("Введите адрес")
                     return
-                }
-                else {
+                } else {
                     setCompleted(number)
                 }
             }
@@ -1389,13 +1617,83 @@ export default function Main() {
                                         )
                                     }
                                 </Paper>
+
+                                <Paper className={clsx(classes.news, classes.news2)}>
+                                    <h5 className={classes.titleNews}>Новости</h5>
+                                    <div className={classes.newsBody}></div>
+                                </Paper>
+
+                                <Paper className={clsx(classes.news)}>
+                                    <h5 className={classes.titleNews}>Статьи</h5>
+                                    <div className={classes.newsBody}></div>
+                                </Paper>
+
+                                <Paper className={clsx(classes.news, classes.email)}>
+                                    <div className={classes.emailBody}>
+                                        <div className={classes.emailBody2}>
+                                            <h5 className={classes.titleEmail}>Подписаться на новости</h5>
+                                            <div className={classes.buttonInputBlock}>
+                                                <input className={classes.inputEmail} autoComplete="off" type="text" name="email"/>
+                                                <Button className={classes.buttonEmail}>Подписаться</Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Paper>
+
                             </Grid>
                         </Hidden>
 
                         <Grid item xs={12} sm={8} lg={8}>
+
                             <Paper className={classes.carousel}>
                                 <Carousel/>
                             </Paper>
+
+                            <Paper id="carouselCoffee" className={classes.recipe}>
+
+                                <div className={classes.recipeInner}>
+                                    <span className={classes.innerText}>КАК ПРАВИЛЬНО ЗАВАРИВАТЬ ЧАЙ</span>
+                                    <div className={classes.innerLine}>
+                                        <div className={clsx(classes.divTea, classes.black)}>ЧЁРНЫЙ</div>
+                                        <div className={clsx(classes.divTea, classes.green)}>ЗЕЛЁНЫЙ</div>
+                                        <div className={clsx(classes.divTea, classes.red)}>КРАСНЫЙ</div>
+                                        <div className={clsx(classes.divTea, classes.yellow)}>ЖЁЛТЫЙ</div>
+                                        <div className={clsx(classes.divTea, classes.white)}>БЕЛЫЙ</div>
+                                        <div className={classes.lineTea}>
+                                            <span className={classes.lineTeaText}>Заварки на 200 мл. воды</span>
+                                        </div>
+                                        <div className={clsx(classes.blockTea,classes.blockTeaOne)}>
+                                            <span className={classes.blockTeaSpan}>1 ч.ложка</span>
+                                            <span className={classes.blockTeaSpan}>3 гр.</span>
+                                            <span className={classes.blockTeaSpan}>2 гр.</span>
+                                            <span className={classes.blockTeaSpan}>4 гр.</span>
+                                            <span className={classes.blockTeaSpan}>2 ч.ложки</span>
+                                        </div>
+                                        <div className={classes.lineTea}>
+                                            <span className={classes.lineTeaTextTwo}>Температура воды</span>
+                                        </div>
+                                        <div className={clsx(classes.blockTea,classes.blockTeaTwo)}>
+                                            <span className={classes.blockTeaSpan}>90-100 ℃</span>
+                                            <span className={classes.blockTeaSpan}>80 ℃</span>
+                                            <span className={classes.blockTeaSpan}>95-97 ℃</span>
+                                            <span className={classes.blockTeaSpan}>85 ℃</span>
+                                            <span className={classes.blockTeaSpan}>50-70 ℃</span>
+                                        </div>
+                                        <div className={classes.lineTea}>
+                                            <span className={classes.lineTeaTextTree}>Время заваривания</span>
+                                        </div>
+                                        <div className={clsx(classes.blockTea,classes.blockTeaTree)}>
+                                            <span className={classes.blockTeaSpan}>4-7 мин.</span>
+                                            <span className={classes.blockTeaSpan}>5 мин.</span>
+                                            <span className={classes.blockTeaSpan}>5 мин.</span>
+                                            <span className={classes.blockTeaSpan}>8-10 мин.</span>
+                                            <span className={classes.blockTeaSpan}>5 мин.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </Paper>
+
                         </Grid>
 
                     </Grid>

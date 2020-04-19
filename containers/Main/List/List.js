@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => createStyles({
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: "35px",
+        height: "36px",
         fontFamily: "Roboto, Helvetica, Arial, sans-serif",
         fontStyle: "normal",
         fontWeight: 500,
@@ -32,10 +32,10 @@ const useStyles = makeStyles((theme) => createStyles({
     body: {
         position: "relative",
         width: "100%",
-        height: "calc(100% - 35px)",
+        height: "calc(100% - 36px)",
         overflowX: "hidden",
         overflowY: "auto",
-        borderTop: "1px solid #ccc",
+        borderTop: "1px solid #D5BC9C",
         padding: "5px 15px",
     },
     subgroup: {
