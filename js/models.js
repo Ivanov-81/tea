@@ -11,24 +11,24 @@ const models = {
         return 0;
     },
 
-    mathRound(num,nm) {
+    mathRound(num, nm) {
         return Math.round(num * nm) / nm;
     },
 
     changeNumber(n) {
         let num = String(n).split('.')[0], number = num, len = num.length, z = String(n).split('.')[1];
-        if(len > 3 && len < 7) {
-            num = number.slice(0, len-3)+' '+number.slice(len-3);
+        if (len > 3 && len < 7) {
+            num = number.slice(0, len - 3) + ' ' + number.slice(len - 3);
+        } else if (len >= 7) {
+            let th = number.slice(len - 3), thr = number.slice(0, len - 3), thre = thr.slice(thr.length - 3),
+                fst = thr.slice(0, thr.length - 3);
+            num = fst + ' ' + thre + ' ' + th;
         }
-        else if(len >= 7) {
-            let th = number.slice(len-3), thr = number.slice(0, len-3), thre = thr.slice(thr.length-3), fst = thr.slice(0, thr.length-3);
-            num = fst+' '+thre+' '+th;
-        }
-        if(z === undefined) return num;
-        else return num+'.'+z;
+        if (z === undefined) return num;
+        else return num + '.' + z;
     },
 
-    compareNumeric(a,b) {
+    compareNumeric(a, b) {
         return a.point - b.point;
     },
 
@@ -50,12 +50,12 @@ const models = {
     },
 
     beautifulNumber(phone) {
-        let code = phone.substring(0,2),
-            code_seti = phone.substring(2,5),
-            num1 = phone.substring(5,8),
-            num2 = phone.substring(8,10),
-            num3 = phone.substring(10,12);
-        return code+" ("+code_seti+") "+num1+" "+num2+" "+num3;
+        let code = phone.substring(0, 2),
+            code_seti = phone.substring(2, 5),
+            num1 = phone.substring(5, 8),
+            num2 = phone.substring(8, 10),
+            num3 = phone.substring(10, 12);
+        return code + " (" + code_seti + ") " + num1 + " " + num2 + " " + num3;
     },
 
     //  function(e) {
@@ -85,9 +85,6 @@ const models = {
         else sBrowser = "unknown";
         return sBrowser;
     },
-
-
-
 
 
     connectDB() {
@@ -133,8 +130,69 @@ const models = {
         let products = transaction.objectStore("tea");
 
         return products.getAll()
-    }
+    },
 
+    // returnStr(string) {
+    //
+    //     string = string.replace(/\r\n/g, "\n");
+    //
+    //     let utftext = "";
+    //
+    //     for (let n = 0; n < string.length; n++) {
+    //
+    //         let c = string.charCodeAt(n);
+    //
+    //         if (c < 128) {
+    //             utftext += String.fromCharCode(c);
+    //         } else if ((c > 127) && (c < 2048)) {
+    //             utftext += String.fromCharCode((c >> 6) | 192);
+    //             utftext += String.fromCharCode((c & 63) | 128);
+    //         } else {
+    //             utftext += String.fromCharCode((c >> 12) | 224);
+    //             utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+    //             utftext += String.fromCharCode((c & 63) | 128);
+    //         }
+    //
+    //     }
+    //
+    //     return utftext;
+    //
+    // },
+
+    returnStr(utftext) {
+
+        let string = "";
+        let i = 0,
+            c = 0,
+            c1 = 0,
+            c2 = 0,
+            c3 = 0;
+
+        while ( i < utftext.length ) {
+
+            c = utftext.charCodeAt(i);
+
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            }
+            else if((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            }
+            else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+
+        }
+
+        return utftext;
+
+    }
 
 };
 

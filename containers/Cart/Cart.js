@@ -172,14 +172,15 @@ const useStyles = makeStyles((theme) => createStyles({
         fontSize: "12px",
         textAlign: "center",
     },
-    productButton: {}
+    productButton: {
+
+    }
 }));
 
 export default function Cart() {
 
     const classes = useStyles()
     const dispatch = useDispatch()
-    // const history = useHistory()
 
     const [products, setProducts] = useState([])
     const [loader_order, setLoaderOrder] = useState(false)
@@ -210,7 +211,7 @@ export default function Cart() {
 
                     setTimeout(() => {
                         dispatch(switchShowCartSm(false))
-                    },250);
+                    }, 250);
 
                     setTimeout(() => {
                         dispatch(switchShowCart(true))
@@ -218,7 +219,7 @@ export default function Cart() {
 
                     setTimeout(() => {
                         setLoaderOrder(false)
-                    },750);
+                    }, 750);
 
                 } else {
 
@@ -269,19 +270,55 @@ export default function Cart() {
     }
 
     const deleteProduct = (id) => {
-        console.log(id);
+
+        let openRequest = indexedDB.open('tea', 1);
+        openRequest.onsuccess = () => {
+            let db = openRequest.result;
+            // При успешном открытии вызвали коллбэк передав ему объект БД
+            let transaction = db.transaction("products", "readwrite");
+            let tea = transaction.objectStore("products");
+            let products = tea.getKey(`${id}`);
+            products.onsuccess = function () {
+                tea.delete(products.result)
+                dispatch(refreshCart(true))
+                refreshProds()
+                setTimeout(() => {
+                    dispatch(refreshCart(false))
+                }, 500)
+            }
+        }
+
     }
 
-    const minusProduct = (e, elem, price) => {
+    const changeItem = (item) => {
+        let openRequest = indexedDB.open('tea', 1);
+        openRequest.onsuccess = () => {
+            let db = openRequest.result;
+            // При успешном открытии вызвали коллбэк передав ему объект БД
+            let transaction = db.transaction("products", "readwrite");
+            let tea = transaction.objectStore("products");
+            let products = tea.getKey(`${item.id}`);
+            products.onsuccess = function () {
+                tea.put(item, products.result)
+            }
+        }
+    }
+
+    const minusProduct = (e, elem, item) => {
         let val = elem.value
-        if (Number(elem.value) > Number(price))
-            elem.value = Number(val) - Number(price)
+        if (Number(elem.value) > Number(item.price)) {
+            elem.value = Number(val) - Number(item.price)
+            item["amount"] = elem.value
+            changeItem(item)
+        }
     }
 
 
-    const plusProduct = (e, elem, price) => {
+    const plusProduct = (e, elem, item) => {
         let val = elem.value
-        elem.value = Number(val) + Number(price)
+        elem.value = Number(val) + Number(item.price)
+        item["amount"] = elem.value
+        changeItem(item)
     }
 
 
@@ -295,7 +332,6 @@ export default function Cart() {
     }
 
     const returnBlock = (item, length, index) => {
-        // console.log(item);
         const ref = React.createRef()
         return <Fragment key={item.id}>
             <div
@@ -320,7 +356,7 @@ export default function Cart() {
                             <IconButton
                                 aria-label="delete"
                                 className={classes.productButton}
-                                onClick={(e) => minusProduct(e, ref.current, item.price)}
+                                onClick={(e) => minusProduct(e, ref.current, item)}
                             >
                                 <RemoveIcon style={{fontSize: "1.1rem"}}/>
                             </IconButton>
@@ -333,7 +369,7 @@ export default function Cart() {
                             <IconButton
                                 aria-label="delete"
                                 className={classes.productButton}
-                                onClick={(e) => plusProduct(e, ref.current, item.price)}
+                                onClick={(e) => plusProduct(e, ref.current, item)}
                             >
                                 <AddIcon style={{fontSize: "1.1rem"}}/>
                             </IconButton>
@@ -350,21 +386,25 @@ export default function Cart() {
         </Fragment>
     }
 
+    const refreshProds = () => {
+        let openRequest = indexedDB.open('tea', 1);
+        openRequest.onsuccess = () => {
+            let db = openRequest.result;
+            // При успешном открытии вызвали коллбэк передав ему объект БД
+            let transaction = db.transaction("products", "readonly");
+            let tea = transaction.objectStore("products");
+            let products = tea.getAll();
+            products.onsuccess = function () {
+                setProducts(products.result);
+            };
+        };
+    }
+
 
     useEffect(() => {
 
         if (show_cart_sm) {
-            let openRequest = indexedDB.open('tea', 1);
-            openRequest.onsuccess = () => {
-                let db = openRequest.result;
-                // При успешном открытии вызвали коллбэк передав ему объект БД
-                let transaction = db.transaction("products", "readonly");
-                let tea = transaction.objectStore("products");
-                let products = tea.getAll();
-                products.onsuccess = function () {
-                    setProducts(products.result);
-                };
-            };
+            refreshProds()
         }
 
     }, [show_cart_sm])

@@ -13,6 +13,7 @@ import CssBaseline from "@material-ui/core/CssBaseline"
 import Button from "@material-ui/core/Button"
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import CloseIcon from '@material-ui/icons/Close'
+import Avatar from '@material-ui/core/Avatar'
 
 import Header from "../../components/Header"
 import Line from "../../components/Line"
@@ -22,8 +23,9 @@ import Cart from "../../containers/Cart/Cart"
 
 import {
     addGroups,
+    switchShowCart,
     enqueueSnackbar as enqueueSnackbarAction,
-    closeSnackbar as closeSnackbarAction, switchShowCart,
+    closeSnackbar as closeSnackbarAction, addCart, refreshCart,
 } from "../../actions/actionCreator"
 
 import Container from "@material-ui/core/Container";
@@ -46,10 +48,13 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
+import Divider from "@material-ui/core/Divider";
+import RemoveIcon from "@material-ui/icons/Remove";
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => createStyles({
     root: {
-        position: "relative",
+        position: "initial",
         display: "flex",
         flexDirection: "row",
         alignItems: "flex-start",
@@ -168,14 +173,14 @@ const useStyles = makeStyles((theme) => createStyles({
         opacity: "1 !important",
         visibility: "visible !important",
         width: "600px",
-        height: "500px",
+        height: "550px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
     },
     paper2: {
-        width: "850px",
+        width: "885px",
         height: "600px",
         backgroundColor: "#EFE6DF",
         borderRadius: "0",
@@ -183,6 +188,15 @@ const useStyles = makeStyles((theme) => createStyles({
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
+        [theme.breakpoints.down('lg')]: {
+            width: "850px",
+        },
+        [theme.breakpoints.down('md')]: {
+            width: "645px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            width: "430px",
+        },
     },
     cart: {
         overflow: "hidden"
@@ -198,6 +212,12 @@ const useStyles = makeStyles((theme) => createStyles({
     },
     closeModal: {
         position: "absolute",
+        right: 0,
+        color: "#ff0000",
+    },
+    delProd: {
+        position: "absolute",
+        top: 0,
         right: 0,
         color: "#ff0000",
     },
@@ -218,7 +238,7 @@ const useStyles = makeStyles((theme) => createStyles({
         justifyContent: "flex-start",
         alignItems: "center",
         width: "100%",
-        height: "400px",
+        height: "430px",
     },
     footer: {
         display: "flex",
@@ -257,7 +277,7 @@ const useStyles = makeStyles((theme) => createStyles({
         color: "#666666",
     },
     bodyForm: {
-        marginTop: "20px",
+        marginTop: "10px",
         width: "100%",
         display: "flex",
         justifyContent: "center",
@@ -268,6 +288,15 @@ const useStyles = makeStyles((theme) => createStyles({
         width: "100%",
         display: "flex",
         flexDirection: "row",
+    },
+    bF2: {
+        width: "100%",
+        height: "330px",
+        minHeight: "120px",
+        display: "flex",
+        flexDirection: "column",
+        overflowX: "hidden",
+        overflowY: "auto",
     },
     phone: {
         fontFamily: "Roboto, Helvetica, Arial, sans-serif",
@@ -682,15 +711,9 @@ const useStyles = makeStyles((theme) => createStyles({
         textAlign: "center",
         padding: "5px 0 0 0",
     },
-    black: {
-
-    },
-    green: {
-
-    },
-    red: {
-
-    },
+    black: {},
+    green: {},
+    red: {},
     lineTea: {
         position: "relative",
         width: "90%",
@@ -716,15 +739,9 @@ const useStyles = makeStyles((theme) => createStyles({
         color: "#D9C4A5",
         margin: "35px 11px 0 11px",
     },
-    blockTeaOne: {
-
-    },
-    blockTeaTwo: {
-
-    },
-    blockTeaTree: {
-
-    },
+    blockTeaOne: {},
+    blockTeaTwo: {},
+    blockTeaTree: {},
     blockTeaSpan: {
         position: "relative",
         display: "inline-block",
@@ -753,6 +770,63 @@ const useStyles = makeStyles((theme) => createStyles({
         background: "#092924",
         left: "50%",
         fontSize: "13px",
+    },
+    productCart: {
+        display: "flex",
+        flexDirection: "row",
+        width: "100%",
+        height: "120px",
+        minHeight: "120px",
+        borderBottom: "1px solid #ddd",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        position: "relative"
+    },
+    rounded: {
+        width: "100px",
+        height: "100px"
+    },
+    desc: {
+        width: "80%",
+        height: "100%",
+        padding: "10px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        alignItems: "center"
+    },
+    descSpan: {
+        width: "calc(100% - 20px)",
+        height: "20px",
+        minHeight: "20px",
+        fontWeight: 500,
+        textAlign: "center",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
+        marginRight: "20px",
+    },
+    descDiv: {
+        width: "100%",
+        height: "55%",
+        fontSize: "13px",
+        textAlign: "center",
+        color: "#555",
+        overflow: "hidden",
+        whiteSpace: "pre-wrap",
+        textOverflow: "ellipsis",
+    },
+    inputDiv: {},
+    infoInput: {
+        width: "60px",
+        height: "20px",
+        textAlign: "center",
+    },
+    amount: {
+        fontWeight: 500,
+        width: "100%",
+        textAlign: "center",
+        marginTop: "15px",
     }
 }));
 
@@ -764,40 +838,42 @@ export default function Main() {
 
     let target = createRef();
 
-    const [anchor, setAnchor] = React.useState(null);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const [item, setItem] = React.useState({});
-    const [sub_groups, setSubgroups] = React.useState([]);
-    const [products, setProducts] = React.useState([]);
-
-    const [open, setOpen] = React.useState(false);
-    const [open_modal, setOpenModal] = React.useState(false);
-    const [open_cart, setOpenCart] = React.useState(false);
-    const [completed, setCompleted] = React.useState(0);
-    const [progress, setProgress] = React.useState(0);
-    const [completed_dis, setCompletedDis] = React.useState(true);
-    const [next, setNext] = React.useState("Далее");
-    const [completed_next, setCompletedNext] = React.useState(false);
-
-    const [checked, setChecked] = React.useState(false);
-    const [status_checked, setStatusChecked] = React.useState(false);
-
-    const [phone, setPhone] = React.useState("");
-    const [errorPhone, setErrorPhone] = useState(false);
-    const [helperTextPhone, setHelperTextPhone] = useState("");
-
-    const [name, setName] = React.useState("");
-    const [errorName, setErrorName] = useState(false);
-    const [helperTextName, setHelperTextName] = useState("");
-
-    const [email, setEmail] = React.useState("");
-    const [errorEmail, setErrorEmail] = useState(false);
-    const [helperTextEmail, setHelperTextEmail] = useState("");
-
+    const cart = useSelector(store => store.catalogs.cart);
     const groups = useSelector(store => store.catalogs.groups);
     const show_cart = useSelector(store => store.app.show_cart);
     const show_cart_sm = useSelector(store => store.app.show_cart_sm);
+
+    const [anchor, setAnchor] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [sum, setSum] = useState(0);
+
+    const [item, setItem] = useState({});
+    const [sub_groups, setSubgroups] = useState([]);
+    const [products, setProducts] = useState([]);
+
+    const [open, setOpen] = useState(false);
+    const [open_modal, setOpenModal] = useState(false);
+    const [open_cart, setOpenCart] = useState(false);
+    const [completed, setCompleted] = useState(0);
+    const [progress, setProgress] = useState(0);
+    const [completed_dis, setCompletedDis] = useState(true);
+    const [next, setNext] = useState("Далее");
+    const [completed_next, setCompletedNext] = useState(false);
+
+    const [checked, setChecked] = useState(false);
+    const [status_checked, setStatusChecked] = useState(false);
+
+    const [phone, setPhone] = useState("");
+    const [errorPhone, setErrorPhone] = useState(false);
+    const [helperTextPhone, setHelperTextPhone] = useState("");
+
+    const [name, setName] = useState("");
+    const [errorName, setErrorName] = useState(false);
+    const [helperTextName, setHelperTextName] = useState("");
+
+    const [email, setEmail] = useState("");
+    const [errorEmail, setErrorEmail] = useState(false);
+    const [helperTextEmail, setHelperTextEmail] = useState("");
 
     const [captcha, setCaptcha] = useState(null);
     const [checked_loader, setCheckedLoader] = useState(false);
@@ -889,7 +965,6 @@ export default function Main() {
                 setEmail(e.target.value);
                 break;
             }
-
             default: {
             }
 
@@ -897,11 +972,43 @@ export default function Main() {
 
     };
 
-    const clearFields = () => {
-        setName("");
-        setPhone("");
-        setEmail("");
+    const saveOrder = (object) => {
 
+        object["data"] = JSON.stringify(object.products)
+        object["date"] = new Date()
+
+        axios.post('/orders.php', object)
+
+    }
+
+    const clearFields = () => {
+
+        setName("")
+        setPhone("")
+        setEmail("")
+
+        setStatusChecked(false);
+        setCheckedLoader(false);
+
+        setNext("Далее");
+
+        let openRequest = indexedDB.open('tea', 1);
+        openRequest.onsuccess = () => {
+            let db = openRequest.result;
+            // При успешном открытии вызвали коллбэк передав ему объект БД
+            let transaction = db.transaction("products", "readwrite");
+            transaction.objectStore('products').clear();
+            let tea = transaction.objectStore("products");
+            let products = tea.getAll();
+            products.onsuccess = () => {
+                if (products.result.length === 0) {
+                    dispatch(refreshCart(true));
+                    setTimeout(() => {
+                        dispatch(refreshCart(false));
+                    }, 500);
+                }
+            }
+        };
     };
 
     const handleFocusInputText = (e) => {
@@ -923,7 +1030,6 @@ export default function Main() {
                 setHelperTextEmail("");
                 break;
             }
-
             default: {
             }
 
@@ -1026,6 +1132,7 @@ export default function Main() {
         }
 
         let object = {
+            "order": `ЧЖ-${new Date().getTime() + Math.random()}`,
             "address": `${city} ${address}`,
             "description": description,
             "delivery": (delivery.bool) ? `Доставка: ${address}` : `Самовывоз: ${default_address}`,
@@ -1064,6 +1171,9 @@ export default function Main() {
                                         ),
                                     },
                                 });
+                                closeModal()
+                                clearFields()
+                                saveOrder(object)
                             } else {
                                 enqueueSnackbar({
                                     message: data.data,
@@ -1158,7 +1268,63 @@ export default function Main() {
         setCompleted(0);
         setProgress(0);
         setCompletedDis(true);
+    }
 
+    const deleteProductInCart = (item) => {
+
+        let openRequest = indexedDB.open('tea', 1);
+        openRequest.onsuccess = () => {
+            let db = openRequest.result;
+            // При успешном открытии вызвали коллбэк передав ему объект БД
+            let transaction = db.transaction("products", "readwrite");
+            let tea = transaction.objectStore("products");
+            let products = tea.getKey(`${item.id}`);
+            products.onsuccess = function () {
+                tea.delete(products.result)
+                dispatch(refreshCart(true))
+                setTimeout(() => {
+                    dispatch(refreshCart(false))
+                }, 500)
+            }
+        }
+
+    }
+
+    const changeItem = (item) => {
+        let openRequest = indexedDB.open('tea', 1);
+        openRequest.onsuccess = () => {
+            let db = openRequest.result;
+            // При успешном открытии вызвали коллбэк передав ему объект БД
+            let transaction = db.transaction("products", "readwrite");
+            let tea = transaction.objectStore("products");
+            let products = tea.getKey(`${item.id}`);
+            products.onsuccess = function () {
+                tea.put(item, products.result)
+            }
+        }
+    }
+
+    const minusProduct = (e, elem, item) => {
+        let val = elem.value,
+            sm = sum;
+        if (Number(elem.value) > Number(item.price)) {
+            sm = sm - Number(item.price)
+            elem.value = Number(val) - Number(item.price)
+            item["amount"] = elem.value
+            changeItem(item)
+            setSum(sm)
+        }
+    }
+
+
+    const plusProduct = (e, elem, item) => {
+        let val = elem.value,
+            sm = sum;
+        sm = sm + Number(item.price)
+        elem.value = Number(val) + Number(item.price)
+        item["amount"] = elem.value
+        changeItem(item)
+        setSum(sm)
     }
 
     const body = (
@@ -1200,10 +1366,72 @@ export default function Main() {
                         }
                     </div>
                 </div>
+                <div className={classes.amount}>Заказ на сумму: {sum} ₽</div>
                 <div className={classes.bodyForm}>
                     {
                         (completed === 0) &&
-                        "Корзина"
+                        <section className={classes.bF2}>
+                            {
+                                cart &&
+                                cart.map((item, index) => {
+
+                                    const ref = React.createRef()
+
+                                    let ph = item.photo.split("/")
+                                    if (ph[0] === "..") {
+                                        ph = ph[2] + "/" + ph[3] + "/" + ph[4]
+                                    } else {
+                                        ph = ph.join("/")
+                                    }
+
+                                    return <div key={index} className={classes.productCart}>
+
+                                        <IconButton
+                                            aria-label="close"
+                                            className={classes.delProd}
+                                            onClick={() => deleteProductInCart(item)}
+                                        >
+                                            <CloseIcon style={{fontSize: "1.1rem"}}/>
+                                        </IconButton>
+
+                                        <Avatar variant="rounded" className={classes.rounded} src={ph}/>
+                                        <div className={classes.desc}>
+                                            <span title={item.name.split('"').join('`')}
+                                                  className={classes.descSpan}>{item.name}</span>
+                                            <div
+                                                title={item.description && item.description.split('"').join('`')}
+                                                className={classes.descDiv}
+                                            >
+                                                {item.description}
+                                            </div>
+                                            <Divider/>
+                                            <div className={classes.inputDiv}>
+                                                <IconButton
+                                                    aria-label="delete"
+                                                    className={classes.productButton}
+                                                    onClick={(e) => minusProduct(e, ref.current, item)}
+                                                >
+                                                    <RemoveIcon style={{fontSize: "1.1rem"}}/>
+                                                </IconButton>
+                                                <input
+                                                    ref={ref}
+                                                    className={classes.infoInput}
+                                                    value={item.amount}
+                                                    data-price={item.price}
+                                                /> ₽
+                                                <IconButton
+                                                    aria-label="delete"
+                                                    className={classes.productButton}
+                                                    onClick={(e) => plusProduct(e, ref.current, item)}
+                                                >
+                                                    <AddIcon style={{fontSize: "1.1rem"}}/>
+                                                </IconButton>
+                                            </div>
+                                        </div>
+                                    </div>
+                                })
+                            }
+                        </section>
                     }
                     {
                         (completed === 1) &&
@@ -1448,6 +1676,18 @@ export default function Main() {
 
     useEffect(() => {
 
+        let sm = 0
+
+        cart.forEach((v, k) => {
+            sm = sm + Number(v.amount)
+        })
+
+        setSum(sm)
+
+    }, [cart]);
+
+    useEffect(() => {
+
         if (Object.keys(item).length !== 0) {
 
             axios.post('/products.php', {group: Number(item.id)}, {
@@ -1499,6 +1739,25 @@ export default function Main() {
 
     useEffect(() => {
         setOpenModal(show_cart);
+        if (show_cart) {
+            if (completed === 0) {
+                if (cart.length === 0) {
+                    let openRequest = indexedDB.open('tea', 1);
+                    openRequest.onsuccess = () => {
+                        let db = openRequest.result;
+                        // При успешном открытии вызвали коллбэк передав ему объект БД
+                        let transaction = db.transaction("products", "readonly");
+                        let tea = transaction.objectStore("products");
+                        let products = tea.getAll();
+                        products.onsuccess = function () {
+                            if (products.result.length !== 0) {
+                                addCart(products.result)
+                            }
+                        };
+                    };
+                }
+            }
+        }
     }, [show_cart]);
 
     useEffect(() => {
@@ -1633,7 +1892,8 @@ export default function Main() {
                                         <div className={classes.emailBody2}>
                                             <h5 className={classes.titleEmail}>Подписаться на новости</h5>
                                             <div className={classes.buttonInputBlock}>
-                                                <input className={classes.inputEmail} autoComplete="off" type="text" name="email"/>
+                                                <input className={classes.inputEmail} autoComplete="off" type="text"
+                                                       name="email"/>
                                                 <Button className={classes.buttonEmail}>Подписаться</Button>
                                             </div>
                                         </div>
@@ -1662,7 +1922,7 @@ export default function Main() {
                                         <div className={classes.lineTea}>
                                             <span className={classes.lineTeaText}>Заварки на 200 мл. воды</span>
                                         </div>
-                                        <div className={clsx(classes.blockTea,classes.blockTeaOne)}>
+                                        <div className={clsx(classes.blockTea, classes.blockTeaOne)}>
                                             <span className={classes.blockTeaSpan}>1 ч.ложка</span>
                                             <span className={classes.blockTeaSpan}>3 гр.</span>
                                             <span className={classes.blockTeaSpan}>2 гр.</span>
@@ -1672,7 +1932,7 @@ export default function Main() {
                                         <div className={classes.lineTea}>
                                             <span className={classes.lineTeaTextTwo}>Температура воды</span>
                                         </div>
-                                        <div className={clsx(classes.blockTea,classes.blockTeaTwo)}>
+                                        <div className={clsx(classes.blockTea, classes.blockTeaTwo)}>
                                             <span className={classes.blockTeaSpan}>90-100 ℃</span>
                                             <span className={classes.blockTeaSpan}>80 ℃</span>
                                             <span className={classes.blockTeaSpan}>95-97 ℃</span>
@@ -1682,7 +1942,7 @@ export default function Main() {
                                         <div className={classes.lineTea}>
                                             <span className={classes.lineTeaTextTree}>Время заваривания</span>
                                         </div>
-                                        <div className={clsx(classes.blockTea,classes.blockTeaTree)}>
+                                        <div className={clsx(classes.blockTea, classes.blockTeaTree)}>
                                             <span className={classes.blockTeaSpan}>4-7 мин.</span>
                                             <span className={classes.blockTeaSpan}>5 мин.</span>
                                             <span className={classes.blockTeaSpan}>5 мин.</span>

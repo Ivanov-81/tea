@@ -15,7 +15,7 @@ import IconButton from "@material-ui/core/IconButton"
 import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone'
 import Badge from '@material-ui/core/Badge'
 import models from "../js/models";
-import {switchShowCartSm} from "../actions/actionCreator";
+import {addCart, switchShowCartSm} from "../actions/actionCreator";
 
 const useStyles = makeStyles((theme) => createStyles({
     root: {
@@ -176,7 +176,9 @@ export default function Tea(props) {
             let tea = transaction.objectStore("products");
             let products = tea.getAll();
             products.onsuccess = function () {
+                console.log(products.result)
                 setBasket(products.result)
+                dispatch(addCart(products.result))
             };
 
         };
