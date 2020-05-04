@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone = $postData['phone'];
     $phone_template = $postData['phone_template'];
     $products = $postData['products'];
+    $order = $postData['order'];
     $string = "";
     $amount = 0;
 
@@ -47,9 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail->setFrom('chainaya.zhemchuzhina@gmail.com', 'Чайная жемчужина'); // Адрес самой почты и имя отправителя
 
         // Получатель письма
-        $mail->addAddress('ivanov-81@mail.ru');
         $mail->addAddress('gmiolegv@gmail.com');
-//        $mail->addAddress('chainaya.zhemchuzhina@gmail.com');
+        //$mail->addAddress('chainaya.zhemchuzhina@gmail.com');
         $mail->addAddress($email);
 
 
@@ -59,9 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // -----------------------
         $mail->isHTML(true);
         $message = '<div style="width: calc(100% - 60px); height: 550px">
-                    <h2>Заявка на доставку из магазина "Чайная жемчужина"</h2>
+                    <h2>Заказ на доставку из магазина "Чайная жемчужина"</h2>
                     <div>
-                        <p><b>'.$name.'</b> прислал(а) заявку с сайта "Чайная жемчужина"</p>
+                        <h3>Заказ №'.$order.'</h3>
+                        <p><b>'.$name.'</b> прислал(а) заказ с сайта "Чайная жемчужина"</p>
                         <p>Адрес доставки: '.$address.'</a></p>
                         <p>Номер телефона: <a href="tel:'.$phone.'">'.$phone_template.'</a></p>
                         <p>'.$string.'</p>
