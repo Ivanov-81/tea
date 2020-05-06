@@ -32,8 +32,18 @@ const tutorialSteps = [
 const useStyles = makeStyles(theme => ({
     root: {
         maxWidth: "100%",
+        height: "422px",
         flexGrow: 1,
         position: "relative",
+        [theme.breakpoints.down('lg')]: {
+            height: "422px",
+        },
+        [theme.breakpoints.down('md')]: {
+            height: "422px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            height: "200px",
+        },
     },
     header: {
         display: 'flex',
@@ -50,6 +60,15 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         borderTopLeftRadius: "4px",
         borderTopRightRadius: "4px",
+        [theme.breakpoints.down('lg')]: {
+            height: "420px",
+        },
+        [theme.breakpoints.down('md')]: {
+            height: "420px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            height: "200px",
+        },
     },
     stepper: {
         position: "absolute",

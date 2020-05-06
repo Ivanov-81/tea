@@ -25,7 +25,7 @@ import {
     addGroups,
     switchShowCart,
     enqueueSnackbar as enqueueSnackbarAction,
-    closeSnackbar as closeSnackbarAction, addCart, refreshCart,
+    closeSnackbar as closeSnackbarAction, addCart, refreshCart, switchMenu,
 } from "../../actions/actionCreator"
 
 import Container from "@material-ui/core/Container";
@@ -51,6 +51,7 @@ import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import Divider from "@material-ui/core/Divider";
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
+import Menu from "./Menu/Menu";
 
 const useStyles = makeStyles((theme) => createStyles({
     root: {
@@ -64,6 +65,15 @@ const useStyles = makeStyles((theme) => createStyles({
         padding: "55px 23px 55px 23px",
         flexGrow: 1,
         overflow: "hidden",
+        [theme.breakpoints.down('lg')]: {
+            padding: "55px 23px 55px 23px",
+        },
+        [theme.breakpoints.down('md')]: {
+            padding: "55px 23px 55px 23px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            padding: "55px 23px 20px 23px",
+        },
     },
     menu: {
         height: "222px",
@@ -85,7 +95,16 @@ const useStyles = makeStyles((theme) => createStyles({
         alignItems: "center",
         justifyContent: "center",
         padding: "0px",
-        borderRadius: 0
+        borderRadius: 0,
+        [theme.breakpoints.down('lg')]: {
+            height: "422px",
+        },
+        [theme.breakpoints.down('md')]: {
+            height: "422px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            height: "200px",
+        },
     },
     block: {
         position: "relative",
@@ -209,6 +228,17 @@ const useStyles = makeStyles((theme) => createStyles({
         right: "10px",
         width: "350px",
         height: "350px",
+        [theme.breakpoints.down('lg')]: {
+
+        },
+        [theme.breakpoints.down('md')]: {
+
+        },
+        [theme.breakpoints.down('sm')]: {
+            top: "50px",
+            right: "50%",
+            marginRight: "-175px"
+        },
     },
     closeModal: {
         position: "absolute",
@@ -670,6 +700,15 @@ const useStyles = makeStyles((theme) => createStyles({
         height: "327px",
         backgroundColor: "#092924",
         borderRadius: 0,
+        [theme.breakpoints.down('lg')]: {
+            height: "327px",
+        },
+        [theme.breakpoints.down('md')]: {
+            height: "327px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            height: "245px",
+        },
     },
     recipeInner: {
         position: "absolute",
@@ -687,10 +726,20 @@ const useStyles = makeStyles((theme) => createStyles({
         color: "#BA975F",
         textAlign: "center",
         position: "relative",
-        display: "block",
-        padding: "5px 0 0 0",
         fontSize: "20px",
         fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        [theme.breakpoints.down('lg')]: {
+            height: "30px",
+        },
+        [theme.breakpoints.down('md')]: {
+            height: "30px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            fontSize: "13px",
+        },
     },
     innerLine: {
         position: "absolute",
@@ -700,6 +749,16 @@ const useStyles = makeStyles((theme) => createStyles({
         margin: "0 -11px 0 -11px",
         background: "#D9C4A5",
         color: "#092924",
+        [theme.breakpoints.down('lg')]: {
+            height: "30px",
+        },
+        [theme.breakpoints.down('md')]: {
+            height: "30px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            height: "30px",
+            top: "30px",
+        },
     },
     divTea: {
         color: "#092924",
@@ -707,9 +766,23 @@ const useStyles = makeStyles((theme) => createStyles({
         fontSize: "15px",
         position: "relative",
         display: "inline-block",
-        width: "19.6%",
+        width: "20%",
+        height: "100%",
         textAlign: "center",
         padding: "5px 0 0 0",
+        [theme.breakpoints.down('lg')]: {
+            fontSize: "15px",
+            width: "20%",
+        },
+        [theme.breakpoints.down('md')]: {
+            fontSize: "13px",
+            width: "20%",
+        },
+        [theme.breakpoints.down('sm')]: {
+            fontSize: "11px",
+            padding: "8px 0 0 0",
+            width: "20%",
+        },
     },
     black: {},
     green: {},
@@ -721,6 +794,15 @@ const useStyles = makeStyles((theme) => createStyles({
         borderTop: "1px solid #BA975F",
         top: "20px",
         margin: "0 30px 0 40px",
+        [theme.breakpoints.down('lg')]: {
+            margin: "0 30px 0 40px",
+        },
+        [theme.breakpoints.down('md')]: {
+            margin: "0 30px 0 40px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            margin: "0 30px 0 15px",
+        },
     },
     lineTeaText: {
         position: "absolute",
@@ -731,6 +813,17 @@ const useStyles = makeStyles((theme) => createStyles({
         background: "#092924",
         left: "50%",
         fontSize: "13px",
+        [theme.breakpoints.down('lg')]: {
+            fontSize: "13px",
+        },
+        [theme.breakpoints.down('md')]: {
+            fontSize: "13px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            fontSize: "12px",
+            margin: "-9px 0 0 -83px",
+            width: "165px"
+        },
     },
     blockTea: {
         position: "relative",
@@ -738,6 +831,16 @@ const useStyles = makeStyles((theme) => createStyles({
         height: "35px",
         color: "#D9C4A5",
         margin: "35px 11px 0 11px",
+        [theme.breakpoints.down('lg')]: {
+            margin: "35px 11px 0 11px",
+        },
+        [theme.breakpoints.down('md')]: {
+            margin: "35px 11px 0 11px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            margin: "25px 11px 0 11px",
+            height: "22px",
+        },
     },
     blockTeaOne: {},
     blockTeaTwo: {},
@@ -745,11 +848,20 @@ const useStyles = makeStyles((theme) => createStyles({
     blockTeaSpan: {
         position: "relative",
         display: "inline-block",
-        width: "19.6%",
+        width: "20%",
         height: "100%",
         textAlign: "center",
         padding: "9px 0 0 0",
         fontSize: "13px",
+        [theme.breakpoints.down('lg')]: {
+            fontSize: "13px",
+        },
+        [theme.breakpoints.down('md')]: {
+            fontSize: "13px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            fontSize: "12px",
+        },
     },
     lineTeaTextTwo: {
         position: "absolute",
@@ -760,6 +872,17 @@ const useStyles = makeStyles((theme) => createStyles({
         background: "#092924",
         left: "50%",
         fontSize: "13px",
+        [theme.breakpoints.down('lg')]: {
+            fontSize: "13px",
+        },
+        [theme.breakpoints.down('md')]: {
+            fontSize: "13px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            fontSize: "12px",
+            margin: "-9px 0 0 -65px",
+            width: "130px"
+        },
     },
     lineTeaTextTree: {
         position: "absolute",
@@ -770,6 +893,17 @@ const useStyles = makeStyles((theme) => createStyles({
         background: "#092924",
         left: "50%",
         fontSize: "13px",
+        [theme.breakpoints.down('lg')]: {
+            fontSize: "13px",
+        },
+        [theme.breakpoints.down('md')]: {
+            fontSize: "13px",
+        },
+        [theme.breakpoints.down('sm')]: {
+            fontSize: "12px",
+            margin: "-9px 0 0 -65px",
+            width: "135px"
+        },
     },
     productCart: {
         display: "flex",
@@ -842,6 +976,7 @@ export default function Main() {
     const groups = useSelector(store => store.catalogs.groups);
     const show_cart = useSelector(store => store.app.show_cart);
     const show_cart_sm = useSelector(store => store.app.show_cart_sm);
+    const open_menu = useSelector(store => store.app.open_menu);
 
     const [anchor, setAnchor] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -1316,7 +1451,6 @@ export default function Main() {
         }
     }
 
-
     const plusProduct = (e, elem, item) => {
         let val = elem.value,
             sm = sum;
@@ -1632,6 +1766,10 @@ export default function Main() {
         // console.log(func);
     };
 
+    const changeWindowState = () => {
+        dispatch(switchMenu(!open_menu))
+    }
+
     useEffect(() => {
 
         axios.get('/groups.php', {
@@ -1767,12 +1905,13 @@ export default function Main() {
         }, 500)
     }, [open_modal]);
 
-//     var iconv = new Iconv('windows-1251', 'UTF-8');
-// var x = iconv.convert(text);
-// console.log(x.toString());
-
     return (
         <Fragment>
+
+            <Menu
+                open_menu={open_menu}
+                changeWindowState={changeWindowState}
+            />
 
             <Modal
                 aria-labelledby="transition-modal-title"
@@ -1828,7 +1967,11 @@ export default function Main() {
                 </Popper>
             </Hidden>
 
-            <Link to="/admin_panel" className={classes.link}>Админка</Link>
+            <Hidden only="xs">
+
+                <Link to="/admin_panel" className={classes.link}>Админка</Link>
+
+            </Hidden>
 
             <section className={classes.block}>
                 <Header/>

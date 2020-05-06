@@ -1,18 +1,19 @@
 import {
     SWITCH_CART,
+    SWITCH_MENU,
     REFRESH_CART,
     SWITCH_LOADER,
     SWITCH_CART_SM,
     SWITCH_AUTHORIZATION,
 } from "../js/constants";
-import {refreshCart} from "../actions/actionCreator";
 
 const defaultState = {
     authorization: false,
     loader: false,
     show_cart: false,
     show_cart_sm: false,
-    refresh_cart: false
+    refresh_cart: false,
+    open_menu: false
 };
 
 const app = (state = defaultState, {
@@ -21,7 +22,8 @@ const app = (state = defaultState, {
     show_cart,
     show_cart_sm,
     authorization,
-    refresh_cart
+    refresh_cart,
+    open_menu
 }) => {
 
     switch (type) {
@@ -40,6 +42,10 @@ const app = (state = defaultState, {
         case SWITCH_CART_SM :
             return Object.assign({}, state, {
                 show_cart_sm: show_cart_sm
+            });
+        case SWITCH_MENU :
+            return Object.assign({}, state, {
+                open_menu: open_menu
             });
         case REFRESH_CART :
             return Object.assign({}, state, {

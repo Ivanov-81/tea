@@ -13,6 +13,7 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    background-color: #041715;
 }
 
 /**************************************************/
@@ -63,6 +64,7 @@ body {
     flex-direction: column;
     overflow-x: hidden;
     min-width: 360px;
+    background-color: #041715;
 }
 
 .glyph-coffee,

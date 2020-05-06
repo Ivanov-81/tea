@@ -6,7 +6,12 @@ import {
     ADD_GROUPS,
     ADD_PRODUCTS,
     SWITCH_LOADER,
-    SWITCH_AUTHORIZATION, SWITCH_CART, SWITCH_CART_SM, REFRESH_CART, ADD_CART
+    SWITCH_AUTHORIZATION,
+    SWITCH_CART,
+    SWITCH_CART_SM,
+    REFRESH_CART,
+    ADD_CART,
+    SWITCH_MENU
 } from "../js/constants";
 
 export const addEvent = ( event ) => ({
@@ -76,4 +81,9 @@ export const addProducts = (products) => ({
 export const addCart = (cart) => ({
     type : ADD_CART,
     cart
+});
+
+export const switchMenu = (open_menu) => ({
+    type : SWITCH_MENU,
+    open_menu
 });

@@ -232,7 +232,7 @@ export default function Tea(props) {
 
                     <a className={classes.phoneXS} href="tel:+79632733137">+7 (963) 273-31-37</a>
 
-                    <IconButton className={classes.cart}>
+                    <IconButton className={classes.cart} onClick={handlerSwitchCartSm}>
                         <StyledBadge badgeContent={basket.length}>
                             <ShoppingCartTwoToneIcon/>
                         </StyledBadge>

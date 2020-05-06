@@ -1,17 +1,15 @@
-import React, {Fragment, useEffect, useState} from 'react'
-import {useDispatch, useSelector} from "react-redux"
-import {useHistory} from "react-router-dom"
-import axios from "axios"
-import clsx from "clsx"
+import React from 'react'
+import {useDispatch} from "react-redux"
 import PropTypes from 'prop-types'
 
-import {makeStyles, createMuiTheme} from "@material-ui/core/styles"
+import {makeStyles} from "@material-ui/core/styles"
 import {createStyles} from "@material-ui/core"
 import Container from "@material-ui/core/Container"
 import withWidth from '@material-ui/core/withWidth'
-import Hidden from "@material-ui/core/Hidden";
-import IconButton from "@material-ui/core/IconButton";
-import DehazeIcon from '@material-ui/icons/Dehaze';
+import Hidden from "@material-ui/core/Hidden"
+import IconButton from "@material-ui/core/IconButton"
+import DehazeIcon from '@material-ui/icons/Dehaze'
+import {switchMenu} from "../actions/actionCreator"
 
 const useStyles = makeStyles((theme) => createStyles({
     root: {
@@ -54,10 +52,12 @@ const useStyles = makeStyles((theme) => createStyles({
 
 function Line(props) {
 
-    const classes = useStyles();
-    const dispatch = useDispatch();
-    const history = useHistory();
-    const theme = createMuiTheme({});
+    const classes = useStyles()
+    const dispatch = useDispatch()
+
+    const openMenu = () => {
+        dispatch(switchMenu(true))
+    }
 
     const {width} = props;
 
@@ -74,9 +74,10 @@ function Line(props) {
 
                 <span className="address">г. Берёзовский<br />Театральная 6</span>
 
-                <IconButton className={classes.hamburger}>
+                <IconButton className={classes.hamburger} onClick={openMenu}>
                     <DehazeIcon/>
                 </IconButton>
+                
             </Hidden>
 
         </Container>

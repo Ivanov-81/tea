@@ -16,6 +16,7 @@ export const SWITCH_CART = 'SWITCH_CART';
 export const REFRESH_CART = 'REFRESH_CART';
 export const SWITCH_LOADER = 'SWITCH_LOADER';
 export const SWITCH_CART_SM = 'SWITCH_CART_SM';
+export const SWITCH_MENU = 'SWITCH_MENU';
 export const SWITCH_AUTHORIZATION = 'SWITCH_AUTHORIZATION';
 
 // Key
