@@ -176,7 +176,6 @@ export default function Tea(props) {
             let tea = transaction.objectStore("products");
             let products = tea.getAll();
             products.onsuccess = function () {
-                console.log(products.result)
                 setBasket(products.result)
                 dispatch(addCart(products.result))
             };

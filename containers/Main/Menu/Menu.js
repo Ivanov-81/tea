@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {Fragment, useEffect, useState} from "react"
 
 import clsx from "clsx";
 
@@ -11,6 +11,7 @@ import {makeStyles} from "@material-ui/core/styles"
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import {useSelector} from "react-redux";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => createStyles({
     menu: {
@@ -54,12 +55,19 @@ const useStyles = makeStyles((theme) => createStyles({
         height: 240,
         flexGrow: 1,
         maxWidth: 400,
+        "& ul": {
+            marginLeft: "0px",
+        },
         "& li": {
-            height: "30px",
-            minHeight: "30px",
-            "& div": {
+            "& ul": {
+                "& div": {
+                    lineHeight: "12px"
+                }
+            },
+            minHeight: "35px",
+            "& div :first-child": {
                 height: "100%",
-                display: "flex",
+                minHeight: "35px",
                 alignItems: "center",
             }
         }
@@ -72,22 +80,72 @@ export default function Menu(props) {
     const classes = useStyles();
 
     const g = useSelector(store => store.catalogs.groups)
-    const p = useSelector(store => store.catalogs.products)
 
     const [groups, setGroups] = useState([])
     const [products, setProducts] = useState([])
+    const [data, setData] = useState({
+        id: "root",
+        name: "Меню",
+        children: []
+    })
 
     const onChangeState = () => {
         props.changeWindowState(false);
     };
 
+
+    const renderTree = (nodes) => {
+        return <TreeItem
+            key={nodes.id}
+            nodeId={nodes.id}
+            label={nodes.name}
+        >
+            {
+                Array.isArray(nodes.children)
+                    ? nodes.children.map((node) => renderTree(node))
+                    : null
+            }
+        </TreeItem>
+    };
+
     useEffect(() => {
 
-        console.log(g)
-        console.log(p)
         setGroups(g)
 
-    }, [g, p]);
+        if (g.length !== 0) {
+
+            let arr = [],
+                obj = data;
+
+            g.map((item) => {
+
+                if (item.parent_id === "0") {
+
+                    axios.post('/products.php', {group: Number(item.id)}, {})
+                        .then((result) => {
+                            const {status, data} = result;
+                            if (status === 200) {
+                                arr.push({id: item.id, name: item.name, children: data.sub_groups})
+                            }
+                        })
+
+                }
+
+            })
+
+            obj.children = arr
+
+            setData(obj)
+
+        }
+
+    }, [g]);
+
+    useEffect(() => {
+        if (data.length !== 0) {
+            console.log(data[0])
+        }
+    }, [data]);
 
     return (
 
@@ -107,22 +165,13 @@ export default function Menu(props) {
                     className={classes.root}
                     defaultCollapseIcon={<ExpandMoreIcon/>}
                     defaultExpandIcon={<ChevronRightIcon/>}
+                    defaultExpanded={["root"]}
                 >
-                    {
-                        groups.map((item) => {
-                            return item.parent_id === "0" &&
-                                <TreeItem nodeId={item.id} label={item.name}>
-                                    <TreeItem nodeId="2" label="Calendar"/>
-                                    <TreeItem nodeId="3" label="Chrome"/>
-                                    <TreeItem nodeId="4" label="Webstorm">
-                                        <TreeItem nodeId="7" label="src">
-                                            <TreeItem nodeId="8" label="index.js"/>
-                                            <TreeItem nodeId="9" label="tree-view.js"/>
-                                        </TreeItem>
-                                    </TreeItem>
-                                </TreeItem>
-                        })
-                    }
+                    <Fragment>
+                        {
+                            renderTree(data)
+                        }
+                    </Fragment>
                 </TreeView>
 
             </div>
