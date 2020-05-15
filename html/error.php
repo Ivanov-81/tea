@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $query = "INSERT INTO errors (id, message, line, col, error) VALUE ('$id', '$msg', '$line', '$column', '$error')";
     $result = $handle->query($query) or die("Ошибка: " . mysqli_error($handle));
 
+    $handle->close();
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -29,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $query = "SELECT * FROM errors"; // order by created desc
     $result = $handle->query($query) or die("<b>Warning Error!!!</b><br />" . mysqli_error($handle));
-    echo $result;
+
     if ($result) {
         while ($str = $result->fetch_assoc()) {
             array_push($pd, $str);
@@ -37,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     if ($result) {
-        echo json_encode($pd); //, 'product_groups' => $gp, 'products' => $pd, 'news' => $nw, 'articles' => $at
+        echo json_encode(array('result' => false, 'data' => $pd)); //, 'product_groups' => $gp, 'products' => $pd, 'news' => $nw, 'articles' => $at
     }
     else {
         echo json_encode(array('result' => false, 'reason' => 'Ошибка!!!')); //, 'product_groups' => $gp, 'products' => $pd, 'news' => $nw, 'articles' => $at
