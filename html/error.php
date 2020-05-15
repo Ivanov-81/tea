@@ -2,6 +2,7 @@
 
 include_once('PHP/db.php');
 
+header('Access-Control-Allow-Origin: *');
 header("Content-Type: text/html; charset=utf-8");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -18,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $query = "INSERT INTO errors (id, message, line, col, error) VALUE ('$id', '$msg', '$line', '$column', '$error')";
     $result = $handle->query($query) or die("Ошибка: " . mysqli_error($handle));
 
-    $handle->close();
+//    $handle->close();
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -38,11 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     if ($result) {
-        echo json_encode(array('result' => false, 'data' => $pd)); //, 'product_groups' => $gp, 'products' => $pd, 'news' => $nw, 'articles' => $at
+        echo json_encode($pd);
     }
     else {
-        echo json_encode(array('result' => false, 'reason' => 'Ошибка!!!')); //, 'product_groups' => $gp, 'products' => $pd, 'news' => $nw, 'articles' => $at
+        echo json_encode(array('result' => false, 'reason' => 'Ошибка!!!'));
     }
 
-    $handle->close();
+//    $handle->close();
 }
