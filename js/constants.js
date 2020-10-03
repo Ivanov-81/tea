@@ -18,6 +18,8 @@ export const SWITCH_LOADER = 'SWITCH_LOADER';
 export const SWITCH_CART_SM = 'SWITCH_CART_SM';
 export const SWITCH_MENU = 'SWITCH_MENU';
 export const SWITCH_AUTHORIZATION = 'SWITCH_AUTHORIZATION';
+export const LIGHT_MISTAKE = 'LIGHT_MISTAKE';
+export const ADD_DEVICE = 'ADD_DEVICE';
 
 // Key
 export const SITE_KEY = "97LeIxAhjgYYGGjtbOOfVBjgYZVRqyHh71UMIE";

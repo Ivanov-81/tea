@@ -2,6 +2,7 @@
   <dictionary name="oleg">
     <words>
       <w>axios</w>
+      <w>beforeinstallprompt</w>
       <w>clsx</w>
       <w>dehaze</w>
       <w>roboto</w>

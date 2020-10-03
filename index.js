@@ -7,17 +7,13 @@ import allReducers from "./redusers";
 import {SnackbarProvider} from 'notistack';
 
 import Tea from './Tea';
-//
-import {addEvent} from "./actions/actionCreator";
+
+import {addDevice, addEvent} from "./actions/actionCreator";
 
 // css
 import './styles.css';
+import './scrollbar.css'
 import models from "./js/models";
-
-// images
-// import './favicon.ico'
-
-// import models from "./js/models";
 
 const store = createStore(allReducers,
     (window).__REDUX_DEVTOOLS_EXTENSION__ &&
@@ -45,6 +41,8 @@ window.addEventListener('beforeinstallprompt', function (e) {
 });
 
 models.connectDB();
+
+store.dispatch(addDevice(models.getDevice()))
 
 ReactDOM.render(
     <Provider store={store}>

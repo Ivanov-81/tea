@@ -1,17 +1,10 @@
 import {
-    ADD_EVENT,
-    CLOSE_SNACKBAR,
-    ENQUEUE_SNACKBAR,
-    REMOVE_SNACKBAR,
-    ADD_GROUPS,
-    ADD_PRODUCTS,
-    SWITCH_LOADER,
-    SWITCH_AUTHORIZATION,
-    SWITCH_CART,
-    SWITCH_CART_SM,
-    REFRESH_CART,
-    ADD_CART,
-    SWITCH_MENU
+    ADD_EVENT, CLOSE_SNACKBAR,
+    ENQUEUE_SNACKBAR, REMOVE_SNACKBAR,
+    ADD_GROUPS, ADD_PRODUCTS, SWITCH_LOADER,
+    SWITCH_AUTHORIZATION, SWITCH_CART,
+    SWITCH_CART_SM, REFRESH_CART, ADD_CART,
+    SWITCH_MENU, LIGHT_MISTAKE, ADD_DEVICE
 } from "../js/constants";
 
 export const addEvent = ( event ) => ({
@@ -86,4 +79,14 @@ export const addCart = (cart) => ({
 export const switchMenu = (open_menu) => ({
     type : SWITCH_MENU,
     open_menu
+});
+
+export const lightMistake = (error) => ({
+    type: LIGHT_MISTAKE,
+    error
+});
+
+export const addDevice = (device) => ({
+    type: ADD_DEVICE,
+    device
 });

@@ -1,55 +1,19 @@
-import React, {forwardRef, Fragment, useEffect, useState} from 'react'
-import {useDispatch, useSelector} from "react-redux"
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 
-import MaterialTable, {MTableToolbar} from 'material-table'
+import MaterialTable, {MTableToolbar} from 'material-table';
 
-import {makeStyles} from "@material-ui/core/styles"
-import {createStyles} from "@material-ui/core"
-import AddBox from "@material-ui/icons/AddBox"
-import Check from "@material-ui/icons/Check"
-import Clear from "@material-ui/icons/Clear"
-import DeleteOutline from "@material-ui/icons/DeleteOutline"
-import ChevronRight from "@material-ui/icons/ChevronRight"
-import Edit from "@material-ui/icons/Edit"
-import SaveAlt from "@material-ui/icons/SaveAlt"
-import FilterList from "@material-ui/icons/FilterList"
-import FirstPage from "@material-ui/icons/FirstPage"
-import LastPage from "@material-ui/icons/LastPage"
-import ChevronLeft from "@material-ui/icons/ChevronLeft"
-import Search from "@material-ui/icons/Search"
-import ArrowUpward from "@material-ui/icons/ArrowUpward"
-import Remove from "@material-ui/icons/Remove"
-import axios from "axios";
-import {
-    addProducts,
-    closeSnackbar as closeSnackbarAction,
-    enqueueSnackbar as enqueueSnackbarAction
-} from "../../../actions/actionCreator";
+import {makeStyles} from "@material-ui/core/styles";
+import {createStyles} from "@material-ui/core";
+
 import Button from "@material-ui/core/Button";
-import CloseIcon from "@material-ui/icons/Close";
+
 import withStyles from "@material-ui/core/styles/withStyles";
 import {green} from "@material-ui/core/colors";
 import Checkbox from "@material-ui/core/Checkbox";
 
-const tableIcons = {
-    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
-    Check: forwardRef((props, ref) => <Check {...props} ref={ref}/>),
-    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref}/>),
-    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref}/>),
-    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref}/>),
-    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref}/>),
-    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref}/>),
-    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref}/>),
-    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref}/>),
-    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref}/>),
-    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref}/>),
-    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref}/>),
-    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref}/>),
-    Search: forwardRef((props, ref) => <Search {...props} ref={ref}/>),
-    SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref}/>),
-    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref}/>),
-    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref}/>)
-};
+import {tableIcons} from "../../../js/variables"
+import MGetProducts from "../../../methods/MGetProducts";
 
 const GreenCheckbox = withStyles({
     root: {
@@ -61,46 +25,50 @@ const GreenCheckbox = withStyles({
     checked: {},
 })(props => <Checkbox color="default" {...props} />);
 
-const useStyles = makeStyles((theme) => createStyles({
-    paper: {
-        width: "100%",
-        height: "100%",
-        border: "3px solid #BA975F",
-        display: "flex",
-        position: "absolute",
-        flexDirection: "column",
-        zIndex: 9,
-        boxShadow: "0px 1px 3px 1px rgba(0, 0, 0, .35)",
-        backgroundColor: "#EFE6DF",
-    },
-    name: {
-        display: "flex",
-        flexDirection: "row",
-        width: "100%",
-        height: "100%",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
-    nameText: {
-        display: "flex",
-        width: "75%",
-        height: "100%",
-        paddingLeft: "10px",
-    },
-    units: {
-        display: "flex",
-        width: "15%",
-        height: "100%",
-        justifyContent: "flex-end",
-        color: "#999999",
-        fontSize: "12px"
-    },
-}));
+const useStyles = makeStyles(() =>
+    createStyles({
+        paper: {
+            width: "100%",
+            height: "100%",
+            border: "3px solid #BA975F",
+            display: "flex",
+            position: "absolute",
+            flexDirection: "column",
+            zIndex: 9,
+            boxShadow: "0px 1px 3px 1px rgba(0, 0, 0, .35)",
+            backgroundColor: "#EFE6DF",
+        },
+        name: {
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            height: "100%",
+            justifyContent: "space-between",
+            alignItems: "center",
+        },
+        nameText: {
+            display: "flex",
+            width: "75%",
+            height: "100%",
+            paddingLeft: "10px",
+        },
+        units: {
+            display: "flex",
+            width: "15%",
+            height: "100%",
+            justifyContent: "flex-end",
+            color: "#999999",
+            fontSize: "12px"
+        },
+    })
+);
 
 export default function Products() {
 
     const classes = useStyles()
     const dispatch = useDispatch()
+
+    const products = useSelector(store => store.catalogs.products)
 
     const columns = [
         {
@@ -119,7 +87,7 @@ export default function Products() {
                     <span className={classes.nameText}>{data.name}</span>
                     <span className={classes.units}>{data.unit}</span>
                     <GreenCheckbox
-                        checked={data.archived}
+                        checked={data.archived === "0"}
                         onChange={() => handleChange(data.id)}
                         value="checkedG"
                     />
@@ -186,7 +154,7 @@ export default function Products() {
                 textAlign: 'left',
             },
             render: (data) => {
-
+                console.log(data.promotion)
             }
         },
         {
@@ -200,67 +168,32 @@ export default function Products() {
                 textAlign: 'left',
             },
             render: (data) => {
-
+                console.log(data.photo)
             }
         },
     ]
 
-    let [pageSize, setPageSize] = useState(50)
+    let [pageSize] = useState(50)
     const [rows, setRows] = useState([])
 
     const handleChange = (id) => {
         console.log(id)
     };
 
-    const enqueueSnackbar = (...args) => {
-        dispatch(enqueueSnackbarAction(...args))
-    };
-
-    const closeSnackbar = (...args) => {
-        dispatch(closeSnackbarAction(...args));
-    };
+    useEffect(() => {
+        MGetProducts(dispatch)
+    }, []);
 
     useEffect(() => {
 
-        axios.get('/products.php', {})
-            .then((result) => {
-                const {status, data} = result;
-                if (status === 200) {
+        if(products.length !== 0) {
+            setRows(products);
+        }
+        else {
+            setRows([]);
+        }
 
-                    console.log(data);
-
-                    dispatch(addProducts(data));
-
-                    setRows(data);
-
-                    enqueueSnackbar({
-                        message: "Продукты получены!",
-                        options: {
-                            key: new Date().getTime() + Math.random(),
-                            variant: 'success',
-                            action: (key) => (
-                                <Button onClick={() => closeSnackbar(key)}>
-                                    <CloseIcon/>
-                                </Button>
-                            ),
-                        },
-                    });
-
-
-                }
-            })
-            .catch(error => {
-
-                if (typeof error.response !== "undefined") {
-                    const {status} = error.response;
-                }
-                else {
-                    console.log(error);
-                }
-
-            });
-
-    }, []);
+    }, [products]);
 
     return (
 

@@ -4,7 +4,7 @@ import {
     REFRESH_CART,
     SWITCH_LOADER,
     SWITCH_CART_SM,
-    SWITCH_AUTHORIZATION,
+    SWITCH_AUTHORIZATION, LIGHT_MISTAKE, ADD_DEVICE,
 } from "../js/constants";
 
 const defaultState = {
@@ -13,7 +13,9 @@ const defaultState = {
     show_cart: false,
     show_cart_sm: false,
     refresh_cart: false,
-    open_menu: false
+    open_menu: false,
+    error: {},
+    device: false,
 };
 
 const app = (state = defaultState, {
@@ -23,7 +25,9 @@ const app = (state = defaultState, {
     show_cart_sm,
     authorization,
     refresh_cart,
-    open_menu
+    open_menu,
+    error,
+    device,
 }) => {
 
     switch (type) {
@@ -50,6 +54,14 @@ const app = (state = defaultState, {
         case REFRESH_CART :
             return Object.assign({}, state, {
                 refresh_cart: refresh_cart
+            });
+        case LIGHT_MISTAKE :
+            return Object.assign({}, state, {
+                error: error
+            });
+        case ADD_DEVICE :
+            return Object.assign({}, state, {
+                device: device
             });
         default:
             return state;

@@ -58,9 +58,9 @@ const models = {
         return code + " (" + code_seti + ") " + num1 + " " + num2 + " " + num3;
     },
 
-    //  function(e) {
-    //      return !(/[А-Яа-яA-Za-z \- \+ \* \/ \= \_ \' \" \! \$ \% \# \@ \^ \& \( \) \{ \.\?\,} ]/.test(String.fromCharCode(e.charCode)));
-    //  });
+    getDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    },
 
     getUserAgent() {
         let sBrowser, sUsrAg = navigator.userAgent;

@@ -48,29 +48,31 @@ function a11yProps(index) {
     };
 }
 
-const useStyles = makeStyles((theme) => createStyles({
-    main: {
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        height: "100vh",
-        overflow: "hidden",
-    },
-    link: {
-        position: "fixed",
-        top: "18px",
-        right: "25px",
-        color: "#BA975F",
-        zIndex: 1,
-        fontSize: "13px",
-    },
-    tabPanel: {
-        height: "100vh",
-        "& div": {
-            padding: "0 0 0 0",
+const useStyles = makeStyles((theme) =>
+    createStyles({
+        main: {
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            height: "100vh",
+            overflow: "hidden",
+        },
+        link: {
+            position: "fixed",
+            top: "18px",
+            right: "25px",
+            color: "#BA975F",
+            zIndex: 1,
+            fontSize: "13px",
+        },
+        tabPanel: {
+            height: "100vh",
+            "& div": {
+                padding: "0 0 0 0",
+            }
         }
-    }
-}));
+    })
+);
 
 export default function Admin() {
 
@@ -81,7 +83,7 @@ export default function Admin() {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-        if(newValue === 2) history.push("/")
+        if (newValue === 2) history.push("/")
     };
 
     return (
