@@ -4,7 +4,7 @@ import {
     REFRESH_CART,
     SWITCH_LOADER,
     SWITCH_CART_SM,
-    SWITCH_AUTHORIZATION, LIGHT_MISTAKE, ADD_DEVICE,
+    SWITCH_AUTHORIZATION, LIGHT_MISTAKE, ADD_DEVICE, UPDATE,
 } from "../js/constants";
 
 const defaultState = {
@@ -16,6 +16,7 @@ const defaultState = {
     open_menu: false,
     error: {},
     device: false,
+    update: false,
 };
 
 const app = (state = defaultState, {
@@ -28,6 +29,7 @@ const app = (state = defaultState, {
     open_menu,
     error,
     device,
+    update,
 }) => {
 
     switch (type) {
@@ -62,6 +64,10 @@ const app = (state = defaultState, {
         case ADD_DEVICE :
             return Object.assign({}, state, {
                 device: device
+            });
+        case UPDATE :
+            return Object.assign({}, state, {
+                update: update
             });
         default:
             return state;

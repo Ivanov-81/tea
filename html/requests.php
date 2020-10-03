@@ -82,13 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($product != ' ') {
             $code = $postData['uuid'];
-            $query = "SELECT * FROM product WHERE uuid = '" . $code . "'";
+            $query = "SELECT * FROM product WHERE id = '" . $code . "'";
             $result = $handle->query($query) or die(" Ошибка: " . mysqli_error($handle));
             if ($result) {
 
             } else {
                 $prod = [];
-                $query = "INSERT INTO product (uuid, group_id, name, photo, vendor_code, upload_date, description, recipe, unit, price, promotion)
+                $query = "INSERT INTO product (id, group_id, name, photo, vendor_code, upload_date, description, recipe, unit, price, promotion)
                       VALUE ('$uuid', '$group_id', '$product', '$file', '$vendor_code', '$date','$description', '$recipe', '$unit', '$price', '$promotion')";
                 $result = $handle->query($query) or die("Ошибка: " . mysqli_error($handle));
                 if ($result) {
@@ -102,31 +102,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
-    elseif (isset($postData['archived'])) {
-        $uuid = $postData['id'];
-        $archived = $postData['archived'];
-        $query = "UPDATE product SET archived = '$archived' WHERE uuid = '" . $uuid . "'";
-        $result = $handle->query($query);
-        if ($result) {
-            echo json_encode(array('result' => true));
-        } else {
-            echo json_encode(array('result' => false, 'reason' => $result));
-        }
-    }
-    elseif (isset($postData['promotion'])) {
-        $uuid = $postData['id'];
-        $promotion = $postData['promotion'];
-        $query = "UPDATE product SET promotion = '$promotion' WHERE uuid = '" . $uuid . "'";
-        $result = $handle->query($query);
-        if ($result) {
-            echo json_encode(array('result' => true));
-        } else {
-            echo json_encode(array('result' => false, 'reason' => $result));
-        }
-    }
+//    elseif (isset($postData['archived'])) {
+//        $uuid = $postData['id'];
+//        $archived = $postData['archived'];
+//        $query = "UPDATE product SET archived = '$archived' WHERE uuid = '" . $uuid . "'";
+//        $result = $handle->query($query);
+//        if ($result) {
+//            echo json_encode(array('result' => true));
+//        } else {
+//            echo json_encode(array('result' => false, 'reason' => $result));
+//        }
+//    }
+//    elseif (isset($postData['promotion'])) {
+//        $uuid = $postData['id'];
+//        $promotion = $postData['promotion'];
+//        $query = "UPDATE product SET promotion = '$promotion' WHERE uuid = '" . $uuid . "'";
+//        $result = $handle->query($query);
+//        if ($result) {
+//            echo json_encode(array('result' => true));
+//        } else {
+//            echo json_encode(array('result' => false, 'reason' => $result));
+//        }
+//    }
     elseif (isset($postData['code'])) { // запрос на редактирование товара
         $code = $postData['code'];
-        $query = "SELECT * FROM product WHERE uuid = '" . $code . "'";
+        $query = "SELECT * FROM product WHERE id = '" . $code . "'";
         $result = $handle->query($query) or die(" Ошибка: " . mysqli_error($handle));
         $stg = $result->fetch_assoc();
         if ($result) {
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $recipe = $value['recipe'];
             $unit = $value['unit'];
             $price = $value['price'];
-            $query = "INSERT INTO product (uuid, group_id, name, photo, vendor_code, upload_date, description, recipe, unit, price) 
+            $query = "INSERT INTO product (id, group_id, name, photo, vendor_code, upload_date, description, recipe, unit, price) 
               VALUE ('$uuid', '$grp', '$product', null, '$vendor_code', '$date','$description', '$recipe', '$unit', '$price')";
             $result = $handle->query($query) or die(" Ошибка: " . mysqli_error($handle));
             if ($result) {
@@ -190,7 +190,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo json_encode(array('result' => false, 'reason' => $handle));
         }
-    } elseif (isset($postData['promotion_item'])) {
+    }
+    elseif (isset($postData['promotion_item'])) {
         $prom = [];
         $qry = "SELECT * FROM product WHERE promotion = '" . $postData['promotion_item'] . "'"; // order by created desc WHERE uuid = '".$code."'
         $res = $handle->query($qry) or die(" Ошибка: " . mysqli_error($handle));

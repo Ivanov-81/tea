@@ -20,6 +20,7 @@ export const SWITCH_MENU = 'SWITCH_MENU';
 export const SWITCH_AUTHORIZATION = 'SWITCH_AUTHORIZATION';
 export const LIGHT_MISTAKE = 'LIGHT_MISTAKE';
 export const ADD_DEVICE = 'ADD_DEVICE';
+export const UPDATE = 'UPDATE';
 
 // Key
 export const SITE_KEY = "97LeIxAhjgYYGGjtbOOfVBjgYZVRqyHh71UMIE";

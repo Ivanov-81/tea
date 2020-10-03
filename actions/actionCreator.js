@@ -4,7 +4,7 @@ import {
     ADD_GROUPS, ADD_PRODUCTS, SWITCH_LOADER,
     SWITCH_AUTHORIZATION, SWITCH_CART,
     SWITCH_CART_SM, REFRESH_CART, ADD_CART,
-    SWITCH_MENU, LIGHT_MISTAKE, ADD_DEVICE
+    SWITCH_MENU, LIGHT_MISTAKE, ADD_DEVICE, UPDATE
 } from "../js/constants";
 
 export const addEvent = ( event ) => ({
@@ -89,4 +89,9 @@ export const lightMistake = (error) => ({
 export const addDevice = (device) => ({
     type: ADD_DEVICE,
     device
+});
+
+export const updateApp = (update) => ({
+    type: UPDATE,
+    update
 });

@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import MaterialTable, {MTableToolbar} from 'material-table';
 
 import {makeStyles} from "@material-ui/core/styles";
-import {createStyles} from "@material-ui/core";
+import {createStyles, IconButton} from "@material-ui/core";
 
 import Button from "@material-ui/core/Button";
 
@@ -14,6 +14,9 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 import {tableIcons} from "../../../js/variables"
 import MGetProducts from "../../../methods/MGetProducts";
+import models from "../../../js/models";
+import {Add} from "@material-ui/icons";
+import MChangeArchived from "../../../methods/MChangeArchived";
 
 const GreenCheckbox = withStyles({
     root: {
@@ -50,7 +53,7 @@ const useStyles = makeStyles(() =>
             display: "flex",
             width: "75%",
             height: "100%",
-            paddingLeft: "10px",
+            paddingLeft: 10,
         },
         units: {
             display: "flex",
@@ -58,7 +61,8 @@ const useStyles = makeStyles(() =>
             height: "100%",
             justifyContent: "flex-end",
             color: "#999999",
-            fontSize: "12px"
+            fontSize: "12px",
+            paddingRight: 5,
         },
     })
 );
@@ -77,8 +81,8 @@ export default function Products() {
             cellStyle: {
                 color: '#73879C',
                 fontSize: '13px',
-                minWidth: '450px',
-                padding: '0px',
+                minWidth: 450,
+                padding: 0,
                 textAlign: 'left',
                 lineHeight: '13px',
             },
@@ -87,8 +91,13 @@ export default function Products() {
                     <span className={classes.nameText}>{data.name}</span>
                     <span className={classes.units}>{data.unit}</span>
                     <GreenCheckbox
-                        checked={data.archived === "0"}
-                        onChange={() => handleChange(data.id)}
+                        title={
+                            data.archived === "0"
+                                ? "Пометить как архивный"
+                                : "Ввести в продажу"
+                        }
+                        checked={data.archived !== "0"}
+                        onChange={handleChange(data)}
                         value="checkedG"
                     />
 
@@ -101,7 +110,7 @@ export default function Products() {
             cellStyle: {
                 color: '#73879C',
                 fontSize: '13px',
-                width: '150px',
+                width: 150,
                 padding: '5px 5px',
                 textAlign: 'left',
             },
@@ -112,7 +121,7 @@ export default function Products() {
             cellStyle: {
                 color: '#73879C',
                 fontSize: '13px',
-                width: '135px',
+                width: 135,
                 padding: '10px 0 10px 0',
                 textAlign: 'left',
             },
@@ -123,7 +132,7 @@ export default function Products() {
             cellStyle: {
                 color: '#73879C',
                 fontSize: '13px',
-                width: '50px',
+                width: 50,
                 padding: '5px 5px',
                 textAlign: 'left',
                 lineHeight: '13px'
@@ -138,7 +147,7 @@ export default function Products() {
             cellStyle: {
                 color: '#73879C',
                 fontSize: '13px',
-                width: '150px',
+                width: 150,
                 padding: '10px 0 10px 50px',
                 textAlign: 'left',
             },
@@ -149,13 +158,13 @@ export default function Products() {
             cellStyle: {
                 color: '#73879C',
                 fontSize: '13px',
-                width: '150px',
+                width: 150,
                 padding: '10px 0 10px 55px',
                 textAlign: 'left',
             },
-            render: (data) => {
-                console.log(data.promotion)
-            }
+            // render: (data) => {
+            //     console.log(data.promotion)
+            // }
         },
         {
             field: 'photo',
@@ -163,21 +172,35 @@ export default function Products() {
             cellStyle: {
                 color: '#73879C',
                 fontSize: '13px',
-                width: '200px',
+                width: 200,
                 padding: '10px 0 10px 15px',
                 textAlign: 'left',
             },
-            render: (data) => {
-                console.log(data.photo)
-            }
+            // render: (data) => {
+            //     console.log(data.photo)
+            // }
         },
     ]
 
     let [pageSize] = useState(50)
     const [rows, setRows] = useState([])
 
-    const handleChange = (id) => {
-        console.log(id)
+    const handleChange = (data) => () => {
+
+        let message = "";
+
+        if(data.archived === "0") {
+            data.archived = "1";
+            message = "Товар помечен как архивный";
+        }
+        else {
+            data.archived = "0";
+            message = "Товар введён в продажу";
+
+        }
+
+        MChangeArchived(dispatch, data, message)
+
     };
 
     useEffect(() => {
@@ -226,8 +249,12 @@ export default function Products() {
             icons={tableIcons}
             style={{boxShadow: 'none'}}
             components={{
-                Toolbar: (props) => (
-                    <MTableToolbar {...props} />
+                Toolbar: () => (
+                    <div>
+                        <IconButton>
+                            <Add/>
+                        </IconButton>
+                    </div>
                 )
             }}
         />
