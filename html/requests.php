@@ -30,7 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo json_encode(array('result' => false, 'reason' => $result));
             }
         }
-    } elseif (isset($postData['header_news'])) {
+    }
+    elseif (isset($postData['header_news'])) {
         $id = $postData['id'];
         $name = $postData['header_news'];
         $text = $postData['text'];
@@ -47,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo json_encode(array('result' => false, 'reason' => $result));
             }
         }
-    } elseif (isset($postData['header_article'])) {
+    }
+    elseif (isset($postData['header_article'])) {
         $id = $postData['id'];
         $name = $postData['header_article'];
         $text = $postData['text'];
@@ -64,7 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo json_encode(array('result' => false, 'reason' => $result));
             }
         }
-    } elseif (isset($postData['product'])) {  // добавление товара
+    }
+    elseif (isset($postData['product'])) {  // добавление товара
         $uuid = $postData['uuid'];
         $group_id = $postData['group_id'];
         $product = $postData['product'];
@@ -98,7 +101,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }
         }
-    } elseif (isset($postData['archived'])) {
+    }
+    elseif (isset($postData['archived'])) {
         $uuid = $postData['id'];
         $archived = $postData['archived'];
         $query = "UPDATE product SET archived = '$archived' WHERE uuid = '" . $uuid . "'";
@@ -108,7 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo json_encode(array('result' => false, 'reason' => $result));
         }
-    } elseif (isset($postData['promotion'])) {
+    }
+    elseif (isset($postData['promotion'])) {
         $uuid = $postData['id'];
         $promotion = $postData['promotion'];
         $query = "UPDATE product SET promotion = '$promotion' WHERE uuid = '" . $uuid . "'";
@@ -118,7 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo json_encode(array('result' => false, 'reason' => $result));
         }
-    } elseif (isset($postData['code'])) { // запрос на редактирование товара
+    }
+    elseif (isset($postData['code'])) { // запрос на редактирование товара
         $code = $postData['code'];
         $query = "SELECT * FROM product WHERE uuid = '" . $code . "'";
         $result = $handle->query($query) or die(" Ошибка: " . mysqli_error($handle));
@@ -128,7 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo json_encode(array('result' => false, 'reason' => $result));
         }
-    } elseif (isset($postData['info'])) {
+    }
+    elseif (isset($postData['info'])) {
         $ar = [];
         $arr = $postData['info'];
         foreach ($arr as $value) {
@@ -149,7 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             echo json_encode(array('result' => true, 'data' => count($ar)));
         }
-    } elseif (isset($postData['email'])) {
+    }
+    elseif (isset($postData['email'])) {
         $email = $postData['email'];
         $arch = $postData['archive'];
         $query = "INSERT INTO newsletter (email, archived) VALUE ('$email', '$arch')";
@@ -159,7 +167,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo json_encode(array('result' => false, 'reason' => mysqli_error($handle)));
         }
-    } elseif (isset($postData['_csrf'])) {
+    }
+    elseif (isset($postData['_csrf'])) {
         $login = $postData['login'];
         $password = md5($postData['password']);
         $query = "SELECT * FROM admin_user WHERE login = '" . $login . "'";
@@ -170,7 +179,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo json_encode(array('result' => false, 'reason' => 'Не верные данные!!!'));
         }
-    } elseif (isset($postData['block'])) {
+    }
+    elseif (isset($postData['block'])) {
         $id = $_SERVER['REMOTE_ADDR'];
         $date = $postData['date'];
         $query = "INSERT INTO block_id (address,date_evt,active) VALUE ('$id',$date,'false')";
