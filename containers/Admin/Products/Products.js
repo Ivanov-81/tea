@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 
 import MaterialTable, {MTableToolbar} from 'material-table';
@@ -6,23 +6,45 @@ import MaterialTable, {MTableToolbar} from 'material-table';
 import {makeStyles} from "@material-ui/core/styles";
 import {createStyles, IconButton} from "@material-ui/core";
 
-import Button from "@material-ui/core/Button";
-
 import withStyles from "@material-ui/core/styles/withStyles";
-import {green} from "@material-ui/core/colors";
+import {green, grey, purple} from "@material-ui/core/colors";
 import Checkbox from "@material-ui/core/Checkbox";
+import CheckIcon from '@material-ui/icons/Check';
 
 import {tableIcons} from "../../../js/variables"
 import MGetProducts from "../../../methods/MGetProducts";
-import models from "../../../js/models";
 import {Add} from "@material-ui/icons";
+
 import MChangeArchived from "../../../methods/MChangeArchived";
+import MChangePromotion from "../../../methods/MChangePromotion";
+import Modal from "@material-ui/core/Modal";
+import AddProduct from "./AddProduct";
 
 const GreenCheckbox = withStyles({
     root: {
         color: green[400],
         '&$checked': {
             color: green[600],
+        },
+    },
+    checked: {},
+})(props => <Checkbox color="default" {...props} />);
+
+const PurpleCheckbox = withStyles({
+    root: {
+        color: purple[400],
+        '&$checked': {
+            color: purple[600],
+        },
+    },
+    checked: {},
+})(props => <Checkbox color="default" {...props} />);
+
+const GreyCheckbox = withStyles({
+    root: {
+        color: grey[400],
+        '&$checked': {
+            color: grey[600],
         },
     },
     checked: {},
@@ -64,6 +86,12 @@ const useStyles = makeStyles(() =>
             fontSize: "12px",
             paddingRight: 5,
         },
+        toolbar: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "0 0 0 20px !important",
+        }
     })
 );
 
@@ -90,17 +118,21 @@ export default function Products() {
                 return <div className={classes.name}>
                     <span className={classes.nameText}>{data.name}</span>
                     <span className={classes.units}>{data.unit}</span>
-                    <GreenCheckbox
-                        title={
-                            data.archived === "0"
-                                ? "Пометить как архивный"
-                                : "Ввести в продажу"
-                        }
-                        checked={data.archived !== "0"}
-                        onChange={handleChange(data)}
-                        value="checkedG"
-                    />
-
+                    {
+                        data.archived === "0"
+                            ? <GreyCheckbox
+                                title="Пометить как архивный"
+                                checked={false}
+                                onChange={handlerChange(data)}
+                                value="checkedG"
+                            />
+                            : <GreenCheckbox
+                                title="Ввести в продажу"
+                                checked={true}
+                                onChange={handlerChange(data)}
+                                value="checkedG"
+                            />
+                    }
                 </div>
             }
         },
@@ -137,9 +169,6 @@ export default function Products() {
                 textAlign: 'left',
                 lineHeight: '13px'
             },
-            render: (data) => {
-                return data.upload_date.split(".").reverse().join(".")
-            }
         },
         {
             field: 'price',
@@ -162,9 +191,25 @@ export default function Products() {
                 padding: '10px 0 10px 55px',
                 textAlign: 'left',
             },
-            // render: (data) => {
-            //     console.log(data.promotion)
-            // }
+            render: (data) => {
+                return <div className={classes.name}>
+                    {
+                        data.promotion === "0"
+                            ? <GreyCheckbox
+                                title="Добавить в список акционных"
+                                checked={false}
+                                onChange={handlerChangePromotion(data)}
+                                value="checkedP"
+                            />
+                            : <PurpleCheckbox
+                                title="Акционный товар"
+                                checked={true}
+                                onChange={handlerChangePromotion(data)}
+                                value="checkedP"
+                            />
+                    }
+                </div>
+            }
         },
         {
             field: 'photo',
@@ -176,24 +221,29 @@ export default function Products() {
                 padding: '10px 0 10px 15px',
                 textAlign: 'left',
             },
-            // render: (data) => {
-            //     console.log(data.photo)
-            // }
+            render: (data) => {
+                return <div className={classes.name}>
+                    {
+                        data.photo &&
+                        <CheckIcon style={{color: "#66bb6a"}}/>
+                    }
+                </div>
+            }
         },
     ]
 
     let [pageSize] = useState(50)
     const [rows, setRows] = useState([])
+    const [open_modal, setOpenModal] = useState(false)
 
-    const handleChange = (data) => () => {
+    const handlerChange = (data) => () => {
 
         let message = "";
 
-        if(data.archived === "0") {
+        if (data.archived === "0") {
             data.archived = "1";
             message = "Товар помечен как архивный";
-        }
-        else {
+        } else {
             data.archived = "0";
             message = "Товар введён в продажу";
 
@@ -203,16 +253,39 @@ export default function Products() {
 
     };
 
+    const handlerChangePromotion = (data) => () => {
+
+        let message = "";
+
+        if (data.promotion === "0") {
+            data.promotion = "1";
+            message = "Товар добавлен в список акционных";
+        } else {
+            data.promotion = "0";
+            message = "Товар удалён из списка акционных";
+        }
+
+        MChangePromotion(dispatch, data, message)
+
+    };
+
+    const handlerAddProduct = () => {
+        setOpenModal(true)
+    };
+
+    const handlerCloseModal= () => {
+        setOpenModal(false)
+    };
+
     useEffect(() => {
         MGetProducts(dispatch)
     }, []);
 
     useEffect(() => {
 
-        if(products.length !== 0) {
+        if (products.length !== 0) {
             setRows(products);
-        }
-        else {
+        } else {
             setRows([]);
         }
 
@@ -220,44 +293,69 @@ export default function Products() {
 
     return (
 
-        <MaterialTable
-            title="Товары"
-            columns={columns}
-            data={rows}
-            options={{
-                maxBodyHeight: "calc(85vh - 30px)",
-                minBodyHeight: "calc(85vh - 30px)",
-                headerStyle: {
-                    backgroundColor: '#613be7',
-                    color: '#ECF0F1',
-                    fontSize: '13px',
-                },
-                paginationType: "normal",
-                draggable: false,
-                pageSize: pageSize,
-                pageSizeOptions: columns.length,
-                search: true,
-                searchFieldAlignment: 'right',
-                searchFieldStyle: {
-                    width: "220px",
-                    fontSize: "14px",
-                    position: "absolute",
-                    right: "16px",
-                    top: '-12px'
-                },
-            }}
-            icons={tableIcons}
-            style={{boxShadow: 'none'}}
-            components={{
-                Toolbar: () => (
-                    <div>
-                        <IconButton>
+        <Fragment>
+
+            <Modal
+                open={open_modal}
+                onClose={handlerCloseModal}
+                disableBackdropClick
+            >
+                <AddProduct
+                    state={open_modal}
+                    closeModal={handlerCloseModal}
+                />
+            </Modal>
+
+            <MaterialTable
+                title={
+                    <div className={classes.toolbar}>
+                        <h3 style={{margin: "0 15px 0 0"}}>Товары</h3>
+                        <IconButton
+                            title="Добавить товар"
+                            style={{color: "rgb(97, 59, 231)"}}
+                            onClick={handlerAddProduct}
+                        >
                             <Add/>
                         </IconButton>
                     </div>
-                )
-            }}
-        />
+                }
+                columns={columns}
+                data={rows}
+                localization={{
+                    toolbar: {
+                        searchPlaceholder: "Поиск"
+                    }
+                }}
+                options={{
+                    maxBodyHeight: 'calc(85vh - 30px)',
+                    minBodyHeight: 'calc(85vh - 30px)',
+                    headerStyle: {
+                        backgroundColor: '#613be7',
+                        color: '#ECF0F1',
+                        fontSize: '13px',
+                    },
+                    paginationType: 'normal',
+                    draggable: false,
+                    pageSize: pageSize,
+                    pageSizeOptions: columns.length,
+                    search: true,
+                    searchFieldAlignment: 'right',
+                    searchFieldStyle: {
+                        width: 220,
+                        fontSize: '14px',
+                        marginRight: 15,
+                    },
+                }}
+                icons={tableIcons}
+                style={{boxShadow: 'none'}}
+                components={{
+                    Toolbar: (props) => (
+                        <MTableToolbar {...props} />
+                    )
+                }}
+            />
+
+        </Fragment>
 
     );
 }

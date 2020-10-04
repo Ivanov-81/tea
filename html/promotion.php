@@ -15,9 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $postData = json_decode(file_get_contents('php://input'), true);
 
     if (isset($postData['promotion'])) {
-        $uuid = $postData['id'];
+        $id = $postData['id'];
         $promotion = $postData['promotion'];
-        $query = "UPDATE product SET promotion = '$promotion' WHERE uuid = '" . $uuid . "'";
+        $query = "UPDATE product SET promotion = '$promotion' WHERE id = '" . $id . "'";
         $result = $handle->query($query);
         if ($result) {
             echo json_encode(array('result' => true));
