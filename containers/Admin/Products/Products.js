@@ -19,6 +19,7 @@ import MChangeArchived from "../../../methods/MChangeArchived";
 import MChangePromotion from "../../../methods/MChangePromotion";
 import Modal from "@material-ui/core/Modal";
 import AddProduct from "./AddProduct";
+import MChangeNovelty from "../../../methods/MChangeNovelty";
 
 const GreenCheckbox = withStyles({
     root: {
@@ -45,6 +46,16 @@ const GreyCheckbox = withStyles({
         color: grey[400],
         '&$checked': {
             color: grey[600],
+        },
+    },
+    checked: {},
+})(props => <Checkbox color="default" {...props} />);
+
+const BlueCheckbox = withStyles({
+    root: {
+        color: "rgba(97, 59, 231, 0.5)",
+        '&$checked': {
+            color: "rgba(97, 59, 231, 1)",
         },
     },
     checked: {},
@@ -110,7 +121,7 @@ export default function Products() {
                 color: '#73879C',
                 fontSize: '13px',
                 minWidth: 450,
-                padding: 0,
+                padding: 16,
                 textAlign: 'left',
                 lineHeight: '13px',
             },
@@ -143,7 +154,7 @@ export default function Products() {
                 color: '#73879C',
                 fontSize: '13px',
                 width: 150,
-                padding: '5px 5px',
+                padding: 16,
                 textAlign: 'left',
             },
         },
@@ -154,7 +165,7 @@ export default function Products() {
                 color: '#73879C',
                 fontSize: '13px',
                 width: 135,
-                padding: '10px 0 10px 0',
+                padding: 16,
                 textAlign: 'left',
             },
         },
@@ -165,7 +176,7 @@ export default function Products() {
                 color: '#73879C',
                 fontSize: '13px',
                 width: 50,
-                padding: '5px 5px',
+                padding: 16,
                 textAlign: 'left',
                 lineHeight: '13px'
             },
@@ -177,7 +188,7 @@ export default function Products() {
                 color: '#73879C',
                 fontSize: '13px',
                 width: 150,
-                padding: '10px 0 10px 50px',
+                padding: 16,
                 textAlign: 'left',
             },
         },
@@ -188,7 +199,7 @@ export default function Products() {
                 color: '#73879C',
                 fontSize: '13px',
                 width: 150,
-                padding: '10px 0 10px 55px',
+                padding: 16,
                 textAlign: 'left',
             },
             render: (data) => {
@@ -212,13 +223,43 @@ export default function Products() {
             }
         },
         {
+            field: 'new',
+            title: 'Новинка',
+            cellStyle: {
+                color: '#73879C',
+                fontSize: '13px',
+                width: 150,
+                padding: 16,
+                textAlign: 'left',
+            },
+            render: (data) => {
+                return <div className={classes.name}>
+                    {
+                        data.new === "0"
+                            ? <GreyCheckbox
+                                title="Добавить в список новинок"
+                                checked={false}
+                                onChange={handlerChangeNovelty(data)}
+                                value="checkedB"
+                            />
+                            : <BlueCheckbox
+                                title="Новинка"
+                                checked={true}
+                                onChange={handlerChangeNovelty(data)}
+                                value="checkedB"
+                            />
+                    }
+                </div>
+            }
+        },
+        {
             field: 'photo',
             title: 'Фото',
             cellStyle: {
                 color: '#73879C',
                 fontSize: '13px',
                 width: 200,
-                padding: '10px 0 10px 15px',
+                padding: 16,
                 textAlign: 'left',
             },
             render: (data) => {
@@ -266,6 +307,22 @@ export default function Products() {
         }
 
         MChangePromotion(dispatch, data, message)
+
+    };
+
+    const handlerChangeNovelty = (data) => () => {
+
+        let message = "";
+
+        if (data.new === "0") {
+            data.new = "1";
+            message = "Товар добавлен в список новинок";
+        } else {
+            data.new = "0";
+            message = "Товар удалён из списка новинок";
+        }
+
+        MChangeNovelty(dispatch, data, message)
 
     };
 

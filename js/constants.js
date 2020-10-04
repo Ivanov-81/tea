@@ -24,3 +24,15 @@ export const UPDATE = 'UPDATE';
 
 // Key
 export const SITE_KEY = "97LeIxAhjgYYGGjtbOOfVBjgYZVRqyHh71UMIE";
+
+// COLORS
+export const PRIMARY_COLOR = '#FFCF31';
+export const YELLOW_COLOR = '#FFCF31';
+export const SECONDARY_COLOR = '#B769F3';
+export const ERROR_COLOR = '#FF7E7E';
+export const GREEN_COLOR = 'linear-gradient(100.12deg, #6EDE7E 1.36%, #39CC98 98.47%)';
+export const GREEN_COLOR_FLAT = '#33AF85';
+export const GREY_COLOR = '#AFAFAF';
+export const DARK_GREY_COLOR = '#879196';
+export const MAIN_COLOR = '#613be7';
+export const MAIN_COLOR_LITE = 'rgba(97, 59, 231, 0.5)';
