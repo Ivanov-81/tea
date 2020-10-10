@@ -69,6 +69,9 @@ const useStyles = makeStyles((theme) =>
             height: "100vh",
             "& div": {
                 padding: "0 0 0 0",
+            },
+            "& tfoot div.MuiTablePagination-toolbar": {
+                borderTop: "1px solid rgb(97, 59, 231)",
             }
         }
     })

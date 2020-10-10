@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
     elseif (isset($postData['product'])) {  // добавление товара
-        $uuid = $postData['uuid'];
+        $id = $postData['id'];
         $group_id = $postData['group_id'];
         $product = $postData['product'];
         $vendor_code = $postData['vendor_code'];
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $prod = [];
                 $query = "INSERT INTO product (id, group_id, name, photo, vendor_code, upload_date, description, recipe, unit, price, promotion)
-                      VALUE ('$uuid', '$group_id', '$product', '$file', '$vendor_code', '$date','$description', '$recipe', '$unit', '$price', '$promotion')";
+                      VALUE ('$id', '$group_id', '$product', '$file', '$vendor_code', '$date','$description', '$recipe', '$unit', '$price', '$promotion')";
                 $result = $handle->query($query) or die("Ошибка: " . mysqli_error($handle));
                 if ($result) {
                     $query = "SELECT * FROM product";

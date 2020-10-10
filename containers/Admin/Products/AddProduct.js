@@ -1,4 +1,4 @@
-import React, {createRef, useEffect, useState} from 'react';
+import React, {createRef, Fragment, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 
 import {makeStyles} from "@material-ui/core/styles";
@@ -9,11 +9,11 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import MCatchError from "../../../methods/MCatchError";
 import {
-    closeSnackbar,
-    enqueueSnackbar,
+    closeSnackbar as closeSnackbarAction,
+    enqueueSnackbar as enqueueSnackbarAction,
     switchLoader
 } from "../../../actions/actionCreator";
-import models from "../../../js/models";
+
 import {URL_ADD_PRODUCT} from "../../../js/Urls";
 import {Close} from "@material-ui/icons";
 import clsx from "clsx";
@@ -23,6 +23,10 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {ERROR_COLOR} from "../../../js/constants";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import models from "../../../js/models";
 
 const CssTextField = withStyles({
     root: {
@@ -90,6 +94,12 @@ const useStyles = makeStyles((Theme) =>
         },
         input: {
             width: "100%",
+            "& p.Mui-error": {
+                position: "absolute",
+                top: 43,
+                background: "#FFF",
+                padding: "0 5px",
+            }
         },
         name: {
             marginTop: 0,
@@ -145,7 +155,10 @@ const useStyles = makeStyles((Theme) =>
             position: "absolute",
             right: 15,
             top: 15,
-            color: "rgba(97, 59, 231, 0.3)"
+            color: "rgba(97, 59, 231, 0.3)",
+            "&:hover": {
+                color: ERROR_COLOR,
+            }
         },
         body: {
             display: "flex",
@@ -199,18 +212,26 @@ const useStyles = makeStyles((Theme) =>
                 height: 54,
                 "& div": {
                     height: 34,
-                    padding: "17px 0 3px 15px"
+                    padding: "0px 0 11px 15px"
                 }
             },
-            "& p": {
+            "& p.Mui-error": {
                 position: "absolute",
-                top: 40,
-                background: "#fff",
+                top: 41,
+                background: "#FFF",
                 padding: "0 5px",
             }
         },
         fC1: {
             width: "100%",
+        },
+        loader: {
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            marginTop: -12,
+            marginLeft: -12,
+            color: "#fff !important",
         },
     })
 );
@@ -222,6 +243,7 @@ export default function AddProduct(props) {
     const classes = useStyles()
     const dispatch = useDispatch()
 
+    const loader = useSelector(store => store.app.loader)
     const groups = useSelector(store => store.catalogs.groups)
 
     const [close, setClose] = useState(false)
@@ -296,10 +318,13 @@ export default function AddProduct(props) {
     }
 
     const handlerChangeGroup = (e) => {
-        setGroup(e.target.value)
+        console.log(e.target.value)
+        setGroup(String(e.target.value))
     }
 
     const handlerFocusGroup = (e) => {
+        console.log(String(e.target.value))
+        setGroup(String(e.target.value))
         setErrorGroup(false)
         setHelperGroup("")
     };
@@ -406,9 +431,62 @@ export default function AddProduct(props) {
     const sendProduct = (e) => {
         e.preventDefault();
 
-        let form = new FormData(e.target)
+        let form = new FormData(e.target);
+        let status = true;
 
         form.delete("images")
+
+        if(name === "") {
+            setErrorName(true);
+            setHelperName("Заполните название товара!");
+            status = false;
+        }
+
+        if (image1 === null) {
+            enqueueSnackbar({
+                message: "Выберите хотя бы одно изображение",
+                options: {
+                    key: new Date().getTime() + Math.random(),
+                    variant: 'warning',
+                    action: (key) => (
+                        <Button onClick={() => closeSnackbar(key)}>х</Button>
+                    ),
+                },
+            });
+            status = false;
+        }
+
+        if(group === "null") {
+            setErrorGroup(true);
+            setHelperGroup("Выберите группу!");
+            status = false;
+        }
+
+        if(vendor_code === "") {
+            setErrorVendorCode(true);
+            setHelperVendorCode("Заполните артикул!");
+            status = false;
+        }
+
+        if(unit === "") {
+            setErrorUnit(true);
+            setHelperUnit("Заполните единицы измерения!");
+            status = false;
+        }
+
+        if(price === "") {
+            setErrorPrice(true);
+            setHelperPrice("Заполните цену!");
+            status = false;
+        }
+
+        if(!status) return
+
+        dispatch(switchLoader(true));
+
+        form.set("id", models.generateID(18));
+        form.set("data", new Date().getTime());
+        form.set("promotion", "0");
 
         if (typeof image_view1 === "string") {
             if (image_view1.length > 500) {
@@ -437,39 +515,39 @@ export default function AddProduct(props) {
         let options = {
             method: "POST",
             url: URL_ADD_PRODUCT,
-            headers: {'Authorization': 'Bearer ' + models.getCookie('Authorization')},
+            // headers: {'Authorization': 'Bearer ' + models.getCookie('Authorization')},
             data: form
         }
 
-        console.log(options)
+        axios(options)
+            .then(result => {
 
-        // axios(options)
-        //     .then(result => {
-        //
-        //         const {status} = result;
-        //
-        //         if (status === 200) {
-        //
-        //             enqueueSnackbar({
-        //                 message: "Изменения сохранены",
-        //                 options: {
-        //                     key: new Date().getTime() + Math.random(),
-        //                     variant: 'success',
-        //                     action: (key) => (
-        //                         <Button onClick={() => closeSnackbar(key)}>х</Button>
-        //                     ),
-        //                 },
-        //             });
-        //
-        //         }
-        //
-        //     })
-        //     .catch((error) => {
-        //         MCatchError(dispatch, error)
-        //     })
-        //     .finally(() => {
-        //         dispatch(switchLoader(false));
-        //     });
+                const {status} = result;
+
+                if (status === 200) {
+
+                    form.reset()
+
+                    enqueueSnackbar({
+                        message: "Изменения сохранены",
+                        options: {
+                            key: new Date().getTime() + Math.random(),
+                            variant: 'success',
+                            action: (key) => (
+                                <Button onClick={() => closeSnackbar(key)}>х</Button>
+                            ),
+                        },
+                    });
+
+                }
+
+            })
+            .catch((error) => {
+                MCatchError(dispatch, error)
+            })
+            .finally(() => {
+                dispatch(switchLoader(false));
+            });
 
 
     }
@@ -548,6 +626,14 @@ export default function AddProduct(props) {
             props.closeModal()
         }, 300)
     }
+
+    const enqueueSnackbar = (...args) => {
+        dispatch(enqueueSnackbarAction(...args))
+    };
+
+    const closeSnackbar = (...args) => {
+        dispatch(closeSnackbarAction(...args));
+    };
 
     useEffect(() => {
 
@@ -649,6 +735,7 @@ export default function AddProduct(props) {
                             value={group}
                             onChange={handlerChangeGroup}
                             onClick={handlerFocusGroup}
+                            name="group_id"
                         >
                             <MenuItem
                                 disabled
@@ -659,13 +746,33 @@ export default function AddProduct(props) {
                                 Выберите группу
                             </MenuItem>
                             {
-                                groups.map((item) => {
-                                    return <MenuItem
-                                        key={item.id}
-                                        value={item.id}
-                                    >
-                                        {item.name}
-                                    </MenuItem>
+                                groups.map((it) => {
+                                                        return <MenuItem
+                                                            key={it.id}
+                                                            value={it.id}
+                                                            style={{fontSize: "14px", color: "#555555", paddingLeft: 29}}
+                                                        >
+                                                            {it.name}
+                                                        </MenuItem>
+                                    // if(item.parent_id === "0") {
+                                    //     return <>
+                                    //         <ListSubheader style={{fontSize: "16px", color: "#444444"}}>{item.name}</ListSubheader>
+                                    //         {
+                                    //             groups.map((it) => {
+                                    //                 if(it.parent_id === item.id) {
+                                    //                     return <MenuItem
+                                    //                         key={it.id}
+                                    //                         value={it.id}
+                                    //                         style={{fontSize: "14px", color: "#555555", paddingLeft: 29}}
+                                    //                     >
+                                    //                         {it.name}
+                                    //                     </MenuItem>
+                                    //                 }
+                                    //             })
+                                    //         }
+                                    //     </>
+                                    // }
+
                                 })
                             }
                         </Select>
@@ -776,7 +883,12 @@ export default function AddProduct(props) {
                 <Button
                     type="submit"
                     className={classes.submit}
+                    disabled={loader}
                 >
+                    {
+                        loader &&
+                        <CircularProgress size={24} className={classes.loader}/>
+                    }
                     Сохранить
                 </Button>
 

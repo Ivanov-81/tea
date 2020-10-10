@@ -38,7 +38,7 @@ export default function MCatchError(dispatch, error, message) {
 
         if (status === 413) {
             dispatch(enqueueSnackbar({
-                message: "Слишком большой объект запроса",
+                message: "Слишком большой файл для загрузки!",
                 options: {
                     key: new Date().getTime() + Math.random(),
                     variant: 'error',
@@ -62,7 +62,7 @@ export default function MCatchError(dispatch, error, message) {
         if (status !== 400) {
 
             dispatch(enqueueSnackbar({
-                message: "Упс, возникла непредвиденная ошибка",
+                message: "Упс, возникла 400 ошибка",
                 options: {
                     key: new Date().getTime() + Math.random(),
                     variant: 'error',

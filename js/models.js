@@ -10,7 +10,9 @@ const models = {
         if (a.name < b.name) return -1;
         return 0;
     },
-
+    generateID(n) {
+        return Math.random().toString(36).slice(2, 2 + Math.max(1, Math.min(n, 10)));
+    },
     mathRound(num, nm) {
         return Math.round(num * nm) / nm;
     },
