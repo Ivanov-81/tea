@@ -27,6 +27,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {ERROR_COLOR} from "../../../js/constants";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import models from "../../../js/models";
+import {string} from "prop-types";
 
 const CssTextField = withStyles({
     root: {
@@ -212,7 +213,7 @@ const useStyles = makeStyles((Theme) =>
                 height: 54,
                 "& div": {
                     height: 34,
-                    padding: "0px 0 11px 15px"
+                    padding: "17px 0 3px 15px"
                 }
             },
             "& p.Mui-error": {
@@ -247,6 +248,7 @@ export default function AddProduct(props) {
     const groups = useSelector(store => store.catalogs.groups)
 
     const [close, setClose] = useState(false)
+    const [open_select, setOpenSelect] = useState(false)
 
     const [name, setName] = useState("")
     const [error_name, setErrorName] = useState(false)
@@ -264,7 +266,7 @@ export default function AddProduct(props) {
     const [error_price, setErrorPrice] = useState(false)
     const [helper_price, setHelperPrice] = useState("")
 
-    const [group, setGroup] = useState("null")
+    const [group, setGroup] = useState("18")
     const [error_group, setErrorGroup] = useState(false)
     const [helper_group, setHelperGroup] = useState("")
 
@@ -317,16 +319,22 @@ export default function AddProduct(props) {
         return num.split(".")
     }
 
-    const handlerChangeGroup = (e) => {
-        console.log(e.target.value)
-        setGroup(String(e.target.value))
-    }
-
     const handlerFocusGroup = (e) => {
-        console.log(String(e.target.value))
-        setGroup(String(e.target.value))
+        if(e.target.value) {
+            console.log(String(e.target.value))
+            setGroup(String(e.target.value))
+        }
+        setOpenSelect(false)
         setErrorGroup(false)
         setHelperGroup("")
+    };
+
+    const handlerOpen = () => {
+        setOpenSelect(true)
+    };
+
+    const handlerClose = () => {
+        setOpenSelect(false)
     };
 
     const handlerChangeInputText = (e) => {
@@ -436,7 +444,7 @@ export default function AddProduct(props) {
 
         form.delete("images")
 
-        if(name === "") {
+        if (name === "") {
             setErrorName(true);
             setHelperName("Заполните название товара!");
             status = false;
@@ -456,31 +464,31 @@ export default function AddProduct(props) {
             status = false;
         }
 
-        if(group === "null") {
+        if (group === "null") {
             setErrorGroup(true);
             setHelperGroup("Выберите группу!");
             status = false;
         }
 
-        if(vendor_code === "") {
+        if (vendor_code === "") {
             setErrorVendorCode(true);
             setHelperVendorCode("Заполните артикул!");
             status = false;
         }
 
-        if(unit === "") {
+        if (unit === "") {
             setErrorUnit(true);
             setHelperUnit("Заполните единицы измерения!");
             status = false;
         }
 
-        if(price === "") {
+        if (price === "") {
             setErrorPrice(true);
             setHelperPrice("Заполните цену!");
             status = false;
         }
 
-        if(!status) return
+        if (!status) return
 
         dispatch(switchLoader(true));
 
@@ -731,9 +739,41 @@ export default function AddProduct(props) {
                         variant="outlined"
                         className={clsx(classes.formControl, classes.fC1)}
                     >
+
+
+                        {/*<Select*/}
+                        {/*    value={group}*/}
+                        {/*    name="group_id"*/}
+                        {/*    onClick={handlerFocusGroup}*/}
+                        {/*    onChange={handlerChangeGroup}*/}
+                        {/*>*/}
+                        {/*    <MenuItem*/}
+                        {/*        disabled*/}
+                        {/*        key="0000"*/}
+                        {/*        value="null"*/}
+                        {/*        style={{color: "#444"}}*/}
+                        {/*    >*/}
+                        {/*        Выберите группу*/}
+                        {/*    </MenuItem>*/}
+                        {/*    {*/}
+                        {/*        groups.map((item) => {*/}
+                        {/*            return <MenuItem*/}
+                        {/*                key={item.id}*/}
+                        {/*                value={item.id}*/}
+                        {/*                style={{fontSize: "16px", color: "#444444"}}*/}
+                        {/*            >*/}
+                        {/*                {item.name}*/}
+                        {/*            </MenuItem>*/}
+                        {/*        })*/}
+                        {/*    }*/}
+                        {/*</Select>*/}
+
+
                         <Select
                             value={group}
-                            onChange={handlerChangeGroup}
+                            open={open_select}
+                            onOpen={handlerOpen}
+                            onClose={handlerClose}
                             onClick={handlerFocusGroup}
                             name="group_id"
                         >
@@ -746,32 +786,32 @@ export default function AddProduct(props) {
                                 Выберите группу
                             </MenuItem>
                             {
-                                groups.map((it) => {
+                                groups.map((item) => {
+
+                                    if (item.parent_id === "0") {
+                                        return <>
+                                            <MenuItem
+                                                disabled
+                                                key={item.id}
+                                                style={{fontSize: "16px", color: "#444444", opacity: 1}}
+                                            >
+                                                {item.name}
+                                            </MenuItem>
+                                            {
+                                                groups.map((it) => {
+                                                    if (it.parent_id === item.id) {
                                                         return <MenuItem
                                                             key={it.id}
                                                             value={it.id}
-                                                            style={{fontSize: "14px", color: "#555555", paddingLeft: 29}}
+                                                            style={{fontSize: "14px", color: "#555555"}}
                                                         >
                                                             {it.name}
                                                         </MenuItem>
-                                    // if(item.parent_id === "0") {
-                                    //     return <>
-                                    //         <ListSubheader style={{fontSize: "16px", color: "#444444"}}>{item.name}</ListSubheader>
-                                    //         {
-                                    //             groups.map((it) => {
-                                    //                 if(it.parent_id === item.id) {
-                                    //                     return <MenuItem
-                                    //                         key={it.id}
-                                    //                         value={it.id}
-                                    //                         style={{fontSize: "14px", color: "#555555", paddingLeft: 29}}
-                                    //                     >
-                                    //                         {it.name}
-                                    //                     </MenuItem>
-                                    //                 }
-                                    //             })
-                                    //         }
-                                    //     </>
-                                    // }
+                                                    }
+                                                })
+                                            }
+                                        </>
+                                    }
 
                                 })
                             }
