@@ -89,12 +89,6 @@ export default function Admin() {
         if (newValue === 2) history.push("/")
     };
 
-    useEffect(() => {
-
-        console.log(history.location)
-
-    }, [])
-
     return (
         <section className={classes.main}>
 

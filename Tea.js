@@ -19,12 +19,6 @@ export default function Tea() {
 
     useEffect(() => {
 
-        console.log(history.location)
-
-    }, [])
-
-    useEffect(() => {
-
         if(update) {
             setTimeout(() => {
                 dispatch(updateApp(false))

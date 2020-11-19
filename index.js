@@ -17,8 +17,6 @@ import models from "./js/models";
 import {useHistory} from "react-router";
 import {createBrowserHistory} from "history";
 
-const history = createBrowserHistory();
-
 const store = createStore(allReducers,
     (window).__REDUX_DEVTOOLS_EXTENSION__ &&
     (window).__REDUX_DEVTOOLS_EXTENSION__()
@@ -48,10 +46,7 @@ models.connectDB();
 
 store.dispatch(addDevice(models.getDevice()))
 
-window.onbeforeunload = function (evt) {
-    console.log(evt)
-    alert("Какое то сообщение")
-}
+window.onbeforeunload = function (evt) {}
 
 ReactDOM.render(
     <Provider store={store}>

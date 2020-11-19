@@ -143,7 +143,7 @@ export default function Menu(props) {
 
     useEffect(() => {
         if (data.length !== 0) {
-            console.log(data)
+            // console.log(data)
         }
     }, [data]);
 

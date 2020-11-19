@@ -1777,11 +1777,7 @@ export default function Main() {
             .then((result) => {
                 const {status, data} = result;
                 if (status === 200) {
-
-                    console.log(data);
-
                     dispatch(addGroups(data));
-
                 }
             })
             .catch(error => {
