@@ -13,7 +13,7 @@ import CheckIcon from '@material-ui/icons/Check';
 
 import {tableIcons} from "../../../js/variables"
 import MGetProducts from "../../../methods/MGetProducts";
-import {Add} from "@material-ui/icons";
+import {Add, Edit} from "@material-ui/icons";
 
 import MChangeArchived from "../../../methods/MChangeArchived";
 import MChangePromotion from "../../../methods/MChangePromotion";
@@ -271,11 +271,34 @@ export default function Products() {
                 </div>
             }
         },
+        {
+            field: 'photo',
+            title: 'Ред.',
+            cellStyle: {
+                color: '#73879C',
+                fontSize: '13px',
+                width: 50,
+                padding: 16,
+                textAlign: 'left',
+            },
+            render: (data) => {
+                return <IconButton
+                    title="Редактировать товар"
+                    style={{color: "#73879C"}}
+                    onClick={handlerEditProduct(data)}
+                >
+                    <Edit/>
+                </IconButton>
+            }
+        },
     ]
 
     let [pageSize] = useState(50)
     const [rows, setRows] = useState([])
     const [open_modal, setOpenModal] = useState(false)
+    const [product, setProduct] = useState({})
+
+
 
     const handlerChange = (data) => () => {
 
@@ -310,6 +333,12 @@ export default function Products() {
 
     };
 
+    const handlerEditProduct = (data) => () => {
+        console.log(data)
+        setProduct(data)
+        setOpenModal(true)
+    };
+
     const handlerChangeNovelty = (data) => () => {
 
         let message = "";
@@ -327,10 +356,11 @@ export default function Products() {
     };
 
     const handlerAddProduct = () => {
+        setProduct({})
         setOpenModal(true)
     };
 
-    const handlerCloseModal= () => {
+    const handlerCloseModal = () => {
         setOpenModal(false)
     };
 
@@ -358,6 +388,7 @@ export default function Products() {
                 disableBackdropClick
             >
                 <AddProduct
+                    product={product}
                     state={open_modal}
                     closeModal={handlerCloseModal}
                 />

@@ -1,4 +1,4 @@
-import React, {createRef, Fragment, useEffect, useState} from 'react';
+import React, {createRef, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 
 import {makeStyles} from "@material-ui/core/styles";
@@ -25,15 +25,15 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {ERROR_COLOR} from "../../../js/constants";
-import ListSubheader from "@material-ui/core/ListSubheader";
 import models from "../../../js/models";
-import {string} from "prop-types";
+import InputBase from "@material-ui/core/InputBase";
 
 const CssTextField = withStyles({
     root: {
         borderWidth: "2px",
         '& label.Mui-focused': {
-            color: '#EBEBEB',
+            color: '#000000',
+            // border: "2px solid #EBEBEB",
         },
         '& .MuiInput-underline:after': {
             borderBottomColor: '#EBEBEB',
@@ -41,6 +41,7 @@ const CssTextField = withStyles({
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
                 borderColor: '#EBEBEB',
+                border: "2px solid #EBEBEB",
             },
             '&:hover fieldset': {
                 borderColor: '#EBEBEB',
@@ -51,6 +52,39 @@ const CssTextField = withStyles({
         },
     },
 })(TextField);
+
+const CustomInput = withStyles((theme) =>
+    createStyles({
+        root: {
+            'label + &': {
+                marginTop: theme.spacing(3),
+            },
+        },
+        input: {
+            borderRadius: 4,
+            position: "relative",
+            border: '2px solid #ebebeb',
+            fontSize: 16,
+            height: 35,
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: 10,
+            paddingTop: 10,
+            transition: theme.transitions.create(['border-color', 'box-shadow']),
+            fontFamily: [
+                'Roboto',
+                '"Helvetica Neue"',
+                'Arial',
+                'sans-serif',
+            ].join(','),
+            '&:focus': {
+                borderRadius: 4,
+                border: "2px solid #ebebeb",
+                // boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+            },
+        },
+    }),
+)(InputBase);
 
 const useStyles = makeStyles((Theme) =>
     createStyles({
@@ -106,7 +140,7 @@ const useStyles = makeStyles((Theme) =>
             marginTop: 0,
         },
         vendorCode: {
-            marginTop: 10,
+            marginTop: 20,
             marginBottom: 0
         },
         labels: {
@@ -166,18 +200,19 @@ const useStyles = makeStyles((Theme) =>
             flexDirection: "column",
             width: "100%",
             height: "75%",
-            padding: "2px 0",
+            padding: "10px 0",
             overflowX: "hidden",
             overflowY: "auto",
         },
         textareaDiv: {
+            position: "relative",
             width: "calc(100% - 4px)",
-            height: 94,
-            minHeight: 94,
+            height: 100,
+            minHeight: 100,
             border: "2px solid #EBEBEB",
             borderRadius: 4,
             overflow: "hidden",
-            margin: "10px 0 0",
+            margin: "20px 0 0",
             display: "flex",
             justifyContent: "flex-start",
         },
@@ -189,7 +224,7 @@ const useStyles = makeStyles((Theme) =>
             borderRadius: 4,
             margin: "-2px -2px 0px -2px",
             fontFamily: "Roboto, Helvetica, Arial, sans-serif",
-            padding: 7,
+            padding: "10px 7px",
             outline: "none",
             fontSize: "0.875em",
             color: "#444",
@@ -234,6 +269,31 @@ const useStyles = makeStyles((Theme) =>
             marginLeft: -12,
             color: "#fff !important",
         },
+        textareaDescription: {
+            background: "#FFFFFF",
+            position: "absolute",
+            top: 13,
+            height: 17,
+            left: 10,
+            fontSize: "13px",
+            zIndex: 3,
+            padding: "0 5px",
+            color: "#666666",
+        },
+        textareaRecipe: {
+            background: "#FFFFFF",
+            position: "absolute",
+            top: 13,
+            height: 17,
+            left: 10,
+            fontSize: "13px",
+            zIndex: 3,
+            padding: "0 5px",
+            color: "#666666",
+        },
+        block: {
+            position: "relative",
+        }
     })
 );
 
@@ -246,6 +306,8 @@ export default function AddProduct(props) {
 
     const loader = useSelector(store => store.app.loader)
     const groups = useSelector(store => store.catalogs.groups)
+
+    const [id, setId] = useState(null)
 
     const [close, setClose] = useState(false)
     const [open_select, setOpenSelect] = useState(false)
@@ -266,7 +328,7 @@ export default function AddProduct(props) {
     const [error_price, setErrorPrice] = useState(false)
     const [helper_price, setHelperPrice] = useState("")
 
-    const [group, setGroup] = useState("18")
+    const [group, setGroup] = useState("null")
     const [error_group, setErrorGroup] = useState(false)
     const [helper_group, setHelperGroup] = useState("")
 
@@ -320,7 +382,7 @@ export default function AddProduct(props) {
     }
 
     const handlerFocusGroup = (e) => {
-        if(e.target.value) {
+        if (e.target.value) {
             console.log(String(e.target.value))
             setGroup(String(e.target.value))
         }
@@ -653,6 +715,43 @@ export default function AddProduct(props) {
         }
     }, [props.state]);
 
+    useEffect(() => {
+
+        if (Object.keys(props.product).length !== 0) {
+
+            let {
+                id,
+                name,
+                unit,
+                price,
+                recipe,
+                group_id,
+                vendor_code,
+                description
+            } = props.product;
+
+            setId(id);
+            setName(name);
+            setGroup(group_id);
+            setVendorCode(vendor_code)
+            setUnit(unit)
+            setPrice(price)
+            setDescription(description)
+            setRecipe(recipe)
+
+        } else {
+            setId(null);
+            setName("");
+            setGroup("null");
+            setVendorCode("")
+            setUnit("")
+            setPrice("")
+            setDescription("")
+            setRecipe("")
+        }
+
+    }, [props.product]);
+
     return (
 
         <Zoom
@@ -686,6 +785,7 @@ export default function AddProduct(props) {
                         error={error_name}
                         helperText={helper_name}
                         placeholder="Название товара"
+                        label="Название товара"
                         name="name"
                         type="text"
                         value={name}
@@ -740,7 +840,6 @@ export default function AddProduct(props) {
                         className={clsx(classes.formControl, classes.fC1)}
                     >
 
-
                         {/*<Select*/}
                         {/*    value={group}*/}
                         {/*    name="group_id"*/}
@@ -776,6 +875,7 @@ export default function AddProduct(props) {
                             onClose={handlerClose}
                             onClick={handlerFocusGroup}
                             name="group_id"
+                            input={<CustomInput/>}
                         >
                             <MenuItem
                                 disabled
@@ -824,6 +924,7 @@ export default function AddProduct(props) {
                         error={error_vendor_code}
                         helperText={helper_vendor_code}
                         placeholder="Артикул"
+                        label="Артикул"
                         name="vendor_code"
                         type="text"
                         value={vendor_code}
@@ -845,6 +946,7 @@ export default function AddProduct(props) {
                         error={error_unit}
                         helperText={helper_unit}
                         placeholder="Ед. измерения"
+                        label="Ед. измерения"
                         name="unit"
                         type="text"
                         value={unit}
@@ -866,6 +968,7 @@ export default function AddProduct(props) {
                         error={error_price}
                         helperText={helper_price}
                         placeholder="Цена"
+                        label="Цена"
                         name="price"
                         type="text"
                         value={price}
@@ -883,38 +986,54 @@ export default function AddProduct(props) {
 
                     />
 
-                    <div className={classes.textareaDiv}>
+                    <div className={classes.block}>
 
-                        <TextareaAutosize
-                            placeholder="Описание продукта"
-                            value={description}
-                            className={clsx(classes.textarea, "scrollbar")}
-                            name="description"
-                            onChange={handlerChangeInputText}
-                            onFocus={handlerFocusInputText}
-                            autoComplete="description"
-                        />
                         {
-                            error_description && <span className={classes.shotDesc}>{helper_description}</span>
+                            description !== "" && <span className={classes.textareaDescription}>Описание</span>
                         }
+
+                        <div className={classes.textareaDiv}>
+
+                            <TextareaAutosize
+                                placeholder="Описание продукта"
+                                value={description}
+                                className={clsx(classes.textarea, "scrollbar")}
+                                name="description"
+                                onChange={handlerChangeInputText}
+                                onFocus={handlerFocusInputText}
+                                autoComplete="description"
+                            />
+                            {
+                                error_description && <span className={classes.shotDesc}>{helper_description}</span>
+                            }
+
+                        </div>
 
                     </div>
 
-                    <div className={classes.textareaDiv}>
+                    <div className={classes.block}>
 
-                        <TextareaAutosize
-                            placeholder="Рецепт приготовления"
-                            value={recipe}
-                            className={classes.textarea}
-                            style={{}}
-                            name="recipe"
-                            onChange={handlerChangeInputText}
-                            onFocus={handlerFocusInputText}
-                            autoComplete="recipe"
-                        />
                         {
-                            error_recipe && <span className={classes.shotDesc}>{helper_recipe}</span>
+                            recipe !== "" && <span className={classes.textareaRecipe}>Рецепт приготовления</span>
                         }
+
+                        <div className={classes.textareaDiv}>
+
+                            <TextareaAutosize
+                                placeholder="Рецепт приготовления"
+                                value={recipe}
+                                className={clsx(classes.textarea, "scrollbar")}
+                                style={{}}
+                                name="recipe"
+                                onChange={handlerChangeInputText}
+                                onFocus={handlerFocusInputText}
+                                autoComplete="recipe"
+                            />
+                            {
+                                error_recipe && <span className={classes.shotDesc}>{helper_recipe}</span>
+                            }
+
+                        </div>
 
                     </div>
 

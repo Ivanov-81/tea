@@ -36,3 +36,6 @@ export const GREY_COLOR = '#AFAFAF';
 export const DARK_GREY_COLOR = '#879196';
 export const MAIN_COLOR = '#613be7';
 export const MAIN_COLOR_LITE = 'rgba(97, 59, 231, 0.5)';
+
+// REGEXP
+export const REG_EMAIL = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;

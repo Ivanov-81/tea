@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Link} from "react-router-dom"
 import PropTypes from 'prop-types'
 import {useHistory} from "react-router"
@@ -88,6 +88,12 @@ export default function Admin() {
         setValue(newValue);
         if (newValue === 2) history.push("/")
     };
+
+    useEffect(() => {
+
+        console.log(history.location)
+
+    }, [])
 
     return (
         <section className={classes.main}>

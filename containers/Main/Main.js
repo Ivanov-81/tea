@@ -22,10 +22,10 @@ import List from "../../containers/Main/List/List"
 import Cart from "../../containers/Cart/Cart"
 
 import {
-    addGroups,
-    switchShowCart,
+    addGroups, refreshCart,
+    switchShowCart, switchMenu, addCart,
+    closeSnackbar as closeSnackbarAction,
     enqueueSnackbar as enqueueSnackbarAction,
-    closeSnackbar as closeSnackbarAction, addCart, refreshCart, switchMenu,
 } from "../../actions/actionCreator"
 
 import Container from "@material-ui/core/Container";
@@ -42,7 +42,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 
 import {CheckBox, CheckBoxOutlineBlank} from "@material-ui/icons";
 
-import {SITE_KEY} from "../../js/constants"
+import {REG_EMAIL, SITE_KEY} from "../../js/constants"
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -53,916 +53,914 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
 import Menu from "./Menu/Menu";
 
-const useStyles = makeStyles((theme) => createStyles({
-    root: {
-        position: "initial",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "flex-start",
-        width: "100%",
-        height: "100%",
-        color: "#000000",
-        padding: "55px 23px 55px 23px",
-        flexGrow: 1,
-        overflow: "hidden",
-        [theme.breakpoints.down('lg')]: {
+const useStyles = makeStyles((theme) =>
+    createStyles({
+        root: {
+            position: "initial",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-start",
+            width: "100%",
+            height: "100%",
+            color: "#000000",
             padding: "55px 23px 55px 23px",
+            flexGrow: 1,
+            overflow: "hidden",
+            [theme.breakpoints.down('lg')]: {
+                padding: "55px 23px 55px 23px",
+            },
+            [theme.breakpoints.down('md')]: {
+                padding: "55px 23px 55px 23px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                padding: "55px 23px 20px 23px",
+            },
         },
-        [theme.breakpoints.down('md')]: {
-            padding: "55px 23px 55px 23px",
+        menu: {
+            height: 222,
+            backgroundColor: "#092924",
+            // border: "1px solid #D5BC9C",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            minWidth: 186,
+            borderRadius: 0,
+            padding: 0
         },
-        [theme.breakpoints.down('sm')]: {
-            padding: "55px 23px 20px 23px",
-        },
-    },
-    menu: {
-        height: 222,
-        backgroundColor: "#092924",
-        // border: "1px solid #D5BC9C",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        minWidth: 186,
-        borderRadius: 0,
-        padding: 0
-    },
-    carousel: {
-        height: 422,
-        backgroundColor: "#EFE6DF",
-        border: "1px solid #D5BC9C",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 0,
-        borderRadius: 0,
-        [theme.breakpoints.down('lg')]: {
+        carousel: {
             height: 422,
-        },
-        [theme.breakpoints.down('md')]: {
-            height: 422,
-        },
-        [theme.breakpoints.down('sm')]: {
-            height: 200,
-        },
-    },
-    block: {
-        position: "relative",
-        display: "flex",
-        width: "100%",
-        height: 52,
-        color: "#BA975F",
-        flexDirection: "column",
-        backgroundColor: "#041715",
-        padding: "0 0 0 23px"
-    },
-    block2: {
-        position: "relative",
-        display: "flex",
-        width: "100%",
-        height: 50,
-        color: "#000000",
-        flexDirection: "column",
-        backgroundColor: "#BA975F",
-        padding: "0 0 0 23px"
-    },
-    block3: {
-        position: "relative",
-        display: "flex",
-        width: "100%",
-        color: "#000000",
-        flexDirection: "column",
-        backgroundImage: "url(../images/fone.jpg)",
-        backgroundAttachment: "fixed",
-        backgroundSize: "cover",
-        minHeight: "calc(100vh - 102px)",
-    },
-    link: {
-        position: "fixed",
-        top: "110px",
-        right: "25px",
-        color: "#BA975F",
-        zIndex: 1,
-        fontSize: "13px",
-    },
-    item: {
-        display: "flex",
-        justifyContent: "space-between",
-        textTransform: "none",
-        width: "100%",
-        height: "37px",
-        borderBottom: "1px solid #D5BC9C",
-        borderRight: "1px solid #D5BC9C",
-        backgroundColor: "#EFE6DF",
-        fontSize: "15px",
-        fontWeight: 400,
-        color: "#815333",
-        borderRadius: 0,
-        "&:hover": {
-            color: "#815333",
             backgroundColor: "#EFE6DF",
-        }
-    },
-    chevron: {
-        display: "flex",
-        padding: "2px",
-        color: "#D5BC9C",
-    },
-    name: {
-        display: "flex",
-    },
-    span: {
-        overflow: "hidden",
-        height: "28px",
-        textAlign: "left",
-    },
-    popper: {
-        left: "-10px !important"
-    },
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    paper: {
-        backgroundColor: "#EFE6DF",
-        border: '2px solid #041715',
-        boxShadow: theme.shadows[5],
-        padding: "15px",
-        opacity: "1 !important",
-        visibility: "visible !important",
-        width: "600px",
-        height: "550px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
-    },
-    paper2: {
-        width: "885px",
-        height: "600px",
-        backgroundColor: "#EFE6DF",
-        borderRadius: "0",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        [theme.breakpoints.down('lg')]: {
-            width: "850px",
+            border: "1px solid #D5BC9C",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 0,
+            borderRadius: 0,
+            [theme.breakpoints.down('lg')]: {
+                height: 422,
+            },
+            [theme.breakpoints.down('md')]: {
+                height: 422,
+            },
+            [theme.breakpoints.down('sm')]: {
+                height: 200,
+            },
         },
-        [theme.breakpoints.down('md')]: {
-            width: "645px",
+        block: {
+            position: "relative",
+            display: "flex",
+            width: "100%",
+            height: 52,
+            color: "#BA975F",
+            flexDirection: "column",
+            backgroundColor: "#041715",
+            padding: "0 0 0 23px"
         },
-        [theme.breakpoints.down('sm')]: {
-            width: "430px",
+        block2: {
+            position: "relative",
+            display: "flex",
+            width: "100%",
+            height: 50,
+            color: "#000000",
+            flexDirection: "column",
+            backgroundColor: "#BA975F",
+            padding: "0 0 0 23px"
         },
-    },
-    cart: {
-        overflow: "hidden"
-    },
-    container: {
-        position: "absolute",
-        display: "flex",
-        flexDirection: "column",
-        top: "-54px",
-        right: "10px",
-        width: "350px",
-        height: "350px",
-        [theme.breakpoints.down('lg')]: {
-
+        block3: {
+            position: "relative",
+            display: "flex",
+            width: "100%",
+            color: "#000000",
+            flexDirection: "column",
+            backgroundImage: "url(../images/fone.jpg)",
+            backgroundAttachment: "fixed",
+            backgroundSize: "cover",
+            minHeight: "calc(100vh - 102px)",
         },
-        [theme.breakpoints.down('md')]: {
-
+        link: {
+            position: "fixed",
+            top: "110px",
+            right: "25px",
+            color: "#BA975F",
+            zIndex: 1,
+            fontSize: "13px",
         },
-        [theme.breakpoints.down('sm')]: {
-            top: "50px",
-            right: "50%",
-            marginRight: "-175px"
+        item: {
+            display: "flex",
+            justifyContent: "space-between",
+            textTransform: "none",
+            width: "100%",
+            height: "37px",
+            borderBottom: "1px solid #D5BC9C",
+            borderRight: "1px solid #D5BC9C",
+            backgroundColor: "#EFE6DF",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "#815333",
+            borderRadius: 0,
+            "&:hover": {
+                color: "#815333",
+                backgroundColor: "#EFE6DF",
+            }
         },
-    },
-    closeModal: {
-        position: "absolute",
-        right: 0,
-        color: "#ff0000",
-    },
-    delProd: {
-        position: "absolute",
-        top: 0,
-        right: 0,
-        color: "#ff0000",
-    },
-    header: {
-        position: "relative",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        height: "36px",
-        fontSize: "18px",
-        color: "#041715",
-    },
-    body: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        width: "100%",
-        height: "430px",
-    },
-    footer: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        width: "100%",
-        height: "45px"
-    },
-    button: {
-        color: "darkgreen",
-        border: "1px solid darkgreen",
-        padding: "5px 10px",
-        fontSize: "14px",
-        textTransform: "none",
-        backgroundColor: "#d8c3a4",
-        height: "37px",
-        width: "150px",
-    },
-    progress: {
-        width: '100%',
-        '& > * + *': {
-            marginTop: theme.spacing(2),
+        chevron: {
+            display: "flex",
+            padding: "2px",
+            color: "#D5BC9C",
         },
-    },
-    progressInfo: {
-        width: "100%",
-        height: "15px",
-        display: "flex",
-        justifyContent: "space-around",
-        fontSize: "12px",
-    },
-    progressAction: {
-        width: "33.3%",
-        textAlign: "center",
-        color: "#666666",
-    },
-    bodyForm: {
-        marginTop: "10px",
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-        alignItems: "center",
-    },
-    bF: {
-        width: "100%",
-        display: "flex",
-        flexDirection: "row",
-    },
-    bF2: {
-        width: "100%",
-        height: "330px",
-        minHeight: "120px",
-        display: "flex",
-        flexDirection: "column",
-        overflowX: "hidden",
-        overflowY: "auto",
-    },
-    phone: {
-        fontFamily: "Roboto, Helvetica, Arial, sans-serif",
-        fontStyle: "normal",
-        fontWeight: "bold",
-        fontSize: "14px",
-        lineHeight: "14px",
-        display: "flex",
-        alignItems: "center",
-        color: "#000000",
-        margin: "20px 0 0 0",
-        // [theme.breakpoints.down('lg')]: {
-        //     fontSize: "14px",
-        //     fontWeight: 400,
-        //     lineHeight: "14px",
-        //     margin: "5px 0 0 0",
-        // },
-        // [theme.breakpoints.down('md')]: {
-        //     fontSize: "13px",
-        //     lineHeight: "13px",
-        //     fontWeight: 400,
-        //     margin: "4px 0 0 0",
-        //     overflow: "hidden",
-        //     whiteSpace: "nowrap",
-        // },
-        // [theme.breakpoints.down('sm')]: {
-        //     fontSize: "12px",
-        //     lineHeight: "12px",
-        //     fontWeight: 300,
-        //     margin: "3px 0 0 0",
-        //     overflow: "hidden",
-        //     whiteSpace: "nowrap",
-        // },
-    },
-    input: {
-        margin: "5px 0 0 0",
-        color: "#879196",
-        width: "200px",
-        "& div": {
-            height: "35px",
+        name: {
+            display: "flex",
         },
-        "& p": {
+        span: {
+            overflow: "hidden",
+            height: "28px",
+            textAlign: "left",
+        },
+        popper: {
+            left: "-10px !important"
+        },
+        modal: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        paper: {
+            backgroundColor: "#EFE6DF",
+            border: '2px solid #041715',
+            boxShadow: theme.shadows[5],
+            padding: "15px",
+            opacity: "1 !important",
+            visibility: "visible !important",
+            width: "600px",
+            height: "550px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "center",
+        },
+        paper2: {
+            width: "885px",
+            height: "600px",
+            backgroundColor: "#EFE6DF",
+            borderRadius: "0",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            [theme.breakpoints.down('lg')]: {
+                width: "850px",
+            },
+            [theme.breakpoints.down('md')]: {
+                width: "645px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                width: "430px",
+            },
+        },
+        cart: {
+            overflow: "hidden"
+        },
+        container: {
+            position: "absolute",
+            display: "flex",
+            flexDirection: "column",
+            top: "-54px",
+            right: "10px",
+            width: "350px",
+            height: "350px",
+            [theme.breakpoints.down('lg')]: {},
+            [theme.breakpoints.down('md')]: {},
+            [theme.breakpoints.down('sm')]: {
+                top: "50px",
+                right: "50%",
+                marginRight: "-175px"
+            },
+        },
+        closeModal: {
+            position: "absolute",
+            right: 0,
+            color: "#ff0000",
+        },
+        delProd: {
+            position: "absolute",
+            top: 0,
+            right: 0,
+            color: "#ff0000",
+        },
+        header: {
+            position: "relative",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "36px",
+            fontSize: "18px",
+            color: "#041715",
+        },
+        body: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            width: "100%",
+            height: "430px",
+        },
+        footer: {
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            width: "100%",
+            height: "45px"
+        },
+        button: {
+            color: "darkgreen",
+            border: "1px solid darkgreen",
+            padding: "5px 10px",
             fontSize: "14px",
-            margin: "1px 3px 0 -5px",
+            textTransform: "none",
+            backgroundColor: "#d8c3a4",
+            height: "37px",
+            width: "150px",
+        },
+        progress: {
+            width: '100%',
+            '& > * + *': {
+                marginTop: theme.spacing(2),
+            },
+        },
+        progressInfo: {
+            width: "100%",
+            height: "15px",
+            display: "flex",
+            justifyContent: "space-around",
+            fontSize: "12px",
+        },
+        progressAction: {
+            width: "33.3%",
+            textAlign: "center",
+            color: "#666666",
+        },
+        bodyForm: {
+            marginTop: "10px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+        },
+        bF: {
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+        },
+        bF2: {
+            width: "100%",
+            height: "330px",
+            minHeight: "120px",
+            display: "flex",
+            flexDirection: "column",
+            overflowX: "hidden",
+            overflowY: "auto",
+        },
+        phone: {
+            fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+            fontStyle: "normal",
+            fontWeight: "bold",
+            fontSize: "14px",
+            lineHeight: "14px",
+            display: "flex",
+            alignItems: "center",
+            color: "#000000",
+            margin: "20px 0 0 0",
             // [theme.breakpoints.down('lg')]: {
             //     fontSize: "14px",
-            //     margin: "0 0 0 -5px",
+            //     fontWeight: 400,
+            //     lineHeight: "14px",
+            //     margin: "5px 0 0 0",
             // },
             // [theme.breakpoints.down('md')]: {
-            //     fontSize: "12px",
-            //     margin: "0 0 0 -5px",
+            //     fontSize: "13px",
+            //     lineHeight: "13px",
+            //     fontWeight: 400,
+            //     margin: "4px 0 0 0",
+            //     overflow: "hidden",
+            //     whiteSpace: "nowrap",
             // },
             // [theme.breakpoints.down('sm')]: {
-            //     fontSize: "11px",
-            //     margin: "0 0 0 -5px",
+            //     fontSize: "12px",
+            //     lineHeight: "12px",
+            //     fontWeight: 300,
+            //     margin: "3px 0 0 0",
+            //     overflow: "hidden",
+            //     whiteSpace: "nowrap",
             // },
         },
-        "& input": {
-            margin: "1px 3px 0 0",
-            height: "35px",
-            fontSize: "14px",
+        input: {
+            margin: "5px 0 0 0",
+            color: "#879196",
+            width: "200px",
+            "& div": {
+                height: "35px",
+            },
+            "& p": {
+                fontSize: "14px",
+                margin: "1px 3px 0 -5px",
+                // [theme.breakpoints.down('lg')]: {
+                //     fontSize: "14px",
+                //     margin: "0 0 0 -5px",
+                // },
+                // [theme.breakpoints.down('md')]: {
+                //     fontSize: "12px",
+                //     margin: "0 0 0 -5px",
+                // },
+                // [theme.breakpoints.down('sm')]: {
+                //     fontSize: "11px",
+                //     margin: "0 0 0 -5px",
+                // },
+            },
+            "& input": {
+                margin: "1px 3px 0 0",
+                height: "35px",
+                fontSize: "14px",
+            },
+            "& p.Mui-error": {
+                position: "absolute",
+                top: "26px",
+                fontSize: "11px",
+                margin: "0 0 0 9px",
+                background: "#EFE6DF",
+                padding: "0 5px",
+            },
+            // [theme.breakpoints.down('lg')]: {
+            //     margin: "2px 0 0 0",
+            //     "& input": {
+            //         padding: "10px 10px",
+            //         fontSize: "14px",
+            //         height: "19px",
+            //     },
+            //     "& p.Mui-error": {
+            //         top: "28px",
+            //         fontSize: "11px",
+            //     },
+            // },
+            // [theme.breakpoints.down('md')]: {
+            //     margin: "2px 0 0 0",
+            //     "& input": {
+            //         padding: "5px 5px",
+            //         fontSize: "13px",
+            //         height: "28px",
+            //     },
+            //     "& p.Mui-error": {
+            //         top: "30px",
+            //         fontSize: "10px",
+            //         height: "10px",
+            //     },
+            // },
+            // [theme.breakpoints.down('sm')]: {
+            //     margin: "2px 0 0 0",
+            //     "& input": {
+            //         padding: "3px 3px",
+            //         fontSize: "13px",
+            //         height: "24px",
+            //     },
+            //     "& p.Mui-error": {
+            //         top: "26px",
+            //         fontSize: "10px",
+            //         height: "10px",
+            //     },
+            // },
         },
-        "& p.Mui-error": {
-            position: "absolute",
-            top: "26px",
-            fontSize: "11px",
-            margin: "0 0 0 9px",
-            background: "#EFE6DF",
-            padding: "0 5px",
-        },
-        // [theme.breakpoints.down('lg')]: {
-        //     margin: "2px 0 0 0",
-        //     "& input": {
-        //         padding: "10px 10px",
-        //         fontSize: "14px",
-        //         height: "19px",
-        //     },
-        //     "& p.Mui-error": {
-        //         top: "28px",
-        //         fontSize: "11px",
-        //     },
-        // },
-        // [theme.breakpoints.down('md')]: {
-        //     margin: "2px 0 0 0",
-        //     "& input": {
-        //         padding: "5px 5px",
-        //         fontSize: "13px",
-        //         height: "28px",
-        //     },
-        //     "& p.Mui-error": {
-        //         top: "30px",
-        //         fontSize: "10px",
-        //         height: "10px",
-        //     },
-        // },
-        // [theme.breakpoints.down('sm')]: {
-        //     margin: "2px 0 0 0",
-        //     "& input": {
-        //         padding: "3px 3px",
-        //         fontSize: "13px",
-        //         height: "24px",
-        //     },
-        //     "& p.Mui-error": {
-        //         top: "26px",
-        //         fontSize: "10px",
-        //         height: "10px",
-        //     },
-        // },
-    },
-    captcha: {
-        position: "relative",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        margin: "20px 0 0 0",
-        width: "200px",
-        height: "55px",
-        borderRadius: "4px",
-        border: "1px solid #BBB",
-        "&:hover": {
+        captcha: {
+            position: "relative",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
             margin: "20px 0 0 0",
-            border: "1px solid blue",
             width: "200px",
             height: "55px",
-        }
-    },
-    checkbox: {
-        cursor: "pointer",
-        width: "24px",
-        height: "24px",
-        margin: "0 20px",
-    },
-    loader: {
-        position: "absolute",
-        top: "12px",
-        left: "17px",
-    },
-    delivery: {
-        width: "35%",
-        padding: "10px",
-    },
-    pickup: {
-        width: "65%",
-        padding: "10px",
-        position: "relative"
-    },
-    fone: {
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        zIndex: 1,
-    },
-    checkboxDeliv: {
-        width: "100%",
-        height: "40px",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        cursor: "pointer",
-    },
-    formControl: {
-        width: "60%",
-        height: "35px",
-        margin: "10px 0 0 0",
-        "& div": {
-            height: "35px",
-            "& div": {
-                height: "23px",
-                padding: "8px 22px 5px 15px",
-                fontSize: "14px",
+            borderRadius: "4px",
+            border: "1px solid #BBB",
+            "&:hover": {
+                margin: "20px 0 0 0",
+                border: "1px solid blue",
+                width: "200px",
+                height: "55px",
             }
-        }
-    },
-    fC1: {},
-    textarea: {
-        color: "#879196",
-        width: "90%",
-        height: "150px !important",
-        margin: "5px 0 0 0",
-        fontSize: "13px",
-        border: "1px solid #BBB",
-        borderRadius: "4px",
-        background: "#EFE6DF",
-        padding: "5px 10px",
-        outline: "none",
-    },
-    inputArea: {
-        color: "#879196",
-        width: "90%",
-        margin: "5px 0 0 0",
-        "& div": {
-            height: "35px",
-            fontSize: "14px"
         },
-        "& p": {
-            fontSize: "14px",
-            margin: "1px 3px 0 -5px",
+        checkbox: {
+            cursor: "pointer",
+            width: "24px",
+            height: "24px",
+            margin: "0 20px",
+        },
+        loader: {
+            position: "absolute",
+            top: "12px",
+            left: "17px",
+        },
+        delivery: {
+            width: "35%",
+            padding: "10px",
+        },
+        pickup: {
+            width: "65%",
+            padding: "10px",
+            position: "relative"
+        },
+        fone: {
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            zIndex: 1,
+        },
+        checkboxDeliv: {
+            width: "100%",
+            height: "40px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            cursor: "pointer",
+        },
+        formControl: {
+            width: "60%",
+            height: "35px",
+            margin: "10px 0 0 0",
+            "& div": {
+                height: "35px",
+                "& div": {
+                    height: "23px",
+                    padding: "8px 22px 5px 15px",
+                    fontSize: "14px",
+                }
+            }
+        },
+        fC1: {},
+        textarea: {
+            color: "#879196",
+            width: "90%",
+            height: "150px !important",
+            margin: "5px 0 0 0",
+            fontSize: "13px",
+            border: "1px solid #BBB",
+            borderRadius: "4px",
+            background: "#EFE6DF",
+            padding: "5px 10px",
+            outline: "none",
+        },
+        inputArea: {
+            color: "#879196",
+            width: "90%",
+            margin: "5px 0 0 0",
+            "& div": {
+                height: "35px",
+                fontSize: "14px"
+            },
+            "& p": {
+                fontSize: "14px",
+                margin: "1px 3px 0 -5px",
+                // [theme.breakpoints.down('lg')]: {
+                //     fontSize: "14px",
+                //     margin: "0 0 0 -5px",
+                // },
+                // [theme.breakpoints.down('md')]: {
+                //     fontSize: "12px",
+                //     margin: "0 0 0 -5px",
+                // },
+                // [theme.breakpoints.down('sm')]: {
+                //     fontSize: "11px",
+                //     margin: "0 0 0 -5px",
+                // },
+            },
+            "&input": {
+                margin: "1px 3px 0 0",
+                height: "35px",
+                fontSize: "14px",
+            },
+            "& p.Mui-error": {
+                height: "10px",
+                position: "absolute",
+                top: "26px",
+                fontSize: "11px",
+                margin: "0 0 0 9px",
+                background: "#EFE6DF",
+                padding: "0 5px",
+            },
             // [theme.breakpoints.down('lg')]: {
-            //     fontSize: "14px",
-            //     margin: "0 0 0 -5px",
+            //     margin: "2px 0 0 0",
+            //     "& input": {
+            //         padding: "10px 10px",
+            //         fontSize: "14px",
+            //         height: "19px",
+            //     },
+            //     "& p.Mui-error": {
+            //         top: "28px",
+            //         fontSize: "11px",
+            //     },
             // },
             // [theme.breakpoints.down('md')]: {
-            //     fontSize: "12px",
-            //     margin: "0 0 0 -5px",
+            //     margin: "2px 0 0 0",
+            //     "& input": {
+            //         padding: "5px 5px",
+            //         fontSize: "13px",
+            //         height: "28px",
+            //     },
+            //     "& p.Mui-error": {
+            //         top: "30px",
+            //         fontSize: "10px",
+            //         height: "10px",
+            //     },
             // },
             // [theme.breakpoints.down('sm')]: {
-            //     fontSize: "11px",
-            //     margin: "0 0 0 -5px",
+            //     margin: "2px 0 0 0",
+            //     "& input": {
+            //         padding: "3px 3px",
+            //         fontSize: "13px",
+            //         height: "24px",
+            //     },
+            //     "& p.Mui-error": {
+            //         top: "26px",
+            //         fontSize: "10px",
+            //         height: "10px",
+            //     },
             // },
         },
-        "&input": {
-            margin: "1px 3px 0 0",
-            height: "35px",
-            fontSize: "14px",
+        news: {
+            position: "relative",
+            display: "flex",
+            margin: "10px 0 0 0",
+            borderRadius: 0,
+            height: "222px",
+            minWidth: "186px",
+            alignItems: "center",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            backgroundColor: "#092924",
         },
-        "& p.Mui-error": {
-            height: "10px",
-            position: "absolute",
-            top: "26px",
-            fontSize: "11px",
-            margin: "0 0 0 9px",
-            background: "#EFE6DF",
-            padding: "0 5px",
+        news2: {
+            margin: "15px 0 0 0",
         },
-        // [theme.breakpoints.down('lg')]: {
-        //     margin: "2px 0 0 0",
-        //     "& input": {
-        //         padding: "10px 10px",
-        //         fontSize: "14px",
-        //         height: "19px",
-        //     },
-        //     "& p.Mui-error": {
-        //         top: "28px",
-        //         fontSize: "11px",
-        //     },
-        // },
-        // [theme.breakpoints.down('md')]: {
-        //     margin: "2px 0 0 0",
-        //     "& input": {
-        //         padding: "5px 5px",
-        //         fontSize: "13px",
-        //         height: "28px",
-        //     },
-        //     "& p.Mui-error": {
-        //         top: "30px",
-        //         fontSize: "10px",
-        //         height: "10px",
-        //     },
-        // },
-        // [theme.breakpoints.down('sm')]: {
-        //     margin: "2px 0 0 0",
-        //     "& input": {
-        //         padding: "3px 3px",
-        //         fontSize: "13px",
-        //         height: "24px",
-        //     },
-        //     "& p.Mui-error": {
-        //         top: "26px",
-        //         fontSize: "10px",
-        //         height: "10px",
-        //     },
-        // },
-    },
-    news: {
-        position: "relative",
-        display: "flex",
-        margin: "10px 0 0 0",
-        borderRadius: 0,
-        height: "222px",
-        minWidth: "186px",
-        alignItems: "center",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        backgroundColor: "#092924",
-    },
-    news2: {
-        margin: "15px 0 0 0",
-    },
-    titleNews: {
-        textAlign: "center",
-        position: "relative",
-        top: "20px",
-        zIndex: 9,
-        fontWeight: 600,
-        fontSize: "15px",
-        color: "#A58A58",
-        padding: "0 0 0 0",
-        margin: "0 0 0 0",
-    },
-    newsBody: {
-        position: "absolute",
-        top: "10px",
-        right: "10px",
-        bottom: "10px",
-        left: "10px",
-        backgroundColor: "#092924",
-        borderLeft: "2px solid #A58A58",
-        borderTop: "1px solid #A58A58",
-        borderBottom: "1px solid #A58A58",
-        borderRight: "1px solid #A58A58",
-        padding: "30px 0 0 0",
-        overflowX: "hidden",
-        overflowY: "auto",
-    },
-    email: {
-        height: "120px",
-        backgroundColor: "inherit",
-    },
-    titleEmail: {
-        top: "7px",
-        color: "#092924",
-        margin: "0 0 10px 0",
-        padding: 0,
-        zIndex: 9,
-        position: "relative",
-        fontSize: "15px",
-        textAlign: "center",
-        fontWeight: 600,
-        display: "flex",
-        flexDirection: "column",
-    },
-    buttonInputBlock: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    emailBody: {
-        position: "absolute",
-        top: "10px",
-        right: "10px",
-        bottom: "10px",
-        left: "10px",
-        backgroundColor: "#A58A58",
-        padding: "0",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-    },
-    emailBody2: {
-        position: "absolute",
-        top: "10px",
-        right: "10px",
-        bottom: "10px",
-        left: "10px",
-        backgroundColor: "#A58A58",
-        padding: "0",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        border: "1px solid #092924",
-    },
-    inputEmail: {
-        height: "100%",
-        border: 0,
-        background: "#D8C3A4",
-        padding: "0 12px",
-    },
-    buttonEmail: {
-        padding: "6px 24px",
-        border: "1px solid #D8C3A4",
-        borderRadius: 0
-    },
-    recipe: {
-        position: "relative",
-        marginTop: "16px",
-        width: "100%",
-        height: "327px",
-        backgroundColor: "#092924",
-        borderRadius: 0,
-        [theme.breakpoints.down('lg')]: {
-            height: "327px",
-        },
-        [theme.breakpoints.down('md')]: {
-            height: "327px",
-        },
-        [theme.breakpoints.down('sm')]: {
-            height: "245px",
-        },
-    },
-    recipeInner: {
-        position: "absolute",
-        width: "auto",
-        height: "auto",
-        border: "1px solid #A58A58",
-        top: "10px",
-        left: "10px",
-        bottom: "10px",
-        right: "10px"
-    },
-    innerText: {
-        width: "100%",
-        height: "30px",
-        color: "#BA975F",
-        textAlign: "center",
-        position: "relative",
-        fontSize: "20px",
-        fontFamily: "Roboto, Helvetica, Arial, sans-serif",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        [theme.breakpoints.down('lg')]: {
-            height: "30px",
-        },
-        [theme.breakpoints.down('md')]: {
-            height: "30px",
-        },
-        [theme.breakpoints.down('sm')]: {
-            fontSize: "13px",
-        },
-    },
-    innerLine: {
-        position: "absolute",
-        top: "40px",
-        width: "calc(100% + 23px)",
-        height: "30px",
-        margin: "0 -11px 0 -11px",
-        background: "#D9C4A5",
-        color: "#092924",
-        [theme.breakpoints.down('lg')]: {
-            height: "30px",
-        },
-        [theme.breakpoints.down('md')]: {
-            height: "30px",
-        },
-        [theme.breakpoints.down('sm')]: {
-            height: "30px",
-            top: "30px",
-        },
-    },
-    divTea: {
-        color: "#092924",
-        fontFamily: "Roboto, Helvetica, Arial, sans-serif",
-        fontSize: "15px",
-        position: "relative",
-        display: "inline-block",
-        width: "20%",
-        height: "100%",
-        textAlign: "center",
-        padding: "5px 0 0 0",
-        [theme.breakpoints.down('lg')]: {
+        titleNews: {
+            textAlign: "center",
+            position: "relative",
+            top: "20px",
+            zIndex: 9,
+            fontWeight: 600,
             fontSize: "15px",
-            width: "20%",
+            color: "#A58A58",
+            padding: "0 0 0 0",
+            margin: "0 0 0 0",
         },
-        [theme.breakpoints.down('md')]: {
-            fontSize: "13px",
-            width: "20%",
+        newsBody: {
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            bottom: "10px",
+            left: "10px",
+            backgroundColor: "#092924",
+            borderLeft: "2px solid #A58A58",
+            borderTop: "1px solid #A58A58",
+            borderBottom: "1px solid #A58A58",
+            borderRight: "1px solid #A58A58",
+            padding: "30px 0 0 0",
+            overflowX: "hidden",
+            overflowY: "auto",
         },
-        [theme.breakpoints.down('sm')]: {
-            fontSize: "11px",
-            padding: "8px 0 0 0",
-            width: "20%",
+        email: {
+            height: "120px",
+            backgroundColor: "inherit",
         },
-    },
-    black: {},
-    green: {},
-    red: {},
-    lineTea: {
-        position: "relative",
-        width: "90%",
-        height: 0,
-        borderTop: "1px solid #BA975F",
-        top: "20px",
-        margin: "0 30px 0 40px",
-        [theme.breakpoints.down('lg')]: {
+        titleEmail: {
+            top: "7px",
+            color: "#092924",
+            margin: "0 0 10px 0",
+            padding: 0,
+            zIndex: 9,
+            position: "relative",
+            fontSize: "15px",
+            textAlign: "center",
+            fontWeight: 600,
+            display: "flex",
+            flexDirection: "column",
+        },
+        buttonInputBlock: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+        },
+        emailBody: {
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            bottom: "10px",
+            left: "10px",
+            backgroundColor: "#A58A58",
+            padding: "0",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+        },
+        emailBody2: {
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            bottom: "10px",
+            left: "10px",
+            backgroundColor: "#A58A58",
+            padding: "0",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            border: "1px solid #092924",
+        },
+        inputEmail: {
+            height: "100%",
+            border: 0,
+            background: "#D8C3A4",
+            padding: "0 12px",
+        },
+        buttonEmail: {
+            padding: "6px 24px",
+            border: "1px solid #D8C3A4",
+            borderRadius: 0
+        },
+        recipe: {
+            position: "relative",
+            marginTop: "16px",
+            width: "100%",
+            height: "327px",
+            backgroundColor: "#092924",
+            borderRadius: 0,
+            [theme.breakpoints.down('lg')]: {
+                height: "327px",
+            },
+            [theme.breakpoints.down('md')]: {
+                height: "327px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                height: "245px",
+            },
+        },
+        recipeInner: {
+            position: "absolute",
+            width: "auto",
+            height: "auto",
+            border: "1px solid #A58A58",
+            top: "10px",
+            left: "10px",
+            bottom: "10px",
+            right: "10px"
+        },
+        innerText: {
+            width: "100%",
+            height: "30px",
+            color: "#BA975F",
+            textAlign: "center",
+            position: "relative",
+            fontSize: "20px",
+            fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            [theme.breakpoints.down('lg')]: {
+                height: "30px",
+            },
+            [theme.breakpoints.down('md')]: {
+                height: "30px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                fontSize: "13px",
+            },
+        },
+        innerLine: {
+            position: "absolute",
+            top: "40px",
+            width: "calc(100% + 23px)",
+            height: "30px",
+            margin: "0 -11px 0 -11px",
+            background: "#D9C4A5",
+            color: "#092924",
+            [theme.breakpoints.down('lg')]: {
+                height: "30px",
+            },
+            [theme.breakpoints.down('md')]: {
+                height: "30px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                height: "30px",
+                top: "30px",
+            },
+        },
+        divTea: {
+            color: "#092924",
+            fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+            fontSize: "15px",
+            position: "relative",
+            display: "inline-block",
+            width: "20%",
+            height: "100%",
+            textAlign: "center",
+            padding: "5px 0 0 0",
+            [theme.breakpoints.down('lg')]: {
+                fontSize: "15px",
+                width: "20%",
+            },
+            [theme.breakpoints.down('md')]: {
+                fontSize: "13px",
+                width: "20%",
+            },
+            [theme.breakpoints.down('sm')]: {
+                fontSize: "11px",
+                padding: "8px 0 0 0",
+                width: "20%",
+            },
+        },
+        black: {},
+        green: {},
+        red: {},
+        lineTea: {
+            position: "relative",
+            width: "90%",
+            height: 0,
+            borderTop: "1px solid #BA975F",
+            top: "20px",
             margin: "0 30px 0 40px",
+            [theme.breakpoints.down('lg')]: {
+                margin: "0 30px 0 40px",
+            },
+            [theme.breakpoints.down('md')]: {
+                margin: "0 30px 0 40px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                margin: "0 30px 0 15px",
+            },
         },
-        [theme.breakpoints.down('md')]: {
-            margin: "0 30px 0 40px",
-        },
-        [theme.breakpoints.down('sm')]: {
-            margin: "0 30px 0 15px",
-        },
-    },
-    lineTeaText: {
-        position: "absolute",
-        color: "#BA975F",
-        width: "180px",
-        textAlign: "center",
-        margin: "-10px 0 0 -90px",
-        background: "#092924",
-        left: "50%",
-        fontSize: "13px",
-        [theme.breakpoints.down('lg')]: {
+        lineTeaText: {
+            position: "absolute",
+            color: "#BA975F",
+            width: "180px",
+            textAlign: "center",
+            margin: "-10px 0 0 -90px",
+            background: "#092924",
+            left: "50%",
             fontSize: "13px",
+            [theme.breakpoints.down('lg')]: {
+                fontSize: "13px",
+            },
+            [theme.breakpoints.down('md')]: {
+                fontSize: "13px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                fontSize: "12px",
+                margin: "-9px 0 0 -83px",
+                width: "165px"
+            },
         },
-        [theme.breakpoints.down('md')]: {
-            fontSize: "13px",
-        },
-        [theme.breakpoints.down('sm')]: {
-            fontSize: "12px",
-            margin: "-9px 0 0 -83px",
-            width: "165px"
-        },
-    },
-    blockTea: {
-        position: "relative",
-        width: "calc(100% - 22px)",
-        height: "35px",
-        color: "#D9C4A5",
-        margin: "35px 11px 0 11px",
-        [theme.breakpoints.down('lg')]: {
+        blockTea: {
+            position: "relative",
+            width: "calc(100% - 22px)",
+            height: "35px",
+            color: "#D9C4A5",
             margin: "35px 11px 0 11px",
+            [theme.breakpoints.down('lg')]: {
+                margin: "35px 11px 0 11px",
+            },
+            [theme.breakpoints.down('md')]: {
+                margin: "35px 11px 0 11px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                margin: "25px 11px 0 11px",
+                height: "22px",
+            },
         },
-        [theme.breakpoints.down('md')]: {
-            margin: "35px 11px 0 11px",
-        },
-        [theme.breakpoints.down('sm')]: {
-            margin: "25px 11px 0 11px",
-            height: "22px",
-        },
-    },
-    blockTeaOne: {},
-    blockTeaTwo: {},
-    blockTeaTree: {},
-    blockTeaSpan: {
-        position: "relative",
-        display: "inline-block",
-        width: "20%",
-        height: "100%",
-        textAlign: "center",
-        padding: "9px 0 0 0",
-        fontSize: "13px",
-        [theme.breakpoints.down('lg')]: {
+        blockTeaOne: {},
+        blockTeaTwo: {},
+        blockTeaTree: {},
+        blockTeaSpan: {
+            position: "relative",
+            display: "inline-block",
+            width: "20%",
+            height: "100%",
+            textAlign: "center",
+            padding: "9px 0 0 0",
             fontSize: "13px",
+            [theme.breakpoints.down('lg')]: {
+                fontSize: "13px",
+            },
+            [theme.breakpoints.down('md')]: {
+                fontSize: "13px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                fontSize: "12px",
+            },
         },
-        [theme.breakpoints.down('md')]: {
+        lineTeaTextTwo: {
+            position: "absolute",
+            color: "#BA975F",
+            width: "140px",
+            textAlign: "center",
+            margin: "-10px 0 0 -70px",
+            background: "#092924",
+            left: "50%",
             fontSize: "13px",
+            [theme.breakpoints.down('lg')]: {
+                fontSize: "13px",
+            },
+            [theme.breakpoints.down('md')]: {
+                fontSize: "13px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                fontSize: "12px",
+                margin: "-9px 0 0 -65px",
+                width: "130px"
+            },
         },
-        [theme.breakpoints.down('sm')]: {
-            fontSize: "12px",
-        },
-    },
-    lineTeaTextTwo: {
-        position: "absolute",
-        color: "#BA975F",
-        width: "140px",
-        textAlign: "center",
-        margin: "-10px 0 0 -70px",
-        background: "#092924",
-        left: "50%",
-        fontSize: "13px",
-        [theme.breakpoints.down('lg')]: {
+        lineTeaTextTree: {
+            position: "absolute",
+            color: "#BA975F",
+            width: "150px",
+            textAlign: "center",
+            margin: "-10px 0 0 -75px",
+            background: "#092924",
+            left: "50%",
             fontSize: "13px",
+            [theme.breakpoints.down('lg')]: {
+                fontSize: "13px",
+            },
+            [theme.breakpoints.down('md')]: {
+                fontSize: "13px",
+            },
+            [theme.breakpoints.down('sm')]: {
+                fontSize: "12px",
+                margin: "-9px 0 0 -65px",
+                width: "135px"
+            },
         },
-        [theme.breakpoints.down('md')]: {
+        productCart: {
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            height: "120px",
+            minHeight: "120px",
+            borderBottom: "1px solid #ddd",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            position: "relative"
+        },
+        rounded: {
+            width: "100px",
+            height: "100px"
+        },
+        desc: {
+            width: "80%",
+            height: "100%",
+            padding: "10px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "center"
+        },
+        descSpan: {
+            width: "calc(100% - 20px)",
+            height: "20px",
+            minHeight: "20px",
+            fontWeight: 500,
+            textAlign: "center",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            marginRight: "20px",
+        },
+        descDiv: {
+            width: "100%",
+            height: "55%",
             fontSize: "13px",
+            textAlign: "center",
+            color: "#555",
+            overflow: "hidden",
+            whiteSpace: "pre-wrap",
+            textOverflow: "ellipsis",
         },
-        [theme.breakpoints.down('sm')]: {
-            fontSize: "12px",
-            margin: "-9px 0 0 -65px",
-            width: "130px"
+        inputDiv: {},
+        infoInput: {
+            width: "60px",
+            height: "20px",
+            textAlign: "center",
         },
-    },
-    lineTeaTextTree: {
-        position: "absolute",
-        color: "#BA975F",
-        width: "150px",
-        textAlign: "center",
-        margin: "-10px 0 0 -75px",
-        background: "#092924",
-        left: "50%",
-        fontSize: "13px",
-        [theme.breakpoints.down('lg')]: {
-            fontSize: "13px",
-        },
-        [theme.breakpoints.down('md')]: {
-            fontSize: "13px",
-        },
-        [theme.breakpoints.down('sm')]: {
-            fontSize: "12px",
-            margin: "-9px 0 0 -65px",
-            width: "135px"
-        },
-    },
-    productCart: {
-        display: "flex",
-        flexDirection: "row",
-        width: "100%",
-        height: "120px",
-        minHeight: "120px",
-        borderBottom: "1px solid #ddd",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        position: "relative"
-    },
-    rounded: {
-        width: "100px",
-        height: "100px"
-    },
-    desc: {
-        width: "80%",
-        height: "100%",
-        padding: "10px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center"
-    },
-    descSpan: {
-        width: "calc(100% - 20px)",
-        height: "20px",
-        minHeight: "20px",
-        fontWeight: 500,
-        textAlign: "center",
-        overflow: "hidden",
-        whiteSpace: "nowrap",
-        textOverflow: "ellipsis",
-        marginRight: "20px",
-    },
-    descDiv: {
-        width: "100%",
-        height: "55%",
-        fontSize: "13px",
-        textAlign: "center",
-        color: "#555",
-        overflow: "hidden",
-        whiteSpace: "pre-wrap",
-        textOverflow: "ellipsis",
-    },
-    inputDiv: {},
-    infoInput: {
-        width: "60px",
-        height: "20px",
-        textAlign: "center",
-    },
-    amount: {
-        fontWeight: 500,
-        width: "100%",
-        textAlign: "center",
-        marginTop: "15px",
-    }
-}));
+        amount: {
+            fontWeight: 500,
+            width: "100%",
+            textAlign: "center",
+            marginTop: "15px",
+        }
+    })
+);
 
 export default function Main() {
 
@@ -1257,9 +1255,8 @@ export default function Main() {
             setHelperTextEmail("Введите E-mail");
             return
         } else {
-            let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
-            if (reg.test(email) === false) {
+            if (REG_EMAIL.test(email) === false) {
                 setErrorEmail(true);
                 setHelperTextEmail("Введите корректный E-mail");
                 return false;

@@ -14,6 +14,10 @@ import {addDevice, addEvent} from "./actions/actionCreator";
 import './styles.css';
 import './scrollbar.css'
 import models from "./js/models";
+import {useHistory} from "react-router";
+import {createBrowserHistory} from "history";
+
+const history = createBrowserHistory();
 
 const store = createStore(allReducers,
     (window).__REDUX_DEVTOOLS_EXTENSION__ &&
@@ -43,6 +47,11 @@ window.addEventListener('beforeinstallprompt', function (e) {
 models.connectDB();
 
 store.dispatch(addDevice(models.getDevice()))
+
+window.onbeforeunload = function (evt) {
+    console.log(evt)
+    alert("Какое то сообщение")
+}
 
 ReactDOM.render(
     <Provider store={store}>
