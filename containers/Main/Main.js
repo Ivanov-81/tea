@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState, createRef} from 'react'
+import React, {Fragment, useEffect, useState, createRef, useRef} from 'react'
 import {useDispatch, useSelector} from "react-redux"
 import {Link} from "react-router-dom"
 import axios from "axios"
@@ -159,9 +159,13 @@ const useStyles = makeStyles((theme) =>
             fontWeight: 400,
             color: "#815333",
             borderRadius: 0,
+            padding: "0 20px",
             "&:hover": {
                 color: "#815333",
                 backgroundColor: "#EFE6DF",
+            },
+            "& .MuiButton-label": {
+                height: "100%",
             }
         },
         chevron: {
@@ -171,14 +175,14 @@ const useStyles = makeStyles((theme) =>
         },
         name: {
             display: "flex",
+            alignItems: "center",
         },
         span: {
             overflow: "hidden",
-            height: "28px",
             textAlign: "left",
         },
         popper: {
-            left: "-10px !important"
+            // left: "-10px !important"
         },
         modal: {
             display: 'flex',
@@ -964,6 +968,8 @@ const useStyles = makeStyles((theme) =>
 
 export default function Main() {
 
+    const button = useRef(null)
+
     const classes = useStyles();
     const dispatch = useDispatch();
     const theme = createMuiTheme({});
@@ -1047,7 +1053,16 @@ export default function Main() {
         setCity(e.target.value)
     };
 
-    const handlerGetProducts = (item) => {
+    const handlerGetProducts = (item) => (e) => {
+
+        let elem = document.getElementsByClassName("border-right-zero")[0]
+
+        if(elem) {
+            elem.classList.remove("border-right-zero");
+        }
+
+        let parent = e.target.offsetParent
+        parent.classList.add("border-right-zero")
 
         if (!open) {
             setAnchor(target.current);
@@ -2001,7 +2016,7 @@ export default function Main() {
                                                 key={item.id}
                                                 data-id={item.id}
                                                 className={classes.item}
-                                                onClick={() => handlerGetProducts(item)}
+                                                onClick={handlerGetProducts(item)}
                                             >
                                                 <div className={classes.name}>
                                                     <span className={item.photo}/>
