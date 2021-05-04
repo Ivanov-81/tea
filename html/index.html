@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <link rel="manifest" href="./manifest.json"/>
+<!--    <link rel="manifest" href="./manifest.json"/>-->
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="theme-color" content="#000000"/>
     <meta name="description" content="Web site created using create-react-app"/>
@@ -15,16 +15,16 @@
     <link rel="apple-touch-icon" href="./images/icons/192x192.png"/>
     <link rel="apple-touch-icon" href="./images/icons/512x512.png"/>
 
-    <title id="main_title">Магаз</title>
+    <title id="main_title"><%= htmlWebpackPlugin.options.title || 'Чайная жемчужина' %></title>
     <link href='./fonts.css' rel='stylesheet'/>
-    <link rel="icon" href="./images/favicon.ico"/>
-    <link href="./main.css" rel="stylesheet">
+    <link rel="icon" href="./favicon.ico"/>
+
+    <% for (var css in htmlWebpackPlugin.files.css) { %>
+    <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet"/>
+    <% } %>
+
 </head>
 <body>
-
     <section id="tea" class="tea"></section>
-
-    <script src="./bundle.js"></script>
-
 </body>
 </html>

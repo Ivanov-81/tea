@@ -8,11 +8,9 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import {
-    addCart,
     closeSnackbar as closeSnackbarAction,
     enqueueSnackbar as enqueueSnackbarAction,
-    refreshCart,
-    switchShowCart,
+    refreshCart, addCart, switchShowCart,
     switchShowCartSm
 } from "../../actions/actionCreator";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -374,7 +372,7 @@ export default function Cart() {
                                 <AddIcon style={{fontSize: "1.1rem"}}/>
                             </IconButton>
                         </div>
-                        <div className={classes.infoTotal}></div>
+                        <div className={classes.infoTotal}/>
                     </div>
                 </div>
             </div>

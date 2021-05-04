@@ -16,17 +16,17 @@ const tutorialSteps = [
         label: '1. Сверд. обл., г. БЕРЕЗОВСКИЙ, ул. Театральная 6',
         imgPath:
             '../images/pic_05.jpg',
-    },
-    {
-        label: '2. Сверд. обл., г. БЕРЕЗОВСКИЙ, ул. Театральная 6',
-        imgPath:
-            '../images/pic_05.jpg',
-    },
-    {
-        label: '3. Сверд. обл., г. БЕРЕЗОВСКИЙ, ул. Театральная 6',
-        imgPath:
-            '../images/pic_05.jpg',
-    },
+    }
+    // {
+    //     label: '2. Сверд. обл., г. БЕРЕЗОВСКИЙ, ул. Театральная 6',
+    //     imgPath:
+    //         '../images/pic_05.jpg',
+    // },
+    // {
+    //     label: '3. Сверд. обл., г. БЕРЕЗОВСКИЙ, ул. Театральная 6',
+    //     imgPath:
+    //         '../images/pic_05.jpg',
+    // },
 ];
 
 const useStyles = makeStyles(theme => ({

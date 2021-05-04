@@ -12,6 +12,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import {useSelector} from "react-redux";
 import axios from "axios";
+import {URL_GET_PRODUCTS} from "../../../js/Urls";
 
 const useStyles = makeStyles((theme) => createStyles({
     menu: {
@@ -121,7 +122,7 @@ export default function Menu(props) {
 
                 if (item.parent_id === "0") {
 
-                    axios.post('/products.php', {group: Number(item.id)}, {})
+                    axios.post(URL_GET_PRODUCTS, {group: Number(item.id)}, {})
                         .then((result) => {
                             const {status, data} = result;
                             if (status === 200) {

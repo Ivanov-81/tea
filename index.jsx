@@ -1,4 +1,3 @@
-import '@babel/polyfill';
 import React from "react";
 import ReactDOM from "react-dom";
 import {Provider} from "react-redux";
@@ -14,13 +13,18 @@ import {addDevice, addEvent} from "./actions/actionCreator";
 import './styles.css';
 import './scrollbar.css'
 import models from "./js/models";
-import {useHistory} from "react-router";
-import {createBrowserHistory} from "history";
 
-const store = createStore(allReducers,
-    (window).__REDUX_DEVTOOLS_EXTENSION__ &&
-    (window).__REDUX_DEVTOOLS_EXTENSION__()
-);
+let store;
+
+if(window.location.hostname === "localhost") {
+    store = createStore(allReducers,
+        (window).__REDUX_DEVTOOLS_EXTENSION__ &&
+        (window).__REDUX_DEVTOOLS_EXTENSION__()
+    );
+}
+else {
+    store = createStore(allReducers);
+}
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

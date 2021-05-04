@@ -6,7 +6,7 @@
  * Time: 19:48
  */
 
-include_once('PHP/db.php');
+include_once('./PHP/db.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 

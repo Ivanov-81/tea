@@ -30,6 +30,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {green} from "@material-ui/core/colors";
 import Checkbox from "@material-ui/core/Checkbox";
+import {URL_ORDERS} from "../../../js/Urls";
 
 const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
@@ -201,7 +202,7 @@ export default function Orders() {
 
     useEffect(() => {
 
-        axios.get('/orders.php')
+        axios.get(URL_ORDERS)
             .then((result) => {
                 const {status, data} = result;
                 if (status === 200) {

@@ -2,12 +2,12 @@ import React, {useEffect} from 'react'
 import {Router, Switch, Route} from "react-router-dom"
 import {createBrowserHistory} from "history"
 
-import Main from "./containers/Main/Main"
-import Admin from "./containers/Admin/Admin"
-import PageNotFound from './errors/PageNotFound'
-import Notifier from "./js/Notifier";
+import Main from "./containers/Main/Main.js"
+import Admin from "./containers/Admin/Admin.jsx"
+import PageNotFound from './errors/PageNotFound.js'
+import Notifier from "./js/Notifier.js";
 import {useDispatch, useSelector} from "react-redux";
-import {updateApp} from "./actions/actionCreator";
+import {updateApp} from "./actions/actionCreator.js";
 
 const history = createBrowserHistory();
 

@@ -5,7 +5,7 @@ import axios from "axios"
 import clsx from "clsx"
 
 import {makeStyles, createMuiTheme} from "@material-ui/core/styles"
-import {createStyles} from "@material-ui/core"
+import {createStyles, Zoom} from "@material-ui/core"
 import Hidden from '@material-ui/core/Hidden'
 import Grid from "@material-ui/core/Grid"
 import Paper from "@material-ui/core/Paper"
@@ -52,6 +52,8 @@ import Divider from "@material-ui/core/Divider";
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
 import Menu from "./Menu/Menu";
+import {URL_CAPTCHA, URL_GET_GROUPS, URL_GET_PRODUCTS, URL_ORDERS, URL_SEND_MAIL} from "../../js/Urls";
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) =>
     createStyles({
@@ -368,6 +370,9 @@ const useStyles = makeStyles((theme) =>
             width: "200px",
             "& div": {
                 height: "35px",
+                "& input": {
+                    padding: "0px 10px"
+                }
             },
             "& p": {
                 fontSize: "14px",
@@ -521,6 +526,9 @@ const useStyles = makeStyles((theme) =>
             width: "90%",
             margin: "5px 0 0 0",
             "& div": {
+                "& input": {
+                    padding: "9px 10px"
+                },
                 height: "35px",
                 fontSize: "14px"
             },
@@ -962,6 +970,13 @@ const useStyles = makeStyles((theme) =>
             width: "100%",
             textAlign: "center",
             marginTop: "15px",
+        },
+        loaderSend: {
+            position: "absolute",
+            color: "darkgreen",
+        },
+        result: {
+            marginTop: 10
         }
     })
 );
@@ -985,6 +1000,8 @@ export default function Main() {
     const [anchor, setAnchor] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const [sum, setSum] = useState(0);
+    const [alert, setAlert] = useState({"cls": "success", "text": "Заказ оформлен"});
+    const [title, setTitle] = useState("");
 
     const [item, setItem] = useState({});
     const [sub_groups, setSubgroups] = useState([]);
@@ -998,6 +1015,8 @@ export default function Main() {
     const [completed_dis, setCompletedDis] = useState(true);
     const [next, setNext] = useState("Далее");
     const [completed_next, setCompletedNext] = useState(false);
+    const [loader_send_data, setLoaderSendData] = useState(false);
+    const [show_message, setShowMessage] = useState(false);
 
     const [checked, setChecked] = useState(false);
     const [status_checked, setStatusChecked] = useState(false);
@@ -1125,7 +1144,7 @@ export default function Main() {
         object["data"] = JSON.stringify(object.products)
         object["date"] = new Date()
 
-        axios.post('/orders.php', object)
+        axios.post(URL_ORDERS, object)
 
     }
 
@@ -1189,7 +1208,7 @@ export default function Main() {
 
         if (!status_checked) {
             setCheckedLoader(true);
-            axios.post('/captcha.php', {key: SITE_KEY})
+            axios.post(URL_CAPTCHA, {key: SITE_KEY})
                 .then((result) => {
                     const {status, data} = result;
                     if (status === 200) {
@@ -1278,6 +1297,10 @@ export default function Main() {
             }
         }
 
+        setLoaderSendData(true);
+        setCompletedNext(true);
+        setCompletedDis(true);
+
         let object = {
             "order": `ЧЖ-${new Date().getTime() + Math.random()}`,
             "address": `${city} ${address}`,
@@ -1301,11 +1324,14 @@ export default function Main() {
 
                 object['products'] = products.result
 
-                axios.post('/send_mail.php', object)
+                axios.post(URL_SEND_MAIL, object)
                     .then((result) => {
+                        console.log(result);
                         const {status, data} = result;
                         if (status === 200) {
                             if (data === "ok") {
+                                setTitle("Заказ оформлен");
+                                setAlert({"cls": "success", "text": "Заказ оформлен"});
                                 enqueueSnackbar({
                                     message: "Заявка отправлена!",
                                     options: {
@@ -1322,8 +1348,10 @@ export default function Main() {
                                 clearFields()
                                 saveOrder(object)
                             } else {
+                                setTitle(data);
+                                setAlert({"cls": "error", "text": "Произошла ошибка. Сообщение не было отправлено."});
                                 enqueueSnackbar({
-                                    message: data.data,
+                                    message: data,
                                     options: {
                                         key: new Date().getTime() + Math.random(),
                                         variant: 'error',
@@ -1339,10 +1367,27 @@ export default function Main() {
                     })
                     .catch(error => {
 
+                    })
+                    .finally(() => {
+                        setShowMessage(true);
+                        setLoaderSendData(false);
+                        setCompletedNext(false);
+                        setCompletedDis(false);
                     });
 
             };
+
+            products.onerror = () => {
+                setLoaderSendData(false);
+                setCompletedNext(false);
+                setCompletedDis(false);
+            }
         };
+        openRequest.onerror = () => {
+            setLoaderSendData(false);
+            setCompletedNext(false);
+            setCompletedDis(false);
+        }
     };
 
     const addStep = () => {
@@ -1415,6 +1460,7 @@ export default function Main() {
         setCompleted(0);
         setProgress(0);
         setCompletedDis(true);
+        onHideModal();
     }
 
     const deleteProductInCart = (item) => {
@@ -1674,7 +1720,7 @@ export default function Main() {
                                 <TextField
                                     error={errorName}
                                     helperText={helperTextName}
-                                    placeholder="Виктория Олеговна"
+                                    placeholder="Марина Петровна"
                                     name="name"
                                     type="text"
                                     value={name}
@@ -1750,6 +1796,10 @@ export default function Main() {
                                 <span style={{lineHeight: "17px"}}>Подтвердите что вы не робот</span>
                             </div>
 
+                            <Zoom in={show_message}>
+                                <Alert title={title} severity={alert.cls} className={classes.result}>{alert.text}</Alert>
+                            </Zoom>
+
                         </Fragment>
                     }
                 </div>
@@ -1768,6 +1818,9 @@ export default function Main() {
                     disabled={completed_next}
                 >
                     {next}
+                    {
+                        loader_send_data && <CircularProgress size={20} className={classes.loaderSend}/>
+                    }
                 </Button>
             </div>
         </div>
@@ -1779,16 +1832,38 @@ export default function Main() {
     };
 
     const changeWindowState = () => {
-        dispatch(switchMenu(!open_menu))
+        dispatch(switchMenu(!open_menu));
+    }
+
+    const onHideModal = () => {
+        console.log('onHideModal');
+        setAlert({"cls": "success", "text": "Заказ оформлен"});
+        setShowMessage(false);
+        dispatch(switchShowCart(false));
+        clearData();
+    }
+
+    const clearData = () => {
+        setDelivery({bool: false, address: "г.Берёзовский ТЦ Центральный. Театральная улица, 6"});
+        setCity("Берёзовский");
+        setPhone("");
+        setName("");
+        setEmail("");
+        setCaptcha(null);
+        setDescription("");
+        setAddress("");
+        setCompleted(0);
+        setNext("Далее");
+        setCompletedNext(false);
+        setCompletedDis(true);
+        setStatusChecked(false);
     }
 
     useEffect(() => {
 
-        axios.get('/groups.php', {
-            // headers: {
-            //     Authorization: 'Bearer ' + models.getCookie('Authorization')
-            // }
-        })
+        console.log(groups);
+
+        axios.get(URL_GET_GROUPS)
             .then((result) => {
                 const {status, data} = result;
                 if (status === 200) {
@@ -1836,11 +1911,7 @@ export default function Main() {
 
         if (Object.keys(item).length !== 0) {
 
-            axios.post('/products.php', {group: Number(item.id)}, {
-                // headers: {
-                //     Authorization: 'Bearer ' + models.getCookie('Authorization')
-                // }
-            })
+            axios.post(URL_GET_PRODUCTS, {group: Number(item.id)})
                 .then((result) => {
                     const {status, data} = result;
                     if (status === 200) {
@@ -1926,7 +1997,7 @@ export default function Main() {
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={open_modal}
-                onClose={() => dispatch(switchShowCart(false))}
+                onClose={onHideModal}
                 closeAfterTransition
                 disableBackdropClick
                 BackdropComponent={Backdrop}
@@ -2030,12 +2101,12 @@ export default function Main() {
 
                                 <Paper className={clsx(classes.news, classes.news2)}>
                                     <h5 className={classes.titleNews}>Новости</h5>
-                                    <div className={classes.newsBody}></div>
+                                    <div className={classes.newsBody}/>
                                 </Paper>
 
                                 <Paper className={clsx(classes.news)}>
                                     <h5 className={classes.titleNews}>Статьи</h5>
-                                    <div className={classes.newsBody}></div>
+                                    <div className={classes.newsBody}/>
                                 </Paper>
 
                                 <Paper className={clsx(classes.news, classes.email)}>

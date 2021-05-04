@@ -277,7 +277,11 @@ export default function ProductOverview(props) {
                         <div className={classes.blockPhoto}>
                             <img
                                 alt="img"
-                                src={product.photo}
+                                src={
+                                    product.photo[0] === '/'
+                                        ? product.photo
+                                        : `/${product.photo.split('/').splice(2, 3).join('/')}`
+                                }
                                 className={classes.photo}
                             />
                         </div>
