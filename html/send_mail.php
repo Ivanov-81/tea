@@ -36,13 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mail->isSMTP();
     $mail->SMTPAuth = true;
     $mail->Host = "smtp.gmail.com";
-    $mail->Username = "chainaya.zhemchuzhina"; //@gmail.com
-    $mail->Password = 'ncxsxuczaapelpnl';
-    $mail->Port = '465';
-    $mail->SMTPSecure = "ssl";
+    $mail->Username = "chainaya.zhemchuzhina@gmail.com";
+    $mail->Password = "ncxsxuczaapelpnl";  //lfyz1401
+    $mail->Port = 465;
+    $mail->SMTPSecure = "SSL";
 
     $mail->isHTML(true);
-    $mail->setFrom(' chainaya.zhemchuzhina@gmail.com');
+    $mail->setFrom('chainaya.zhemchuzhina@gmail.com', 'Чайная жемчужина', $auto = true);
     $mail->addAddress($email);
 
     $mail->Subject = ("$email ($subj)");

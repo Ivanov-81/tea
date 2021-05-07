@@ -1327,9 +1327,9 @@ export default function Main() {
                 axios.post(URL_SEND_MAIL, object)
                     .then((result) => {
                         console.log(result);
-                        const {status, data} = result;
+                        const {status, data, statusText} = result;
                         if (status === 200) {
-                            if (data === "ok") {
+                            if (statusText === "OK") {
                                 setTitle("Заказ оформлен");
                                 setAlert({"cls": "success", "text": "Заказ оформлен"});
                                 enqueueSnackbar({

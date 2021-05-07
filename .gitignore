@@ -2,3 +2,5 @@
 /node_modules/
 ./package-lock.json
 www
+/html/send_mail.php
+/html/PHP/db.php
