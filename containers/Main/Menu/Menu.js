@@ -109,38 +109,40 @@ export default function Menu(props) {
         </TreeItem>
     };
 
-    useEffect(() => {
-
-        setGroups(g)
-
-        if (g.length !== 0) {
-
-            let arr = [],
-                obj = data;
-
-            g.map((item) => {
-
-                if (item.parent_id === "0") {
-
-                    axios.post(URL_GET_PRODUCTS, {group: Number(item.id)}, {})
-                        .then((result) => {
-                            const {status, data} = result;
-                            if (status === 200) {
-                                arr.push({id: item.id, name: item.name, children: data.sub_groups})
-                            }
-                        })
-
-                }
-
-            })
-
-            obj.children = arr
-
-            setData(obj)
-
-        }
-
-    }, [g]);
+    // useEffect(() => {
+    //
+    //     console.log(g);
+    //
+    //     setGroups(g)
+    //
+    //     if (g.length !== 0) {
+    //
+    //         let arr = [],
+    //             obj = data;
+    //
+    //         g.map((item) => {
+    //
+    //             if (item.parent_id === "0") {
+    //
+    //                 axios.post(URL_GET_PRODUCTS, {group: Number(item.id)}, {})
+    //                     .then((result) => {
+    //                         const {status, data} = result;
+    //                         if (status === 200) {
+    //                             arr.push({id: item.id, name: item.name, children: data.sub_groups})
+    //                         }
+    //                     })
+    //
+    //             }
+    //
+    //         })
+    //
+    //         obj.children = arr
+    //
+    //         setData(obj)
+    //
+    //     }
+    //
+    // }, [g]);
 
     useEffect(() => {
         if (data.length !== 0) {

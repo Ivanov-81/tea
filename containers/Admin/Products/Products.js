@@ -20,6 +20,11 @@ import MChangePromotion from "../../../methods/MChangePromotion";
 import Modal from "@material-ui/core/Modal";
 import AddProduct from "./AddProduct";
 import MChangeNovelty from "../../../methods/MChangeNovelty";
+import axios from "axios";
+import {URL_GET_GROUPS} from "../../../js/Urls";
+import {addGroups} from "../../../actions/actionCreator";
+import Button from "@material-ui/core/Button";
+import CloseIcon from "@material-ui/icons/Close";
 
 const GreenCheckbox = withStyles({
     root: {
@@ -367,6 +372,42 @@ export default function Products() {
     useEffect(() => {
         MGetProducts(dispatch)
     }, []);
+
+    useEffect(() => {
+
+        if(!open_modal) return
+
+        axios.get(`${URL_GET_GROUPS}?groups=all`)
+            .then((result) => {
+                const {status, data} = result;
+                if (status === 200) {
+                    dispatch(addGroups(data));
+                }
+            })
+            .catch(error => {
+
+                if (typeof error.response !== "undefined") {
+                    const {status} = error.response;
+
+                } else {
+                    console.log(error);
+                    enqueueSnackbar({
+                        message: error,
+                        options: {
+                            key: new Date().getTime() + Math.random(),
+                            variant: 'error',
+                            action: (key) => (
+                                <Button onClick={() => closeSnackbar(key)}>
+                                    <CloseIcon/>
+                                </Button>
+                            ),
+                        },
+                    });
+                }
+
+            });
+
+    }, [open_modal]);
 
     useEffect(() => {
 

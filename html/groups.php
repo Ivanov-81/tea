@@ -13,10 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $handle = db_connect() or die("Вроде как ошибка" . mysqli_error($handle));
     $postData = json_decode(file_get_contents('php://input'), true);
 
+    $groups = $_GET['groups'];
+
     $status = true;
     $gp = [];
 
-    $query = "SELECT * FROM product_groups"; // WHERE parent_id = 0 order by created desc
+    if($groups == 'all') {
+        $query = "SELECT * FROM product_groups"; // WHERE parent_id = 0 order by created desc
+    }
+    else {
+        $query = "SELECT * FROM product_groups WHERE parent_id = '0'"; // WHERE parent_id = 0 order by created desc
+    }
+
     $result = $handle->query($query) or die ('Нет соединения с базой данных: ' . mysqli_error($handle));
 
     if ($result) {

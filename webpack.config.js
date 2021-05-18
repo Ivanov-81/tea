@@ -1,5 +1,5 @@
 const path = require("path");
-const CompressionPlugin = require("compression-webpack-plugin");
+// const CompressionPlugin = require("compression-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
@@ -18,7 +18,7 @@ const babelOptions = preset => {
         ]
     }
 
-    if(preset) {
+    if (preset) {
         opts.presets.push(preset)
     }
     console.log(opts)
@@ -48,6 +48,18 @@ module.exports = {
         contentBase: path.join(__dirname, 'html'),
         compress: true,
         port: 9000,
+    },
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    name: 'vendors',
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: 'all',
+                    enforce: true
+                }
+            },
+        }
     },
     module: {
         rules: [
@@ -91,7 +103,7 @@ module.exports = {
                 exclude: '/node_modules/',
                 use: [{
                     loader: 'file-loader',
-                    options: { name: '[name].[ext]' },
+                    options: {name: '[name].[ext]'},
                 }],
             },
             {
@@ -100,11 +112,6 @@ module.exports = {
                 loader: 'file-loader',
             }
         ]
-    },
-    optimization: {
-        splitChunks: {
-            chunks: 'all'
-        }
     },
     resolve: {
         extensions: ['.js', '.jsx', '.json', '.png', '.jpg', '.jpeg', '.css'],
@@ -123,92 +130,90 @@ module.exports = {
             },
             excludeChunks: ['static']
         }),
-        new CopyWebpackPlugin(
-            {
-                patterns: [
-                    {
-                        from: path.resolve(__dirname, 'html/fonts.css'),
-                        to: path.resolve(__dirname, 'www')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'favicon.ico'),
-                        to: path.resolve(__dirname, 'www')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/images'),
-                        to: path.resolve(__dirname, 'www/images')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/fonts'),
-                        to: path.resolve(__dirname, 'www/fonts')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'robots.txt'),
-                        to: path.resolve(__dirname, 'www')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/PHP'),
-                        to: path.resolve(__dirname, 'www/php/PHP')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/PHP_Mailer'),
-                        to: path.resolve(__dirname, 'www/php/PHP_Mailer')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/groups.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/products.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/captcha.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/archived.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/addProduct.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/error.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/novelty.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/orders.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/promotion.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/requests.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    },
-                    {
-                        from: path.resolve(__dirname, 'html/send_mail.php'),
-                        to: path.resolve(__dirname, 'www/php')
-                    }
-                ]
-            }
-        ),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'html/fonts.css'),
+                    to: path.resolve(__dirname, 'www')
+                },
+                {
+                    from: path.resolve(__dirname, 'favicon.ico'),
+                    to: path.resolve(__dirname, 'www')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/images'),
+                    to: path.resolve(__dirname, 'www/images')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/fonts'),
+                    to: path.resolve(__dirname, 'www/fonts')
+                },
+                {
+                    from: path.resolve(__dirname, 'robots.txt'),
+                    to: path.resolve(__dirname, 'www')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/PHP'),
+                    to: path.resolve(__dirname, 'www/php/PHP')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/PHP_Mailer'),
+                    to: path.resolve(__dirname, 'www/php/PHP_Mailer')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/groups.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/products.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/captcha.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/archived.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/addProduct.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/error.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/novelty.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/orders.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/promotion.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/requests.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/send_mail.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                }
+            ]
+        }),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin(),
-        new CompressionPlugin({
-            filename: '[path].gz[query]',
-            algorithm: "gzip",
-            test: /\.js$|\.css$|\.html$|\.eot?.+$|\.ttf?.+$|\.woff?.+$/,
-            threshold: 10240,
-            minRatio: 0.8
-        })
+        // new CompressionPlugin({
+        //     filename: '[path].gz[query]',
+        //     algorithm: "gzip",
+        //     test: /\.js$|\.css$|\.html$|\.eot?.+$|\.ttf?.+$|\.woff?.+$/,
+        //     threshold: 10240,
+        //     minRatio: 0.8
+        // })
     ]
 };

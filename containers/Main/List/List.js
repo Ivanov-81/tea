@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => createStyles({
         height: "calc(100% - 36px)",
         overflowX: "hidden",
         overflowY: "auto",
-        borderTop: "1px solid #D5BC9C",
+        // borderTop: "1px solid #D5BC9C",
         padding: "5px 15px",
     },
     subgroup: {
@@ -101,7 +101,6 @@ export default function List(props) {
     };
 
     const handlerShowProduct = (product) => (event) => {
-        console.log(product);
         setProduct(product);
         handleOpen();
     };
@@ -116,12 +115,6 @@ export default function List(props) {
     const stateWindow = (data) => {
         setOpen(data);
     };
-
-    useEffect(() => {
-
-        console.log(props.item);
-
-    }, [props.item]);
 
     const {item, sub_groups, products} = props;
 

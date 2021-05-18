@@ -62,7 +62,7 @@ export default function MCatchError(dispatch, error, message) {
         if (status !== 400) {
 
             dispatch(enqueueSnackbar({
-                message: "Упс, возникла 400 ошибка",
+                message: "Упс, возникла ошибка",
                 options: {
                     key: new Date().getTime() + Math.random(),
                     variant: 'error',

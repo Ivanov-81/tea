@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone_template = $postData['phone_template'];
     $products = $postData['products'];
     $order = $postData['order'];
+    $SMTPDebug = $postData['SMTPDebug'];
     $string = "";
     $amount = 0;
     $subj = "Заявка на доставку";
@@ -32,20 +33,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $mail = new PHPMailer();
 
-    $mail->SMTPDebug = 4;
+    $mail->SMTPDebug = $SMTPDebug;
     $mail->isSMTP();
+    $mail->CharSet = "UTF-8";
     $mail->SMTPAuth = true;
     $mail->Host = "smtp.gmail.com";
     $mail->Username = "chainaya.zhemchuzhina@gmail.com";
-    $mail->Password = "ncxsxuczaapelpnl";  //lfyz1401
-    $mail->Port = 465;
-    $mail->SMTPSecure = "SSL";
+    $mail->Password = "lfyz1401";
+    $mail->Port = 587;
+    $mail->SMTPSecure = "tls";
 
     $mail->isHTML(true);
-    $mail->setFrom('chainaya.zhemchuzhina@gmail.com', 'Чайная жемчужина', $auto = true);
+    $mail->setFrom('chainaya.zhemchuzhina@gmail.com', 'Чайная жемчужина');
     $mail->addAddress($email);
+    $mail->addAddress("chainaya.zhemchuzhina@gmail.com");
+    $mail->addReplyTo("chainaya.zhemchuzhina@gmail.com", "Reply");
 
-    $mail->Subject = ("$email ($subj)");
+    $mail->Subject = ('Заявка на доставку из магазина "Чайная жемчужина"');
     $message = '<div style="width: calc(100% - 60px); height: 550px">
                     <h2>Заказ на доставку из магазина "Чайная жемчужина"</h2>
                     <div>
@@ -61,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mail->Body = $message;
 
     if ($mail->send()) {
-        echo "Сообщение отправлено";
+        echo "OK";
     } else {
         echo "Сообщение не было отправлено. Причина ошибки: {$mail->ErrorInfo}";
     }

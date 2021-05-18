@@ -1,8 +1,8 @@
-import React, {createRef, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 
 import {makeStyles} from "@material-ui/core/styles";
-import {createStyles, IconButton, Theme} from "@material-ui/core";
+import {createStyles, IconButton, ListSubheader, Theme} from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -248,7 +248,7 @@ const useStyles = makeStyles((Theme) =>
                 height: 54,
                 "& div": {
                     height: 34,
-                    padding: "17px 0 3px 15px"
+                    padding: "10px 0 8px 15px"
                 }
             },
             "& p.Mui-error": {
@@ -299,8 +299,6 @@ const useStyles = makeStyles((Theme) =>
 
 export default function AddProduct(props) {
 
-    const files = createRef()
-
     const classes = useStyles()
     const dispatch = useDispatch()
 
@@ -312,19 +310,19 @@ export default function AddProduct(props) {
     const [close, setClose] = useState(false)
     const [open_select, setOpenSelect] = useState(false)
 
-    const [name, setName] = useState("")
+    const [name, setName] = useState("Новый товар")
     const [error_name, setErrorName] = useState(false)
     const [helper_name, setHelperName] = useState("")
 
-    const [vendor_code, setVendorCode] = useState("")
+    const [vendor_code, setVendorCode] = useState("265-982")
     const [error_vendor_code, setErrorVendorCode] = useState(false)
     const [helper_vendor_code, setHelperVendorCode] = useState("")
 
-    const [unit, setUnit] = useState("")
+    const [unit, setUnit] = useState("100гр")
     const [error_unit, setErrorUnit] = useState(false)
     const [helper_unit, setHelperUnit] = useState("")
 
-    const [price, setPrice] = useState("")
+    const [price, setPrice] = useState(360)
     const [error_price, setErrorPrice] = useState(false)
     const [helper_price, setHelperPrice] = useState("")
 
@@ -332,11 +330,11 @@ export default function AddProduct(props) {
     const [error_group, setErrorGroup] = useState(false)
     const [helper_group, setHelperGroup] = useState("")
 
-    const [description, setDescription] = useState("")
+    const [description, setDescription] = useState("Описание продукта")
     const [error_description, setErrorDescription] = useState(false)
     const [helper_description, setHelperDescription] = useState("")
 
-    const [recipe, setRecipe] = useState("")
+    const [recipe, setRecipe] = useState("Рецепт приготовления")
     const [error_recipe, setErrorRecipe] = useState(false)
     const [helper_recipe, setHelperRecipe] = useState("")
 
@@ -382,8 +380,8 @@ export default function AddProduct(props) {
     }
 
     const handlerFocusGroup = (e) => {
+        console.log(e.target.value)
         if (e.target.value) {
-            console.log(String(e.target.value))
             setGroup(String(e.target.value))
         }
         setOpenSelect(false)
@@ -396,7 +394,14 @@ export default function AddProduct(props) {
     };
 
     const handlerClose = () => {
+        setOpenSelect(false);
+    };
+
+    const handleChange = (event) => {
+        setGroup(event);
         setOpenSelect(false)
+        setErrorGroup(false)
+        setHelperGroup("")
     };
 
     const handlerChangeInputText = (e) => {
@@ -497,14 +502,30 @@ export default function AddProduct(props) {
 
     }
 
+    const clearData = () => {
+        document.getElementById('myForm').reset();
+        setName('Новый товар');
+        setImage1(null);
+        setImage2(null);
+        setImage3(null);
+        setImage4(null);
+        setImageView1('');
+        setImageView2('');
+        setImageView3('');
+        setImageView4('');
+        setGroup('null');
+        setVendorCode('265-982');
+        setUnit('100гр');
+        setPrice(360);
+        setDescription('Описание продукта');
+        setRecipe('Рецепт приготовления');
+    }
 
     const sendProduct = (e) => {
         e.preventDefault();
 
         let form = new FormData(e.target);
         let status = true;
-
-        form.delete("images")
 
         if (name === "") {
             setErrorName(true);
@@ -555,7 +576,7 @@ export default function AddProduct(props) {
         dispatch(switchLoader(true));
 
         form.set("id", models.generateID(18));
-        form.set("data", new Date().getTime());
+        form.set("date", new Date().getTime());
         form.set("promotion", "0");
 
         if (typeof image_view1 === "string") {
@@ -582,24 +603,33 @@ export default function AddProduct(props) {
             }
         }
 
+        form.delete("images")
+
+        console.log('608: ', form.get('image1'));
+
+        for (let value of form.entries()) {
+            console.log('611: ', value[0]+ ', '+ value[1]);
+        }
+
         let options = {
             method: "POST",
             url: URL_ADD_PRODUCT,
-            // headers: {'Authorization': 'Bearer ' + models.getCookie('Authorization')},
             data: form
         }
 
         axios(options)
             .then(result => {
 
-                const {status} = result;
+                console.log('623: ', result);
+
+                const { status, data } = result;
 
                 if (status === 200) {
 
-                    form.reset()
+                    clearData();
 
                     enqueueSnackbar({
-                        message: "Изменения сохранены",
+                        message: data,
                         options: {
                             key: new Date().getTime() + Math.random(),
                             variant: 'success',
@@ -608,7 +638,6 @@ export default function AddProduct(props) {
                             ),
                         },
                     });
-
                 }
 
             })
@@ -635,7 +664,8 @@ export default function AddProduct(props) {
                 setImageView1(reader.result);
             };
 
-        } else {
+        }
+        else {
             setImageView1("");
             setImage1(null)
         }
@@ -651,7 +681,8 @@ export default function AddProduct(props) {
                 setImageView2(reader.result);
             };
 
-        } else {
+        }
+        else {
             setImageView2("");
             setImage2(null)
         }
@@ -667,7 +698,8 @@ export default function AddProduct(props) {
                 setImageView3(reader.result);
             };
 
-        } else {
+        }
+        else {
             setImageView3("");
             setImage3(null)
         }
@@ -683,7 +715,8 @@ export default function AddProduct(props) {
                 setImageView4(reader.result);
             };
 
-        } else {
+        }
+        else {
             setImageView4("");
             setImage4(null)
         }
@@ -704,10 +737,6 @@ export default function AddProduct(props) {
     const closeSnackbar = (...args) => {
         dispatch(closeSnackbarAction(...args));
     };
-
-    useEffect(() => {
-
-    }, []);
 
     useEffect(() => {
         if (props.state) {
@@ -739,15 +768,16 @@ export default function AddProduct(props) {
             setDescription(description)
             setRecipe(recipe)
 
-        } else {
+        }
+        else {
             setId(null);
-            setName("");
+            setName("Новый товар");
             setGroup("null");
-            setVendorCode("")
-            setUnit("")
-            setPrice("")
-            setDescription("")
-            setRecipe("")
+            setVendorCode("265-982");
+            setUnit('100гр');
+            setPrice(360);
+            setDescription('Описание продукта');
+            setRecipe('Рецепт приготовления');
         }
 
     }, [props.product]);
@@ -758,12 +788,13 @@ export default function AddProduct(props) {
             in={close}
             style={{
                 transitionDelay: close
-                    ? '150ms'
+                    ? '50ms'
                     : '0ms'
             }}
         >
 
             <form
+                id='myForm'
                 method="POST"
                 onSubmit={sendProduct}
                 encType="multipart/form-data"
@@ -804,7 +835,6 @@ export default function AddProduct(props) {
                     />
 
                     <input
-                        ref={files}
                         accept="image/*"
                         style={{display: "none"}}
                         id="file"
@@ -813,21 +843,22 @@ export default function AddProduct(props) {
                         name="images"
                         onChange={(e) => selectedFile(e)}
                     />
+
                     <label htmlFor="file" className={classes.labels}>
 
-                        <Button className={classes.pht} component="div">
+                        <Button key={1} className={classes.pht} component="div">
                             <img alt="plus" src={image_view1 === "" ? plus : image_view1} style={{maxHeight: 112}}/>
                         </Button>
 
-                        <Button className={classes.pht} component="div">
+                        <Button key={2} className={classes.pht} component="div">
                             <img alt="plus" src={image_view2 === "" ? plus : image_view2} style={{maxHeight: 112}}/>
                         </Button>
 
-                        <Button className={classes.pht} component="div">
+                        <Button key={3} className={classes.pht} component="div">
                             <img alt="plus" src={image_view3 === "" ? plus : image_view3} style={{maxHeight: 112}}/>
                         </Button>
 
-                        <Button className={classes.pht} component="div" style={{marginRight: 0}}>
+                        <Button key={4} className={classes.pht} component="div" style={{marginRight: 0}}>
                             <img alt="plus" src={image_view4 === "" ? plus : image_view4} style={{maxHeight: 112}}/>
                         </Button>
 
@@ -874,29 +905,29 @@ export default function AddProduct(props) {
                             onOpen={handlerOpen}
                             onClose={handlerClose}
                             onClick={handlerFocusGroup}
+                            // onChange={handleChange}
                             name="group_id"
                             input={<CustomInput/>}
                         >
                             <MenuItem
-                                disabled
                                 key="0000"
                                 value="null"
                                 style={{color: "#444"}}
                             >
-                                Выберите группу
+                                <em>Выберите группу</em>
                             </MenuItem>
+
                             {
                                 groups.map((item) => {
 
                                     if (item.parent_id === "0") {
-                                        return <>
-                                            <MenuItem
-                                                disabled
-                                                key={item.id}
+                                        return <React.Fragment key={item.id}>
+                                            <ListSubheader
                                                 style={{fontSize: "16px", color: "#444444", opacity: 1}}
                                             >
                                                 {item.name}
-                                            </MenuItem>
+                                            </ListSubheader>
+
                                             {
                                                 groups.map((it) => {
                                                     if (it.parent_id === item.id) {
@@ -910,12 +941,13 @@ export default function AddProduct(props) {
                                                     }
                                                 })
                                             }
-                                        </>
+                                        </React.Fragment>
                                     }
 
                                 })
                             }
                         </Select>
+
                         <FormHelperText>{helper_group}</FormHelperText>
                     </FormControl>
 

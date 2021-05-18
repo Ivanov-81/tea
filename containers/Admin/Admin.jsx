@@ -17,7 +17,7 @@ import Tab from "@material-ui/core/Tab"
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
-
+    // console.log(props)
     return (
         <div
             role="tabpanel"
@@ -28,7 +28,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    <Typography component="div">{children}</Typography>
                 </Box>
             )}
         </div>
@@ -90,7 +90,7 @@ export default function Admin() {
     };
 
     return (
-        <section className={classes.main}>
+        <div className={classes.main}>
 
             <AppBar position="static" color="default">
                 <Tabs
@@ -102,8 +102,8 @@ export default function Admin() {
                     scrollButtons="auto"
                     aria-label="scrollable auto tabs example"
                 >
-                    <Tab label="Товары" {...a11yProps(0)}/>
-                    <Tab label="Заказы" {...a11yProps(1)}/>
+                    <Tab label="Товары" {...a11yProps(0)}></Tab>
+                    <Tab label="Заказы" {...a11yProps(1)}></Tab>
                     <Tab label="На главную" {...a11yProps(2)}>
                         <Link to="/" className={classes.link}>На главную</Link>
                     </Tab>
@@ -119,6 +119,6 @@ export default function Admin() {
                 Item Three
             </TabPanel>
 
-        </section>
+        </div>
     );
 }
