@@ -7,7 +7,6 @@ import CloseIcon from '@material-ui/icons/Close'
 import IconButton from "@material-ui/core/IconButton"
 import Button from "@material-ui/core/Button";
 import {Add, Remove} from "@material-ui/icons";
-import clsx from "clsx";
 import {
     closeSnackbar as closeSnackbarAction,
     enqueueSnackbar as enqueueSnackbarAction,
