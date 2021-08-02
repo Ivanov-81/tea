@@ -20,8 +20,6 @@ export default function MGetProducts(dispatch) {
             const {status, data} = result;
             if (status === 200) {
 
-                console.log(data);
-
                 dispatch(addProducts(data.sort(models.compareName)));
 
                 enqueueSnackbar({

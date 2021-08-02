@@ -36,8 +36,7 @@ const isLoaders = () => {
 module.exports = {
     mode: 'development',
     entry: {
-        app: './index.jsx',
-        admin: './containers/Admin/Admin.jsx'
+        app: './index.jsx'
     },
     output: {
         filename: '[name].[contenthash].js',
@@ -202,6 +201,14 @@ module.exports = {
                 },
                 {
                     from: path.resolve(__dirname, 'html/send_mail.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/pass.php'),
+                    to: path.resolve(__dirname, 'www/php')
+                },
+                {
+                    from: path.resolve(__dirname, 'html/prices.php'),
                     to: path.resolve(__dirname, 'www/php')
                 }
             ]

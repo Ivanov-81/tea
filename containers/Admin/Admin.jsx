@@ -16,8 +16,9 @@ import Typography from "@material-ui/core/Typography"
 import Tab from "@material-ui/core/Tab"
 
 function TabPanel(props) {
+
     const {children, value, index, ...other} = props;
-    // console.log(props)
+
     return (
         <div
             role="tabpanel"

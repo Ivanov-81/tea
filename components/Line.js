@@ -39,18 +39,10 @@ const useStyles = makeStyles((theme) => createStyles({
         right: "0px",
         margin: "0 15px 0 0",
         color: "#041715",
-    },
-    width: {
-        position: "absolute",
-        right: "0px",
-        top: "0px",
-        margin: "0 4px 0 0",
-        color: "#041715",
-        fontSize: "12px"
     }
 }));
 
-function Line(props) {
+function Line() {
 
     const classes = useStyles()
     const dispatch = useDispatch()
@@ -58,8 +50,6 @@ function Line(props) {
     const openMenu = () => {
         dispatch(switchMenu(true))
     }
-
-    const {width} = props;
 
     return (
         <Container maxWidth="lg" className={classes.root}>
@@ -69,15 +59,15 @@ function Line(props) {
             </Hidden>
 
             <img alt="logo" src="../images/sign.png" className={classes.image}/>
-            <span className={classes.width}>{width}</span>
+
             <Hidden only={['sm', 'lg', 'md', 'xl']}>
 
-                <span className="address">г. Берёзовский<br />Театральная 6</span>
+                <span className="address">г. Верхняя Пышма<br />Машиностроителей 7</span>
 
                 <IconButton className={classes.hamburger} onClick={openMenu}>
                     <DehazeIcon/>
                 </IconButton>
-                
+
             </Hidden>
 
         </Container>

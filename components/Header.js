@@ -203,8 +203,9 @@ export default function Tea(props) {
                     }
 
                     <iframe
-                        src="https://yandex.ru/map-widget/v1/?um=constructor%3Aea62e60328eed7ffb0742cd584f5dbef9cdd11c41f77de30404a62f426aaa9bd&amp;source=constructor"
-                        width="1016" height="600" frameBorder="0"/>
+                        src="https://yandex.ru/map-widget/v1/?um=constructor%3A9215d21cc94792c4e34080c286efb19350fa42ce8cb2d54228c4d249ca528c2d&amp;source=constructor"
+                        width="1016" height="600" frameBorder="0"
+                    />
 
                 </div>
             </Modal>
@@ -216,7 +217,7 @@ export default function Tea(props) {
                         className={classes.address}
                         onClick={handleWindowControl}
                     >
-                        Сверд. обл., г. БЕРЕЗОВСКИЙ, ул. Театральная 6
+                        Сверд. обл., г.Верхняя Пышма. ул. Машиностроителей, 7
                     </div>
 
                     <a className={classes.phone} href="tel:+79632733137">+7 (963) 273-31-37</a>

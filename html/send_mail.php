@@ -20,13 +20,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $string = "";
     $amount = 0;
     $subj = "Заявка на доставку";
+    $coef = "";
 
     foreach ($products as $value) {
+        $coef = "";
+        if(($value["amount"] / $value["price"]) != 1) {
+            $coef = $value["amount"] / $value["price"]." x ";
+        }
         $amount = $amount + $value["amount"];
         $string .= "<div style='border-bottom: 1px solid #ebebeb; font-size: 13px'>
                 <span style='margin: 0 10px 0 0; width: 100px; min-width: 100px'>" . $value["vendor_code"] . "</span>
                 <span style='margin: 0 10px 0 0'>" . $value["name"] . "</span>
-                <span>" . $value["price"] . "</span> руб/" . $value["unit"] . "
+                <span><b>" . $coef . "</b>" . $value["price"] . "</span> руб/" . $value["unit"] . "
                 <br/><span style='font-weight: bolder'>На сумму: " . $value["amount"] . " руб</span>
             </div>";
     }

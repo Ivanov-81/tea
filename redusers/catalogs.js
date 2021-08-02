@@ -7,7 +7,7 @@ import {
 const defaultState = {
     groups: [],
     products: [],
-    cart: [],
+    cart: []
 };
 
 const catalogs = (state = defaultState, {type, groups, products, cart}) => {

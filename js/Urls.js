@@ -7,4 +7,6 @@ export const URL_CHANGE_NOVELTY = '/php/novelty.php';
 export const URL_ADD_PRODUCT = '/php/addProduct.php';
 export const URL_ORDERS = '/php/orders.php';
 export const URL_CAPTCHA = '/php/captcha.php';
+export const URL_ENTRY_ADMIN = '/php/requests.php';
 export const URL_SEND_MAIL = '/php/send_mail.php';
+export const URL_CHANGE_PRICE = '/php/prices.php';

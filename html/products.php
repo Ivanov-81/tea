@@ -15,20 +15,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $handle = db_connect() or die("Вроде как ошибка" . mysqli_error($handle));
     $postData = json_decode(file_get_contents('php://input'), true);
 
-    if(isset($postData['group'])) {
+    if (isset($postData['group'])) {
         $group = $postData['group'];
+        $count = $postData['count'];
         $subGrp = [];
         $pd = [];
         $ar = [];
-        $query = "SELECT id, name, photo, parent_id FROM product_groups WHERE parent_id = '".$group."' ORDER BY name ASC";
-        $result = $handle->query($query) or die(" Ошибка: ".mysqli_error($handle));
+        $query = "SELECT id, name, photo, parent_id FROM product_groups WHERE parent_id = '" . $group . "' ORDER BY name ASC";
+        $result = $handle->query($query) or die(" Ошибка: " . mysqli_error($handle));
         while ($stg = $result->fetch_assoc()) {
             array_push($subGrp, $stg);
             array_push($ar, $stg['id']);
         }
 
         foreach ($ar as $vl) {
-            $qur = "SELECT id, name, photo, parent_id FROM product_groups WHERE parent_id = '".$vl."' ORDER BY name ASC";
+            $qur = "SELECT id, name, photo, parent_id FROM product_groups WHERE parent_id = '" . $vl . "' ORDER BY name ASC";
             $res = $handle->query($qur) or die(" Ошибка: " . mysqli_error($handle));
             while ($stg = $res->fetch_assoc()) {
                 array_push($subGrp, $stg);
@@ -36,17 +37,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         foreach ($subGrp as $vl) {
-            $qur = "SELECT * FROM product WHERE group_id = '".$vl['id']."' ORDER BY name ASC";
+            $qur = "SELECT * FROM product WHERE group_id = '" . $vl['id'] . "' ORDER BY name ASC";
             $res = $handle->query($qur) or die(" Ошибка: " . mysqli_error($handle));
             while ($stg = $res->fetch_assoc()) {
                 array_push($pd, $stg);
             }
         }
+        if ($count) {
+            $pd = count($pd);
+        }
+
         if ($result) {
             echo json_encode(array('products' => $pd, 'sub_groups' => $subGrp));
-        }
-        else {
+        } else {
             echo json_encode(array('result' => false, 'reason' => $result));
+        }
+    } else if (isset($postData['subgroup'])) {
+        $group = $postData['subgroup'];
+        $subGrp = [];
+        $pd = [];
+        $ar = [];
+
+        $qur = "SELECT * FROM product WHERE group_id = '" . $group . "' ORDER BY name ASC";
+        $res = $handle->query($qur) or die(" Ошибка: " . mysqli_error($handle));
+        while ($stg = $res->fetch_assoc()) {
+            array_push($pd, $stg);
+        }
+
+        if ($res) {
+            echo json_encode(array('products' => $pd));
+        } else {
+            echo json_encode(array('result' => false, 'reason' => $res));
         }
     }
 }
@@ -64,8 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         while ($str = $result->fetch_assoc()) {
             array_push($pd, $str);
         }
-    }
-    else {
+    } else {
         echo json_encode(array('result' => false, 'reason' => 'Ошибка запроса к базе данных product'));
         $status = false;
         return false;
@@ -73,8 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if ($status) {
         echo json_encode($pd); //, 'product_groups' => $gp, 'products' => $pd, 'news' => $nw, 'articles' => $at
-    }
-    else {
+    } else {
         echo json_encode(array('result' => false, 'reason' => 'Ошибка!!!')); //, 'product_groups' => $gp, 'products' => $pd, 'news' => $nw, 'articles' => $at
     }
 

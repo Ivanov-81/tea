@@ -13,8 +13,10 @@ import {
     enqueueSnackbar as enqueueSnackbarAction,
     refreshCart
 } from "../../actions/actionCreator";
+import Grid from "@material-ui/core/Grid";
+import Carousel from "../../components/Carousel";
 
-const useStyles = makeStyles(() => createStyles({
+const useStyles = makeStyles((theme) => createStyles({
     paper: {
         position: "absolute",
         display: "flex",
@@ -31,45 +33,143 @@ const useStyles = makeStyles(() => createStyles({
         justifyContent: "center",
         alignItems: "flex-end",
         width: "100%",
-        height: "40px",
+        height: 40,
         color: "#BA975F",
         textAlign: "center",
         fontSize: "18px",
         lineHeight: "18px",
-        fontWeight: 500
+        fontWeight: 500,
+        [theme.breakpoints.down('xl')]: {
+            width: "100%",
+            height: 40,
+        },
+        [theme.breakpoints.down('lg')]: {
+            width: "100%",
+            height: 40,
+        },
+        [theme.breakpoints.down('md')]: {
+            width: "100%",
+            height: 40,
+        },
+        [theme.breakpoints.down('sm')]: {
+            width: "100%",
+            height: 65,
+            padding: '0 40px',
+            marginTop: 10,
+            lineHeight: '21px'
+        },
+        [theme.breakpoints.down('xs')]: {
+            width: "100%",
+            height: 65,
+            padding: '0 40px',
+            marginTop: 10,
+            lineHeight: '21px'
+        },
     },
     closeButton: {
         display: "flex",
         position: "absolute",
         right: 0,
-        top: "4px",
+        top: 4,
         margin: "0 5px 0 0",
         color: "#FF0000",
+        [theme.breakpoints.down('sm')]: {
+            right: -4,
+            top: 0,
+            margin: 0
+        },
+        [theme.breakpoints.down('xs')]: {
+            right: -4,
+            top: 0,
+            margin: 0
+        },
     },
     body: {
         display: "flex",
         width: "100%",
         height: "calc(100% - 40px)",
         flexDirection: "column",
+        overflow: 'hidden',
+        [theme.breakpoints.down('sm')]: {
+            overflowX: 'hidden',
+            overflowY: 'auto',
+        },
+        [theme.breakpoints.down('xs')]: {
+            overflowX: 'hidden',
+            overflowY: 'auto',
+        },
     },
     block1: {
         display: "flex",
         width: "100%",
         height: "55%",
         flexDirection: "row",
+        [theme.breakpoints.down('sm')]: {
+            height: 'auto',
+            paddingBottom: 20
+        },
+        [theme.breakpoints.down('xs')]: {
+            height: 'auto',
+            paddingBottom: 20
+        },
     },
     blockPhoto: {
-        width: "calc(50% - 40px)",
+        maxWidth: "calc(50% - 40px)",
         height: "calc(100% - 40px)",
         display: "flex",
         margin: "20px",
         border: "3px solid #BA975F",
         borderRadius: "4px",
         overflow: "hidden",
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: "calc(100% - 40px)",
+            height: "auto"
+        },
+        [theme.breakpoints.down('xs')]: {
+            maxWidth: "calc(100% - 40px)",
+            height: "auto"
+        },
     },
     photo: {
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: 281,
+        backgroundColor: "#EFE6DF",
+        border: "1px solid #D5BC9C",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 0,
+        borderRadius: 0,
+        [theme.breakpoints.down('lg')]: {
+            height: 281,
+        },
+        [theme.breakpoints.down('md')]: {
+            height: 281,
+        },
+        [theme.breakpoints.down('sm')]: {
+            height: '100%',
+        },
+        [theme.breakpoints.down('xs')]: {
+            height: '100%',
+        }
+    },
+    root: {
+        maxWidth: "100%",
+        height: 281,
+        flexGrow: 1,
+        position: "relative",
+        [theme.breakpoints.down('lg')]: {
+            height: 281,
+        },
+        [theme.breakpoints.down('md')]: {
+            height: 281,
+        },
+        [theme.breakpoints.down('sm')]: {
+            height: 281,
+        },
+        [theme.breakpoints.down('xs')]: {
+            height: 281,
+        }
     },
     description: {
         display: "flex",
@@ -92,7 +192,7 @@ const useStyles = makeStyles(() => createStyles({
         lineHeight: "16px",
     },
     text: {
-        padding: "10px 15px 0 0",
+        padding: "10px 0 0 0",
         textAlign: "center",
         fontSize: "14px",
         lineHeight: "17px",
@@ -143,6 +243,16 @@ const useStyles = makeStyles(() => createStyles({
         textTransform: "none",
         position: "absolute",
         bottom: "40px",
+        border: '1px solid',
+        padding: '8px 20px',
+        [theme.breakpoints.down('sm')]: {
+            position: "relative",
+            bottom: -35
+        },
+        [theme.breakpoints.down('xs')]: {
+            position: "relative",
+            bottom: -35
+        },
     }
 }));
 
@@ -150,8 +260,6 @@ export default function ProductOverview(props) {
 
     const classes = useStyles();
     const dispatch = useDispatch();
-    // const history = useHistory();
-    const theme = createMuiTheme({});
 
     const [product, setProduct] = useState(props.product);
     const [quantity, setQuantity] = useState(1);
@@ -200,7 +308,7 @@ export default function ProductOverview(props) {
             dispatch(refreshCart(true));
             setTimeout(() => {
                 dispatch(refreshCart(false));
-            },500);
+            }, 500);
 
         }
 
@@ -231,8 +339,6 @@ export default function ProductOverview(props) {
 
             };
 
-            //
-
         };
     };
 
@@ -257,91 +363,82 @@ export default function ProductOverview(props) {
     }, []);
 
     return (
-        <Fragment>
-            <div className={classes.paper}>
 
-                <div className={classes.header}>
-                    {product.name}
-                    <IconButton
-                        onClick={handlerCloseModal}
-                        className={classes.closeButton}
-                    >
-                        <CloseIcon/>
-                    </IconButton>
-                </div>
+        <div className={classes.paper}>
 
-                <div className={classes.body}>
+            <div className={classes.header}>
+                {product.name}
+                <IconButton
+                    onClick={handlerCloseModal}
+                    className={classes.closeButton}
+                >
+                    <CloseIcon/>
+                </IconButton>
+            </div>
 
-                    <div className={classes.block1}>
+            <div className={classes.body}>
 
-                        <div className={classes.blockPhoto}>
-                            <img
-                                alt="img"
-                                src={
-                                    product.photo[0] === '/'
-                                        ? product.photo
-                                        : `/${product.photo.split('/').splice(2, 3).join('/')}`
-                                }
-                                className={classes.photo}
-                            />
-                        </div>
+                <Grid container justify="center" className={classes.block1}>
 
-                        <div className={classes.description}>
-                            <span className={classes.title}>Описание:</span>
-                            <span className={classes.text}>
-                                {product.description}
-                            </span>
-                        </div>
+                    <Grid item xs={12} sm={6} className={classes.blockPhoto}>
+                        <Carousel data={product.photo.split(',')} style1={classes.photo} style2={classes.root}/>
+                    </Grid>
 
-                    </div>
+                    <Grid item xs={12} sm={6} className={classes.description}>
+                        <span className={classes.title}>Описание:</span>
+                        <span className={classes.text}>{product.description}</span>
+                    </Grid>
 
-                    <div className={classes.block2}>
+                </Grid>
 
-                        <div className={classes.blk}>
-                            <span className={classes.vendorCode}>Артикул: {product.vendor_code}</span>
-                            <span className={classes.vendorCode}>Ед. изм.: {product.unit}</span>
-                            <span className={classes.vendorCode}>Цена: {product.price} руб.</span>
+                <Grid container justify="center" className={classes.block2}>
 
+                    <Grid item xs={12} sm={6} className={classes.blk}>
+                        <span className={classes.vendorCode}>Артикул: {product.vendor_code}</span>
+                        <span className={classes.vendorCode}>Ед. изм.: {product.unit}</span>
+                        <span className={classes.vendorCode}>Цена: {product.price} руб.</span>
 
-                            <div className={classes.quantity}>
+                        <div className={classes.quantity}>
 
-                                <Button onClick={handlerRemove} style={{color: "#BA975F"}}>
-                                    <Remove/>
-                                </Button>
+                            <Button onClick={handlerRemove} style={{color: "#BA975F"}}>
+                                <Remove/>
+                            </Button>
 
-                                <div className={classes.unit}>
-                                    {quantity * Number(product.price)}
-                                </div>
-
-                                <Button onClick={handlerAdd} style={{color: "#BA975F"}}>
-                                    <Add/>
-                                </Button>
-
+                            <div className={classes.unit}>
+                                {quantity * Number(product.price)}
                             </div>
 
-
-                            <span>ИТОГО: {quantity * Number(product.price)} руб.</span>
-
-                        </div>
-
-                        <div className={classes.blk}>
-
-                            <span className={classes.title}>Рецепт приготовления:</span>
-
-                            <div className={classes.text}>
-                                {product.recipe}
-                            </div>
-
-                            <Button className={classes.but} onClick={handlerAddToBasket}>
-                                Добавить в корзину
+                            <Button onClick={handlerAdd} style={{color: "#BA975F"}}>
+                                <Add/>
                             </Button>
 
                         </div>
-                    </div>
 
-                </div>
+                        <span>ИТОГО: {quantity * Number(product.price)} руб.</span>
+
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} className={classes.blk}>
+
+                        {
+                            product.recipe !== '' &&
+                                <>
+                                    <span className={classes.title}>Рецепт приготовления:</span>
+                                    <div className={classes.text}>{product.recipe}</div>
+                                </>
+                        }
+
+                        <Button className={classes.but} onClick={handlerAddToBasket}>
+                            Добавить в корзину
+                        </Button>
+
+                    </Grid>
+
+                </Grid>
 
             </div>
-        </Fragment>
+
+        </div>
+
     );
 }

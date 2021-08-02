@@ -4,7 +4,7 @@ import {
     ADD_GROUPS, ADD_PRODUCTS, SWITCH_LOADER,
     SWITCH_AUTHORIZATION, SWITCH_CART,
     SWITCH_CART_SM, REFRESH_CART, ADD_CART,
-    SWITCH_MENU, LIGHT_MISTAKE, ADD_DEVICE, UPDATE
+    SWITCH_MENU, LIGHT_MISTAKE, ADD_DEVICE, UPDATE, SWITCH_SUBMENU
 } from "../js/constants";
 
 export const addEvent = ( event ) => ({
@@ -79,6 +79,11 @@ export const addCart = (cart) => ({
 export const switchMenu = (open_menu) => ({
     type : SWITCH_MENU,
     open_menu
+});
+
+export const switchSubmenu = (open_submenu) => ({
+    type : SWITCH_SUBMENU,
+    open_submenu
 });
 
 export const lightMistake = (error) => ({

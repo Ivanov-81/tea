@@ -25,6 +25,7 @@ import {URL_GET_GROUPS} from "../../../js/Urls";
 import {addGroups} from "../../../actions/actionCreator";
 import Button from "@material-ui/core/Button";
 import CloseIcon from "@material-ui/icons/Close";
+import Price from "../Price/Price";
 
 const GreenCheckbox = withStyles({
     root: {
@@ -185,6 +186,20 @@ export default function Products() {
                 textAlign: 'left',
                 lineHeight: '13px'
             },
+            render: (data) => {
+                function returnData(d) {
+                    let date = new Date(Number(d));
+                    return [
+                        date.getDate(),
+                        ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"][date.getMonth()],
+                        date.getFullYear()
+                    ].join(".")
+                }
+
+                return data.upload_date.length === 13
+                    ? returnData(data.upload_date)
+                    : data.upload_date.split('.').reverse().join('.')
+            }
         },
         {
             field: 'price',
@@ -196,6 +211,9 @@ export default function Products() {
                 padding: 16,
                 textAlign: 'left',
             },
+            render: (data) => {
+                return <Price data={data} />
+            }
         },
         {
             field: 'promotion',
@@ -339,7 +357,6 @@ export default function Products() {
     };
 
     const handlerEditProduct = (data) => () => {
-        console.log(data)
         setProduct(data)
         setOpenModal(true)
     };

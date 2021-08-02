@@ -1,13 +1,9 @@
-import React, {Fragment, useEffect, useState} from 'react'
-import {useSelector} from "react-redux"
+import React, { useState } from 'react'
 
-import {makeStyles, createMuiTheme, withStyles} from "@material-ui/core/styles"
-import {createStyles} from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
+import { createStyles } from "@material-ui/core"
 import CloseIcon from '@material-ui/icons/Close'
 import IconButton from "@material-ui/core/IconButton"
-import Modal from '@material-ui/core/Modal'
-
-import ProductOverview from "../../ProductOverview/ProductOverview"
 
 const useStyles = makeStyles((theme) => createStyles({
     header: {
@@ -63,77 +59,24 @@ const useStyles = makeStyles((theme) => createStyles({
         lineHeight: "13px",
         padding: "0 15px 0 0",
     },
-    wrapper: {
-        position: "relative",
-        width: 800,
-        height: 650,
-        backgroundColor: "#092924",
-        boxShadow: "0px 4px 10px 0px rgba(255,255,255,0.25), 1px -5px 8px 0px rgba(255,255,255,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12)",
-        padding: theme.spacing(2, 4, 3),
-        outline: "none",
-    },
 }));
-
-function getModalStyle() {
-    const top = 50;
-    const left = 50;
-
-    return {
-        top: `${top}%`,
-        left: `${left}%`,
-        transform: `translate(-${top}%, -${left}%)`,
-    };
-}
 
 export default function List(props) {
 
     const classes = useStyles();
-    // const dispatch = useDispatch();
-    // const history = useHistory();
-    // const theme = createMuiTheme({});
-    const [modalStyle] = React.useState(getModalStyle);
-    const [open, setOpen] = useState(false);
-    const [product, setProduct] = useState(false);
-    const [photos, setPhotos] = useState([]);
 
     const handlerCloseList = () => {
         props.closeList(false);
     };
 
-    const handlerShowProduct = (product) => (event) => {
-        setProduct(product);
-        handleOpen();
-    };
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const stateWindow = (data) => {
-        setOpen(data);
+    const handlerShowProduct = (el) => {
+        props.handlerShowProduct(el);
     };
 
     const {item, sub_groups, products} = props;
 
     return (
-        <Fragment>
-
-            <Modal
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
-                open={open}
-                onClose={handleClose}
-            >
-                <div style={modalStyle} className={classes.wrapper}>
-                    <ProductOverview
-                        product={product}
-                        stateWindow={stateWindow}
-                    />
-                </div>
-            </Modal>
+        <>
 
             <div className={classes.header}>
                 {item.name}
@@ -150,32 +93,31 @@ export default function List(props) {
 
                 {
                     sub_groups &&
-                    sub_groups.map((elem) => (
-                        <div key={elem.id}>
-                            <div className={classes.subgroup}>
-                                {elem.name}
+                        sub_groups.map((elem) => (
+                            <div key={elem.id}>
+                                <div className={classes.subgroup}>
+                                    {elem.name}
+                                </div>
+                                <div className={classes.productsBody}>
+                                    {
+                                        products &&
+                                            products.map((el, ind) => ((elem.id === el.group_id) ?
+                                                    <div
+                                                        key={el.id}
+                                                        className={classes.products}
+                                                        onClick={() => handlerShowProduct(el)}
+                                                    >
+                                                        {el.name}
+                                                    </div> : null
+                                            ))
+                                    }
+                                </div>
                             </div>
-                            <div className={classes.productsBody}>
-                                {
-                                    products &&
-                                    products.map((el, ind) => ((elem.id === el.group_id) ?
-                                            <div
-                                                key={el.id}
-                                                className={classes.products}
-                                                onClick={handlerShowProduct(el)}
-                                            >
-                                                {el.name}
-                                            </div> : null
-                                    ))
-                                }
-                            </div>
-                        </div>
-                    ))
+                        ))
                 }
-
 
             </div>
 
-        </Fragment>
+        </>
     );
 }

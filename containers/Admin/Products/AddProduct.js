@@ -293,6 +293,14 @@ const useStyles = makeStyles((Theme) =>
         },
         block: {
             position: "relative",
+        },
+        countDescription: {
+            position: 'absolute',
+            right: 5,
+            bottom: 0,
+            fontStyle: 'italic',
+            fontSize: '13px',
+            color: '#888888'
         }
     })
 );
@@ -306,23 +314,24 @@ export default function AddProduct(props) {
     const groups = useSelector(store => store.catalogs.groups)
 
     const [id, setId] = useState(null)
+    const [photo, setPhoto] = useState(null)
 
     const [close, setClose] = useState(false)
     const [open_select, setOpenSelect] = useState(false)
 
-    const [name, setName] = useState("Новый товар")
+    const [name, setName] = useState("")
     const [error_name, setErrorName] = useState(false)
     const [helper_name, setHelperName] = useState("")
 
-    const [vendor_code, setVendorCode] = useState("265-982")
+    const [vendor_code, setVendorCode] = useState("")
     const [error_vendor_code, setErrorVendorCode] = useState(false)
     const [helper_vendor_code, setHelperVendorCode] = useState("")
 
-    const [unit, setUnit] = useState("100гр")
+    const [unit, setUnit] = useState("")
     const [error_unit, setErrorUnit] = useState(false)
     const [helper_unit, setHelperUnit] = useState("")
 
-    const [price, setPrice] = useState(360)
+    const [price, setPrice] = useState(null)
     const [error_price, setErrorPrice] = useState(false)
     const [helper_price, setHelperPrice] = useState("")
 
@@ -330,11 +339,13 @@ export default function AddProduct(props) {
     const [error_group, setErrorGroup] = useState(false)
     const [helper_group, setHelperGroup] = useState("")
 
-    const [description, setDescription] = useState("Описание продукта")
+    const [description, setDescription] = useState("")
+    const [count_description, setCountDescription] = useState(600)
     const [error_description, setErrorDescription] = useState(false)
     const [helper_description, setHelperDescription] = useState("")
 
-    const [recipe, setRecipe] = useState("Рецепт приготовления")
+    const [recipe, setRecipe] = useState("")
+    const [count_recipe, setCountRecipe] = useState(300)
     const [error_recipe, setErrorRecipe] = useState(false)
     const [helper_recipe, setHelperRecipe] = useState("")
 
@@ -380,7 +391,6 @@ export default function AddProduct(props) {
     }
 
     const handlerFocusGroup = (e) => {
-        console.log(e.target.value)
         if (e.target.value) {
             setGroup(String(e.target.value))
         }
@@ -439,11 +449,15 @@ export default function AddProduct(props) {
             }
 
             case "description": {
+                if(count_description === 0 && e.target.value.length === 601) return
+                setCountDescription(600 - e.target.value.length)
                 setDescription(e.target.value);
                 break;
             }
 
             case "recipe": {
+                if(count_recipe === 0 && e.target.value.length === 301) return
+                setCountRecipe(300 - e.target.value.length)
                 setRecipe(e.target.value);
                 break;
             }
@@ -504,7 +518,7 @@ export default function AddProduct(props) {
 
     const clearData = () => {
         document.getElementById('myForm').reset();
-        setName('Новый товар');
+        setName('');
         setImage1(null);
         setImage2(null);
         setImage3(null);
@@ -514,11 +528,11 @@ export default function AddProduct(props) {
         setImageView3('');
         setImageView4('');
         setGroup('null');
-        setVendorCode('265-982');
-        setUnit('100гр');
-        setPrice(360);
-        setDescription('Описание продукта');
-        setRecipe('Рецепт приготовления');
+        setVendorCode('');
+        setUnit('');
+        setPrice(null);
+        setDescription('');
+        setRecipe('');
     }
 
     const sendProduct = (e) => {
@@ -578,6 +592,7 @@ export default function AddProduct(props) {
         form.set("id", models.generateID(18));
         form.set("date", new Date().getTime());
         form.set("promotion", "0");
+        form.set("archived", "0");
 
         if (typeof image_view1 === "string") {
             if (image_view1.length > 500) {
@@ -604,8 +619,6 @@ export default function AddProduct(props) {
         }
 
         form.delete("images")
-
-        console.log('608: ', form.get('image1'));
 
         for (let value of form.entries()) {
             console.log('611: ', value[0]+ ', '+ value[1]);
@@ -753,6 +766,7 @@ export default function AddProduct(props) {
                 name,
                 unit,
                 price,
+                photo,
                 recipe,
                 group_id,
                 vendor_code,
@@ -767,17 +781,21 @@ export default function AddProduct(props) {
             setPrice(price)
             setDescription(description)
             setRecipe(recipe)
+            setImageView1(photo[0] === '/'
+                ? photo
+                : `/${photo.split('/').splice(2, 3).join('/')}`)
 
         }
         else {
             setId(null);
-            setName("Новый товар");
+            setName("");
             setGroup("null");
-            setVendorCode("265-982");
-            setUnit('100гр');
-            setPrice(360);
-            setDescription('Описание продукта');
-            setRecipe('Рецепт приготовления');
+            setVendorCode("");
+            setUnit('');
+            setPrice(null);
+            setDescription('');
+            setRecipe('');
+            setImageView1('')
         }
 
     }, [props.product]);
@@ -828,7 +846,7 @@ export default function AddProduct(props) {
                         autoComplete="name"
                         InputProps={{
                             inputProps: {
-                                maxLength: 150,
+                                maxLength: 50,
                             },
                         }}
 
@@ -1025,7 +1043,7 @@ export default function AddProduct(props) {
                         }
 
                         <div className={classes.textareaDiv}>
-
+                            <span className={classes.countDescription}>{count_description}</span>
                             <TextareaAutosize
                                 placeholder="Описание продукта"
                                 value={description}
@@ -1050,7 +1068,7 @@ export default function AddProduct(props) {
                         }
 
                         <div className={classes.textareaDiv}>
-
+                            <span className={classes.countDescription}>{count_recipe}</span>
                             <TextareaAutosize
                                 placeholder="Рецепт приготовления"
                                 value={recipe}

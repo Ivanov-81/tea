@@ -1,10 +1,13 @@
 import {
+    UPDATE,
     SWITCH_CART,
     SWITCH_MENU,
+    SWITCH_SUBMENU,
     REFRESH_CART,
     SWITCH_LOADER,
     SWITCH_CART_SM,
-    SWITCH_AUTHORIZATION, LIGHT_MISTAKE, ADD_DEVICE, UPDATE,
+    SWITCH_AUTHORIZATION,
+    LIGHT_MISTAKE, ADD_DEVICE,
 } from "../js/constants";
 
 const defaultState = {
@@ -14,6 +17,7 @@ const defaultState = {
     show_cart_sm: false,
     refresh_cart: false,
     open_menu: false,
+    open_submenu: false,
     error: {},
     device: false,
     update: false,
@@ -27,6 +31,7 @@ const app = (state = defaultState, {
     authorization,
     refresh_cart,
     open_menu,
+    open_submenu,
     error,
     device,
     update,
@@ -52,6 +57,10 @@ const app = (state = defaultState, {
         case SWITCH_MENU :
             return Object.assign({}, state, {
                 open_menu: open_menu
+            });
+        case SWITCH_SUBMENU :
+            return Object.assign({}, state, {
+                open_submenu: open_submenu
             });
         case REFRESH_CART :
             return Object.assign({}, state, {
