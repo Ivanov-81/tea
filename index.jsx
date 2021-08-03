@@ -4,7 +4,7 @@ import {Provider} from "react-redux";
 import {createStore} from 'redux'
 import allReducers from "./redusers";
 import {SnackbarProvider} from 'notistack';
-import { composeWithDevTools } from 'redux-devtools-extension';
+// import { composeWithDevTools } from 'redux-devtools-extension';
 
 import Tea from './Tea';
 
@@ -22,7 +22,6 @@ if(window.location.hostname === "localhost") {
         window.__REDUX_DEVTOOLS_EXTENSION__ &&
         window.__REDUX_DEVTOOLS_EXTENSION__()
     );
-    console.log(store)
 }
 else {
     store = createStore(allReducers);

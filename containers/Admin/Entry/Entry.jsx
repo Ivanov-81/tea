@@ -141,7 +141,7 @@ function Entry(props) {
         if (props.entry && getCookie('name') === 'admin') {
             history.push('/admin_panel')
         } else {
-            if(window.location.host === 'tea') {
+            if(props.entry && window.location.host === 'tea') {
                 history.push('/admin_panel')
             }
             else {

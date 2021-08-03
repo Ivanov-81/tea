@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import Tea from './Tea.jsx';
+import sum from "./js/ts";
 
-test('renders learn react link', () => {
-    render(<Tea />);
-    const linkElement = screen.getByText(/learn react/i);
-    expect(linkElement).toBeInDocument();
+test('first test', () => {
+    expect(sum(5, 6)).toBe(11);
 });
+
+test('return value correctly comparing to other', () => {
+    expect(sum(2,3)).toBeGreaterThan(4)
+    expect(sum(2,3)).toBeLessThan(6)
+})

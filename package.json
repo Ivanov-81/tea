@@ -28,6 +28,7 @@
     "@babel/preset-react": "^7.6.3",
     "@material-ui/styles": "4.9.10",
     "@testing-library/react": "^12.0.0",
+    "jest": "^27.0.6",
     "babel-loader": "8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "compression-webpack-plugin": "3.1.0",
@@ -37,8 +38,7 @@
     "file-loader": "5.1.0",
     "html-webpack-plugin": "^5.3.1",
     "mini-css-extract-plugin": "0.9.0",
-    "webpack": "^5.36.2",
-    "jest": "^27.0.6"
+    "webpack": "^5.36.2"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.10",
