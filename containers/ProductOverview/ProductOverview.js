@@ -357,6 +357,10 @@ export default function ProductOverview(props) {
         props.stateWindow(false);
     };
 
+    const esc_quot_two = (str) => {
+        return str.replace("&#39;", "'");
+    }
+
     useEffect(() => {
 
     }, []);
@@ -366,7 +370,7 @@ export default function ProductOverview(props) {
         <div className={classes.paper}>
 
             <div className={classes.header}>
-                {product.name}
+                {esc_quot_two(product.name)}
                 <IconButton
                     onClick={handlerCloseModal}
                     className={classes.closeButton}
@@ -385,7 +389,7 @@ export default function ProductOverview(props) {
 
                     <Grid item xs={12} sm={6} className={classes.description}>
                         <span className={classes.title}>Описание:</span>
-                        <span className={classes.text}>{product.description}</span>
+                        <span className={classes.text}>{esc_quot_two(product.description)}</span>
                     </Grid>
 
                 </Grid>
@@ -423,7 +427,7 @@ export default function ProductOverview(props) {
                             product.recipe !== '' &&
                                 <>
                                     <span className={classes.title}>Рецепт приготовления:</span>
-                                    <div className={classes.text}>{product.recipe}</div>
+                                    <div className={classes.text}>{esc_quot_two(product.recipe)}</div>
                                 </>
                         }
 

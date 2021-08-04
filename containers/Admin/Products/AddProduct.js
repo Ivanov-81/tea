@@ -593,6 +593,9 @@ export default function AddProduct(props) {
         form.set("date", new Date().getTime());
         form.set("promotion", "0");
         form.set("archived", "0");
+        form.set("name", esc_quot_two(name));
+        form.set("description", esc_quot_two(description));
+        form.set("recipe", esc_quot_two(recipe));
 
         if (typeof image_view1 === "string") {
             if (image_view1.length > 500) {
@@ -620,10 +623,6 @@ export default function AddProduct(props) {
 
         form.delete("images")
 
-        for (let value of form.entries()) {
-            console.log('611: ', value[0]+ ', '+ value[1]);
-        }
-
         let options = {
             method: "POST",
             url: URL_ADD_PRODUCT,
@@ -632,8 +631,6 @@ export default function AddProduct(props) {
 
         axios(options)
             .then(result => {
-
-                console.log('623: ', result);
 
                 const { status, data } = result;
 
@@ -741,6 +738,10 @@ export default function AddProduct(props) {
         setTimeout(() => {
             props.closeModal()
         }, 300)
+    }
+
+    const esc_quot_two = (str) => {
+        return str.replace("'", "&#39;");
     }
 
     const enqueueSnackbar = (...args) => {
